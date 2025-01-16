@@ -30,7 +30,7 @@ app.use("/uploads", express.static(path.join(__dirname, "static/uploads")));
 
 
 app.get('/', (req, res) => {
-    return res.json("From Backenddd Side");
+    return res.json("From Backend Side");
 })
 
 
