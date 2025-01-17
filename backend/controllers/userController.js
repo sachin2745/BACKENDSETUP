@@ -48,7 +48,7 @@ const authenticateUsers = async (req, res) => {
       );
 
       // Respond with the token and user details
-      res.status(200).json({ token, userEmail, userName, userImage });
+      res.status(200).json({ token, userId, userEmail, userName, userImage });
     } else {
       // If no user is found, return a login failure response
       res.status(401).json({ message: "Invalid email or password" });

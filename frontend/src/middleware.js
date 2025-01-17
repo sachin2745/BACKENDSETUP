@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 
 export async function middleware(req) {
   const url = req.nextUrl;
-  const cookieStore = cookies();
-  const token = cookieStore.get("token") || "";
+  const cookieStore = await cookies();
+    const token = cookieStore.get("token") || "";
 
   // Handle logged-in users trying to access login/registration pages
   if (token?.value && (url.pathname === "/admin/login" || url.pathname === "/admin/registration")) {
