@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const verifyToken = require('./verifyToken');
 
-// Define the '/users' route
-router.get('/users', userController.getUsers);
+//fetch all data of users
+router.get('/getall', userController.getUsers);
 
+router.post('/authenticate', userController.authenticateUsers);
 
-router.post('/users/authenticate', userController.authenticateUsers);
+router.get('/authorise', verifyToken, userController.authorise);
 
 module.exports = router;

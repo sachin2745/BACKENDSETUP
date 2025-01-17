@@ -7,7 +7,7 @@ const Sidebar = ({ isCollapsed }) => {
 
     const pathname = usePathname()
 
-    console.log(pathname);
+    // console.log(pathname);
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredOptions, setFilteredOptions] = useState([]);

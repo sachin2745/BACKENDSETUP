@@ -61,7 +61,12 @@ const authenticateUsers = async (req, res) => {
   }
 };
 
+const authorise = async (req, res) => {
+  res.status(200).json({ allowed: true });
+};
+
 module.exports = {
   getUsers,
   authenticateUsers,
+  authorise,
 };

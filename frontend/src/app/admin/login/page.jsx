@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import useAppContext from "@/context/AppContext";
+const ISSERVER = typeof window === "undefined";
 
 const adminLogin = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const adminLogin = () => {
     validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      fetch("http://localhost:8001/api/users/authenticate", {
+      fetch("http://localhost:8001/users/authenticate", {
         method: "POST",
         body: JSON.stringify(values),
         headers: {
@@ -40,9 +41,12 @@ const adminLogin = () => {
           if (response.status === 200) {
             toast.success("User login successfully");
             response.json().then((data) => {
-              sessionStorage.setItem("user", JSON.stringify(data));
+              if (!ISSERVER) {
+                localStorage.setItem("user", JSON.stringify(data));
+              }
               setCurrentUser(data);
               setLoggedIn(true);
+              document.cookie = `token=${data.token}`;
               formik.resetForm();
               router.push("/admin/dashboard");
             });

@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 const Template = ({ children }) => {
   return (
     <div>
-        <Toaster position='top-center' />
+      <Toaster position="top-center" />
       <AppProvider>
         <HydrationOverlay>{children}</HydrationOverlay>
       </AppProvider>
