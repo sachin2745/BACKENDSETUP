@@ -23,13 +23,10 @@ export default function PrelineScript() {
       }
     };
 
-    // Invoke the loader after ensuring the DOM is fully loaded
-    if (document.readyState === "complete") {
-      loadPreline();
-    } else {
-      window.addEventListener("load", loadPreline);
-      return () => window.removeEventListener("load", loadPreline);
-    }
+    // Invoke the loader
+    loadPreline();
+
+    // Handle path change and re-run on URL change
   }, [path]);
 
   return null;

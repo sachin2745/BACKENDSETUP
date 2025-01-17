@@ -17,10 +17,10 @@ export const AppProvider = ({ children }) => {
     setLoggedIn(false);
     if (!ISSERVER) localStorage.removeItem("user");
     setCurrentUser(null);
-    router.push("/login");
-    // clear token
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  };
+    router.push("/admin/login");
+    // Clear token with the correct path and domain (if necessary)
+  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/admin; domain=" + window.location.hostname + ";";
+};
 
   return (
     <AppContext.Provider
