@@ -15,7 +15,7 @@ const Sidebar = ({ isCollapsed }) => {
     // Sample data for demonstration
     const options = [
         { name: 'Dashboard', path: '/admin/dashboard' },
-        { name: 'Calendar', path: '/admin/calendar' },
+        { name: 'Blog', path: '/admin/blog' },
         { name: 'Users', path: '/admin/users' },
         // Add more options as needed
     ];
@@ -544,8 +544,8 @@ const Sidebar = ({ isCollapsed }) => {
                                 </li>
                                 <li>
                                     <Link
-                                        className={` ${pathname === '/admin/calendar' ? 'bg-emerald-200' : ''} flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
-                                        href="/admin/calendar"
+                                        className={` ${pathname === '/admin/blog' ? 'bg-emerald-200' : ''} flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                                        href="/admin/blog"
                                     >
                                         <svg
                                             className="size-4"
@@ -570,7 +570,7 @@ const Sidebar = ({ isCollapsed }) => {
                                             <path d="M12 18h.01" />
                                             <path d="M16 18h.01" />
                                         </svg>
-                                        Calendar
+                                        Blog
                                         
                                     </Link>
                                 </li>

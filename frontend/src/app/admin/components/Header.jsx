@@ -93,7 +93,7 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
   };
 
   return (
-    <header className="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-2 font-RedditSans">
+    <header className="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-2 font-RedditSans  border-b border-gray-200">
       <nav className=" w-full mx-auto px-4 flex items-center  justify-between">
         <div className="flex items-center justify-between capitalize">
           <Link

@@ -11,9 +11,9 @@ const HomePage = () => {
         <h1 className="text-3xl font-bold">Welcome to TailAdmin Dashboard</h1>
         <p className="mt-2 text-white">
           Want to see click below on this this this <br />
-          <Link href="http://localhost:3000/admin/dashboard" className="text-white font-bold">
+          <a href="http://localhost:3000/admin/dashboard" className="text-white font-bold">
             Link
-          </Link>
+          </a>
         </p>
         
       </div>

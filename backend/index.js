@@ -7,6 +7,7 @@ const path = require("path");
 require("dotenv").config();
 
 const userRoutes = require('./routes/userRoutes'); 
+const adminRoutes = require('./routes/adminRoutes'); 
 const utilRouter = require('./routes/util');
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 app.use('/users', userRoutes);
+app.use('/admin', adminRoutes);
 app.use('/util', utilRouter);
 
 
