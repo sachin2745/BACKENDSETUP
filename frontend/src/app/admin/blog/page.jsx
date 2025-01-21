@@ -14,13 +14,18 @@ import axios from "axios";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaSortDown } from "react-icons/fa";
 import "./blog.css";
-// import ReactQuill from 'react-quill';
-// import 'react-quill/dist/quill.snow.css';
-// import $ from 'jquery';
-
-
+import JoditEditor from "jodit-react";
+import useAppContext from "@/context/AppContext";
+import $ from 'jquery'; // Import jQuery
+import 'datatables.net'; // DataTables JS
+import 'datatables.net-responsive'; // Responsive extension
+import 'datatables.net-buttons';
+import 'datatables.net-buttons/js/buttons.html5';
+import 'datatables.net-buttons/js/buttons.print';
 
 const Blog = () => {
+  const { currentUser, setCurrentUser } = useAppContext();
+
   const [blogs, setBlogs] = useState([]);
   const [blogCategories, setBlogCategories] = useState([]);
 
@@ -134,6 +139,59 @@ const Blog = () => {
       .catch((err) => toast.error("Error updating Sort By:", err));
   };
 
+  const [blogDescription, setBlogDescription] = useState("");
+  const [blogContent, setBlogContent] = useState("");
+  const [blogImage, setBlogImage] = useState(null);
+  const [blogImageMobile, setBlogImageMobile] = useState(null);
+
+  const initialValues = {
+    blogTitle: "",
+    blogImgAlt: "",
+    blogImageName: "",
+    blogImageTitle: "",
+    blogCategory: "",
+    blogKeywords: "",
+    blogMetaTitle: "",
+    blogForceKeywords: "",
+    blogMetaDescription: "",
+    blogMetaKeywords: "",
+    blogPostDate: "",
+    blogStatus: 1,
+  };
+
+  const validationSchema = Yup.object({
+    blogTitle: Yup.string().required("Blog title is required"),
+    blogImgAlt: Yup.string().required("Alt text is required"),
+    blogImageName: Yup.string().required("Image name is required"),
+    blogImageTitle: Yup.string().required("Image title is required"),
+    blogCategory: Yup.string().required("Category is required"),
+    blogPostDate: Yup.date().required("Post date is required"),
+  });
+
+  const handleSubmit = async (values) => {
+    const formData = new FormData();
+    formData.append("blogDescription", blogDescription);
+    formData.append("blogContent", blogContent);
+    formData.append("blogImage", blogImage);
+    formData.append("blogImageMobile", blogImageMobile);
+    Object.keys(values).forEach((key) => formData.append(key, values[key]));
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8001/admin/addBlog",
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Specify content type
+            'x-auth-token': currentUser.token, // Include the token in the headers
+          },
+        }
+      );
+      console.log("Blog added successfully:", response.data);
+    } catch (error) {
+      console.error("Error adding blog:", error);
+    }
+  };
 
   return (
     <AdminLayout>
@@ -361,7 +419,118 @@ const Blog = () => {
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-2"
         >
-         
+          <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
+            <h1 className="text-2xl font-bold mb-6">Add Blog</h1>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ errors, touched, setFieldValue }) => (
+                <Form className="space-y-6">
+                  <div className="flex items-center">
+                    <label className="w-1/4 text-right pr-4">Blog Title</label>
+                    <Field
+                      name="blogTitle"
+                      className="w-3/4 p-2 border rounded-md"
+                      placeholder="Enter blog title"
+                    />
+                    {errors.blogTitle && touched.blogTitle && (
+                      <div className="text-red-500 text-sm">
+                        {errors.blogTitle}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center">
+                    <label className="w-1/4 text-right pr-4">
+                      Blog Description
+                    </label>
+                    <div className="w-3/4">
+                      <JoditEditor
+                        value={blogDescription}
+                        onChange={(value) => setBlogDescription(value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center">
+                    <label className="w-1/4 text-right pr-4">
+                      Blog Content
+                    </label>
+                    <div className="w-3/4">
+                      <JoditEditor
+                        value={blogContent}
+                        onChange={(value) => setBlogContent(value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center">
+                    <label className="w-1/4 text-right pr-4">Blog Image</label>
+                    <input
+                      type="file"
+                      className="w-3/4"
+                      onChange={(e) => setBlogImage(e.target.files[0])}
+                    />
+                    {blogImage && (
+                      <img
+                        src={URL.createObjectURL(blogImage)}
+                        alt="Preview"
+                        className="w-20 h-20 object-cover mt-2"
+                      />
+                    )}
+                  </div>
+
+                  <div className="flex items-center">
+                    <label className="w-1/4 text-right pr-4">
+                      Blog Image Mobile
+                    </label>
+                    <input
+                      type="file"
+                      className="w-3/4"
+                      onChange={(e) => setBlogImageMobile(e.target.files[0])}
+                    />
+                    {blogImageMobile && (
+                      <img
+                        src={URL.createObjectURL(blogImageMobile)}
+                        alt="Preview"
+                        className="w-20 h-20 object-cover mt-2"
+                      />
+                    )}
+                  </div>
+
+                  <div className="flex items-center">
+                    <label className="w-1/4 text-right pr-4">Category</label>
+                    <Field
+                      as="select"
+                      name="blogCategory"
+                      className="w-3/4 p-2 border rounded-md"
+                    >
+                      <option value="">Select a category</option>
+                      {blogCategories.map((category) => (
+                        <option key={category.blog_category_id } value={category.blog_category_id }>
+                          {category.blog_category_name}
+                        </option>
+                      ))}
+                    </Field>
+                    {errors.blogCategory && touched.blogCategory && (
+                      <div className="text-red-500 text-sm">
+                        {errors.blogCategory}
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  >
+                    Submit
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
         </div>
         <div
           id="tabs-with-underline-3"

@@ -2,7 +2,6 @@
 
 import { AppProvider } from "@/context/AppContext";
 import PrelineScript from "@/Prelinescript";
-import { HydrationOverlay } from "@builder.io/react-hydration-overlay";
 import React, { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -16,7 +15,7 @@ const Template = ({ children }) => {
     <div>
       <Toaster position="top-center" />
       <AppProvider>
-        <HydrationOverlay>{children}</HydrationOverlay>
+        {children}
       </AppProvider>
       <PrelineScript />
     </div>

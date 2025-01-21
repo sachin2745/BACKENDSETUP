@@ -24,8 +24,10 @@ app.use('/util', utilRouter);
 
 // Middleware to parse JSON request bodies
 
+
 // Connection to the database
  const db = require("./config/db"); 
+
 
 // Serve uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "static/uploads")));
