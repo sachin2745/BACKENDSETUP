@@ -1,5 +1,5 @@
-"use client";
-import { useEffect, useState } from "react";
+'use client';
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import AdminLayout from "../Layout/adminLayout";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import Zoom from "react-medium-image-zoom";
@@ -14,14 +14,16 @@ import axios from "axios";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaSortDown } from "react-icons/fa";
 import "./blog.css";
-import JoditEditor from "jodit-react";
 import useAppContext from "@/context/AppContext";
-import $ from 'jquery'; // Import jQuery
-import 'datatables.net'; // DataTables JS
-import 'datatables.net-responsive'; // Responsive extension
-import 'datatables.net-buttons';
-import 'datatables.net-buttons/js/buttons.html5';
-import 'datatables.net-buttons/js/buttons.print';
+// import $ from 'jquery'; // Import jQuery
+// import 'datatables.net'; // DataTables JS
+// import 'datatables.net-responsive'; // Responsive extension
+// import 'datatables.net-buttons';
+// import 'datatables.net-buttons/js/buttons.html5';
+// import 'datatables.net-buttons/js/buttons.print';
+import dynamic from 'next/dynamic';
+const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
+
 
 const Blog = () => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -191,6 +193,25 @@ const Blog = () => {
     } catch (error) {
       console.error("Error adding blog:", error);
     }
+  };
+
+  const editor = useRef(null); //declared a null value 
+  const [content, setContent] = useState("Worlds best html page"); //declare using state
+
+  /* The most important point*/
+  const config = useMemo( //  Using of useMemo while make custom configuration is strictly recomended 
+    () => ({              //  if you don't use it the editor will lose focus every time when you make any change to the editor, even an addition of one character
+      /* Custom image uploader button configuretion to accept image and convert it to base64 format */
+      uploader: {         
+        insertImageAsBase64URI: true,
+        imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp'] // this line is not much important , use if you only strictly want to allow some specific image format
+      },
+    }),
+    []
+  );
+  /* function to handle the changes in the editor */
+  const handleChange = (value) => {
+    setContent(value);
   };
 
   return (
@@ -447,10 +468,20 @@ const Blog = () => {
                       Blog Description
                     </label>
                     <div className="w-3/4">
-                      <JoditEditor
+                      {/* <JoditEditor
                         value={blogDescription}
                         onChange={(value) => setBlogDescription(value)}
-                      />
+                      /> */}
+                       <JoditEditor 
+                          ref={editor}            //This is important
+                          value={content}         //This is important
+                          config={config}         //Only use when you declare some custom configs
+                          onChange={handleChange} //handle the changes
+                          className="w-full h-[70%] mt-10 bg-white"
+                          />
+                           <style>
+              {`.jodit-wysiwyg{height:300px !important}`}
+            </style>
                     </div>
                   </div>
 
@@ -459,10 +490,10 @@ const Blog = () => {
                       Blog Content
                     </label>
                     <div className="w-3/4">
-                      <JoditEditor
+                      {/* <JoditEditor
                         value={blogContent}
                         onChange={(value) => setBlogContent(value)}
-                      />
+                      /> */}
                     </div>
                   </div>
 

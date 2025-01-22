@@ -19,7 +19,7 @@
     "datatables.net-responsive": "^3.0.3",
     "date-fns": "^4.1.0",
     "formik": "^2.4.6",
-    "jodit-react": "^5.0.10",
+    "jodit-react": "^4.0.19",
     "jquery": "^3.7.1",
     "next": "^15.1.5",
     "preline": "^2.7.0",
