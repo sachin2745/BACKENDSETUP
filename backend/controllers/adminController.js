@@ -9,13 +9,13 @@ const getBlogs = async (req, res) => {
   const sql = `
       SELECT 
         blogs.*, 
-        GROUP_CONCAT(blog_category.blog_category_name) AS blogCategory 
+        blog_category.blog_category_name AS blogCategory 
       FROM 
         blogs 
       LEFT JOIN 
         blog_category 
       ON 
-        JSON_CONTAINS(blogs.blogCategory, CONCAT('[', blog_category.blog_category_id, ']')) = 1 
+        blogs.blogCategory = blog_category.blog_category_id
       GROUP BY 
         blogs.blogId 
       ORDER BY 
@@ -75,57 +75,105 @@ const updateStatus = async (req, res) => {
   }
 };
 
-const addBlog = async (req, res) => {
-  const {
-    blogTitle,
-    blogDescription,
-    blogContent,
-    blogImgAlt,
-    blogImageName,
-    blogImageTitle,
-    blogCategory,
-    blogKeywords,
-    blogMetaTitle,
-    blogForceKeywords,
-    blogMetaDescription,
-    blogMetaKeywords,
-    blogPostDate,
-    blogStatus,
-  } = req.body;
+// const addBlog = async (req, res) => {
+//   const {
+//     blogTitle,
+//     blogDescription,
+//     blogContent,
+//     blogImgAlt,
+//     blogImageName,
+//     blogImageTitle,
+//     blogCategory,
+//     blogKeywords,
+//     blogMetaTitle,
+//     blogForceKeywords,
+//     blogMetaDescription,
+//     blogMetaKeywords,
+//     blogStatus,
+//     blogSchema,
+//     blogSKU,
+//   } = req.body;
 
-  const blogCreatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
-  const blogSortBy = await db
-    .query("SELECT MAX(blogId) + 1 AS nextSort FROM blogs")
-    .then(([rows]) => rows[0]?.nextSort || 1);
 
+//   const blogCreatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
+//   const  blogPostDate = Math.floor(Date.now() / 1000);
+  
+//   const blogImage = req.files?.blogImage?.[0]?.path
+//   ? `/uploads/blog/${req.files.blogImage[0].filename}`
+//   : null;
+// const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
+//   ? `/uploads/blog/${req.files.blogImageMobile[0].filename}`
+//   : null;
+
+// console.log("Request body:", req.body);
+// console.log("Uploaded files:", req.files);
+
+//   const blogSortBy = await db
+//     .query("SELECT MAX(blogId) + 1 AS nextSort FROM blogs")
+//     .then(([rows]) => rows[0]?.nextSort || 1);
+
+//   try {
+//     await db.query(
+//       `INSERT INTO blogs (blogTitle, blogImage, blogImageMobile,  blogDescription, blogContent, blogImgAlt, blogImageName, blogImageTitle, blogCategory, blogKeywords, blogMetaTitle, blogForceKeywords, blogMetaDescription, blogMetaKeywords, blogPostDate, blogStatus, blogCreatedTime, blogSortBy, blogSchema, blogSKU) 
+//       VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)`,
+//       [
+//         blogTitle,
+//         blogImage ,
+//         blogImageMobile ,
+//         blogDescription,
+//         blogContent,
+//         blogImgAlt,
+//         blogImageName,
+//         blogImageTitle,
+//         blogCategory,
+//         blogKeywords,
+//         blogMetaTitle,
+//         blogForceKeywords,
+//         blogMetaDescription,
+//         blogMetaKeywords,
+//         blogPostDate,
+//         blogStatus,
+//         blogCreatedTime,
+//         blogSortBy,
+//         blogSchema,
+//         blogSKU,
+//       ]
+//     );
+
+//     res.status(200).json({ message: "Blog added successfully" });
+//   } catch (error) {
+//     console.error("Error adding blog:", error.response ? error.response.data : error);
+//     res.status(500).json({ error: "An error occurred" });
+//   }
+// };
+
+const addBlog = async(req, res) => {
   try {
-    await db.query(
-      `INSERT INTO blogs (blogTitle, blogDescription, blogContent, blogImgAlt, blogImageName, blogImageTitle, blogCategory, blogKeywords, blogMetaTitle, blogForceKeywords, blogMetaDescription, blogMetaKeywords, blogPostDate, blogStatus, blogCreatedTime, blogSortBy) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        blogTitle,
-        blogDescription,
-        blogContent,
-        blogImgAlt,
-        blogImageName,
-        blogImageTitle,
-        blogCategory,
-        blogKeywords,
-        blogMetaTitle,
-        blogForceKeywords,
-        blogMetaDescription,
-        blogMetaKeywords,
-        blogPostDate,
-        blogStatus,
-        blogCreatedTime,
-        blogSortBy,
-      ]
-    );
+    const { blogTitle, blogDescription, blogCategory } = req.body;
+    console.log(req.body);
+    // Save image
+    // const blogImage = req.files?.blogImage?.[0]?.path
+    //   ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
+    //   : null;
+    const blogImage = req.files?.blogImage?.[0]?.path
+    ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
+    : null;
+        // Insert data into blogs table
+    const query = `
+      INSERT INTO blogs (blogTitle, blogDescription, blogImage, blogCategory)
+      VALUES (?, ?, ?, ?)
+    `;
+    const [result] = await db.execute(query, [
+      blogTitle,
+      blogDescription,
+      blogImage,
+      blogCategory,
+    ]);
 
-    res.status(200).json({ message: "Blog added successfully" });
+    res.status(200).json({ message: 'Blog inserted successfully', blogId: result.insertId });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "An error occurred" });
+    console.error('Error inserting blog:', error);
+    res.status(500).json({ message: 'Error inserting blog' });
   }
 };
 

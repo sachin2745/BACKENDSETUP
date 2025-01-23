@@ -5,12 +5,13 @@ const verifyToken = require('./verifyToken');
 const app = express();
 const path = require("path");
 const multer = require('multer');
+const fs = require("fs");
 
 // Dynamic folder storage setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const folderName = file.fieldname; // Dynamically get folder name from fieldname
-    const uploadPath = path.join(__dirname, "static/uploads", folderName);
+    const folderName = file.fieldname; // This will be "blogImage" based on your upload fields
+    const uploadPath = path.join(__dirname, "../static/uploads", folderName); // Go up one directory
 
     // Ensure the folder exists, create it if not
     if (!fs.existsSync(uploadPath)) {
@@ -33,7 +34,25 @@ const upload = multer({
 //fetch all data of users
 router.get('/blogs/getall', adminController.getBlogs);
 router.put('/status/:id',adminController.updateStatus);
-router.post("/addBlog", upload.fields([{ name: "blogImage" }, { name: "blogImageMobile" }]), adminController.addBlog);
+// router.post(
+//   '/addblog',
+//   (req, res, next) => {
+//     upload.fields([{ name: "blogImage" }, { name: "blogImageMobile" }])(req, res, (err) => {
+//       if (err instanceof multer.MulterError) {
+//         console.error("Multer error:", err); // Debugging
+//         return res.status(400).json({ error: "Multer error: " + err.message });
+//       } else if (err) {
+//         console.error("File upload error:", err); // Debugging
+//         return res.status(500).json({ error: "File upload error: " + err.message });
+//       }
+//       next();
+//     });
+//   },
+//   verifyToken,
+//   adminController.addBlog
+// );
 
+router.post('/addblog',upload.fields([{ name: "blogImage" }]), verifyToken, adminController.addBlog
+);
 
 module.exports = router;

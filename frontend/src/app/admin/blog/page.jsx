@@ -1,5 +1,11 @@
-'use client';
-import React, { useEffect, useMemo, useRef, useState } from "react";
+"use client";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import AdminLayout from "../Layout/adminLayout";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import Zoom from "react-medium-image-zoom";
@@ -8,22 +14,21 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import { FaEdit, FaCheck, FaBan } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
+import { Formik, Form, input, ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaSortDown } from "react-icons/fa";
 import "./blog.css";
 import useAppContext from "@/context/AppContext";
-// import $ from 'jquery'; // Import jQuery
-// import 'datatables.net'; // DataTables JS
-// import 'datatables.net-responsive'; // Responsive extension
-// import 'datatables.net-buttons';
-// import 'datatables.net-buttons/js/buttons.html5';
-// import 'datatables.net-buttons/js/buttons.print';
-import dynamic from 'next/dynamic';
+// import $ from "jquery"; // Import jQuery
+// import "datatables.net"; // DataTables JS
+// import "datatables.net-responsive"; // Responsive extension
+// import "datatables.net-buttons";
+// import "datatables.net-buttons/js/buttons.html5";
+// import "datatables.net-buttons/js/buttons.print";
+import dynamic from "next/dynamic";
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
-
 
 const Blog = () => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -141,78 +146,78 @@ const Blog = () => {
       .catch((err) => toast.error("Error updating Sort By:", err));
   };
 
-  const [blogDescription, setBlogDescription] = useState("");
-  const [blogContent, setBlogContent] = useState("");
-  const [blogImage, setBlogImage] = useState(null);
-  const [blogImageMobile, setBlogImageMobile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
-  const initialValues = {
-    blogTitle: "",
-    blogImgAlt: "",
-    blogImageName: "",
-    blogImageTitle: "",
-    blogCategory: "",
-    blogKeywords: "",
-    blogMetaTitle: "",
-    blogForceKeywords: "",
-    blogMetaDescription: "",
-    blogMetaKeywords: "",
-    blogPostDate: "",
-    blogStatus: 1,
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file && file.size > 2 * 1024 * 1024) {
+      alert("File size should not exceed 2MB");
+      return;
+    }
+
+    // Set the preview image
+    const imageUrl = URL.createObjectURL(file);
+    setPreviewImage(imageUrl);
+    formik.setFieldValue("blogImage", file);
   };
 
-  const validationSchema = Yup.object({
-    blogTitle: Yup.string().required("Blog title is required"),
-    blogImgAlt: Yup.string().required("Alt text is required"),
-    blogImageName: Yup.string().required("Image name is required"),
-    blogImageTitle: Yup.string().required("Image title is required"),
-    blogCategory: Yup.string().required("Category is required"),
-    blogPostDate: Yup.date().required("Post date is required"),
+  const formik = useFormik({
+    initialValues: {
+      blogTitle: "",
+      blogDescription: "",
+      blogImage: null,
+      blogCategory: "",
+    },
+    validationSchema: Yup.object({
+      blogTitle: Yup.string()
+        .min(5, "Title must be at least 5 characters")
+        .required("Title is required"),
+      blogDescription: Yup.string()
+        .min(20, "Description must be at least 20 characters")
+        .required("Description is required"),
+      blogImage: Yup.mixed().required("Blog image is required"),
+      blogCategory: Yup.string().required("Please select a category"),
+    }),
+    onSubmit: async (values) => {
+      const formData = new FormData();
+      formData.append("blogTitle", values.blogTitle);
+      formData.append("blogDescription", values.blogDescription);
+      formData.append("blogImage", values.blogImage);
+      formData.append("blogCategory", values.blogCategory);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8001/admin/addblog",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              "x-auth-token": currentUser.token,
+            },
+          }
+        );
+        alert("Blog submitted successfully!");
+      } catch (error) {
+        console.error("Error submitting blog:", error);
+        alert("Error submitting blog.");
+      }
+    },
   });
 
-  const handleSubmit = async (values) => {
-    const formData = new FormData();
-    formData.append("blogDescription", blogDescription);
-    formData.append("blogContent", blogContent);
-    formData.append("blogImage", blogImage);
-    formData.append("blogImageMobile", blogImageMobile);
-    Object.keys(values).forEach((key) => formData.append(key, values[key]));
-
-    try {
-      const response = await axios.post(
-        "http://localhost:8001/admin/addBlog",
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data', // Specify content type
-            'x-auth-token': currentUser.token, // Include the token in the headers
-          },
-        }
-      );
-      console.log("Blog added successfully:", response.data);
-    } catch (error) {
-      console.error("Error adding blog:", error);
-    }
-  };
-
-  const editor = useRef(null); //declared a null value 
-  const [content, setContent] = useState("Worlds best html page"); //declare using state
+  const editorDescription = useRef(null);
+  const editorContent = useRef(null);
 
   /* The most important point*/
-  const config = useMemo( //  Using of useMemo while make custom configuration is strictly recomended 
-    () => ({              //  if you don't use it the editor will lose focus every time when you make any change to the editor, even an addition of one character
-      /* Custom image uploader button configuretion to accept image and convert it to base64 format */
-      uploader: {         
+  const config = useMemo(
+    () => ({
+      uploader: {
         insertImageAsBase64URI: true,
-        imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp'] // this line is not much important , use if you only strictly want to allow some specific image format
       },
+      readonly: false,
     }),
     []
   );
-  /* function to handle the changes in the editor */
-  const handleChange = (value) => {
-    setContent(value);
-  };
 
   return (
     <AdminLayout>
@@ -297,11 +302,16 @@ const Blog = () => {
                     {/* <td>{user.userId}</td> */}
                     <td>
                       <Zoom>
-                        <img
-                          src={`http://localhost:8001${item.blogImage}`}
-                          alt={item.blogImgAlt}
-                          className="h-10 w-10"
-                        />
+                        
+                        {item.blogImage ? (
+                          <img
+                            src={`http://localhost:8001${item.blogImage}`}
+                            alt={item.blogImgAlt || item.blogTitle} // Fallback to blog title if alt text is not provided
+                            className="h-10 w-10 object-cover" // Added object-cover for better image fitting
+                          />
+                        ) : (
+                          <p>No image available</p> // Fallback message if no image is present
+                        )}
                       </Zoom>
                     </td>
 
@@ -440,127 +450,141 @@ const Blog = () => {
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-2"
         >
-          <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
+          <div className=" mx-auto p-5 bg-white shadow-md rounded-md">
             <h1 className="text-2xl font-bold mb-6">Add Blog</h1>
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmit}
+
+            <form
+              onSubmit={formik.handleSubmit}
+              className="grid grid-cols-2 gap-6"
             >
-              {({ errors, touched, setFieldValue }) => (
-                <Form className="space-y-6">
-                  <div className="flex items-center">
-                    <label className="w-1/4 text-right pr-4">Blog Title</label>
-                    <Field
-                      name="blogTitle"
-                      className="w-3/4 p-2 border rounded-md"
-                      placeholder="Enter blog title"
+              {/* Blog Title */}
+              <label
+                className="flex items-center justify-end pr-4"
+                htmlFor="blogTitle"
+              >
+                Blog Title:
+              </label>
+              <div>
+                <input
+                  id="blogTitle"
+                  name="blogTitle"
+                  type="text"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.blogTitle}
+                  className="w-full border border-gray-300 p-2 rounded"
+                />
+                {formik.touched.blogTitle && formik.errors.blogTitle && (
+                  <p className="text-red-500 text-sm">
+                    {formik.errors.blogTitle}
+                  </p>
+                )}
+              </div>
+
+              {/* Blog Description */}
+              <label
+                className="flex items-center justify-end pr-4"
+                htmlFor="blogDescription"
+              >
+                Blog Description:
+              </label>
+              <div>
+                <JoditEditor
+                  ref={editorDescription}
+                  config={config}
+                  id="blogDescription"
+                  name="blogDescription"
+                  onChange={(newContent) => {
+                    formik.setFieldValue("blogDescription", newContent);
+                  }}
+                  onBlur={() => {
+                    formik.setFieldTouched("blogDescription", true);
+                  }}
+                  value={formik.values.blogDescription}
+                />
+                {formik.touched.blogDescription &&
+                  formik.errors.blogDescription && (
+                    <p className="text-red-500 text-sm">
+                      {formik.errors.blogDescription}
+                    </p>
+                  )}
+              </div>
+
+              {/* Blog Image */}
+              <label
+                className="flex items-center justify-end pr-4"
+                htmlFor="blogImage"
+              >
+                Blog Image:
+              </label>
+              <div>
+                <input
+                  id="blogImage"
+                  name="blogImage"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full border border-gray-300 p-2 rounded"
+                />
+                {formik.touched.blogImage && formik.errors.blogImage && (
+                  <p className="text-red-500 text-sm">
+                    {formik.errors.blogImage}
+                  </p>
+                )}
+                {previewImage && (
+                  <div className="flex  justify-center justify-content-center  my-3">
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      width="100"
+                      height="100"
                     />
-                    {errors.blogTitle && touched.blogTitle && (
-                      <div className="text-red-500 text-sm">
-                        {errors.blogTitle}
-                      </div>
-                    )}
                   </div>
+                )}
+              </div>
 
-                  <div className="flex items-center">
-                    <label className="w-1/4 text-right pr-4">
-                      Blog Description
-                    </label>
-                    <div className="w-3/4">
-                      {/* <JoditEditor
-                        value={blogDescription}
-                        onChange={(value) => setBlogDescription(value)}
-                      /> */}
-                       <JoditEditor 
-                          ref={editor}            //This is important
-                          value={content}         //This is important
-                          config={config}         //Only use when you declare some custom configs
-                          onChange={handleChange} //handle the changes
-                          className="w-full h-[70%] mt-10 bg-white"
-                          />
-                           <style>
-              {`.jodit-wysiwyg{height:300px !important}`}
-            </style>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center">
-                    <label className="w-1/4 text-right pr-4">
-                      Blog Content
-                    </label>
-                    <div className="w-3/4">
-                      {/* <JoditEditor
-                        value={blogContent}
-                        onChange={(value) => setBlogContent(value)}
-                      /> */}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center">
-                    <label className="w-1/4 text-right pr-4">Blog Image</label>
-                    <input
-                      type="file"
-                      className="w-3/4"
-                      onChange={(e) => setBlogImage(e.target.files[0])}
-                    />
-                    {blogImage && (
-                      <img
-                        src={URL.createObjectURL(blogImage)}
-                        alt="Preview"
-                        className="w-20 h-20 object-cover mt-2"
-                      />
-                    )}
-                  </div>
-
-                  <div className="flex items-center">
-                    <label className="w-1/4 text-right pr-4">
-                      Blog Image Mobile
-                    </label>
-                    <input
-                      type="file"
-                      className="w-3/4"
-                      onChange={(e) => setBlogImageMobile(e.target.files[0])}
-                    />
-                    {blogImageMobile && (
-                      <img
-                        src={URL.createObjectURL(blogImageMobile)}
-                        alt="Preview"
-                        className="w-20 h-20 object-cover mt-2"
-                      />
-                    )}
-                  </div>
-
-                  <div className="flex items-center">
-                    <label className="w-1/4 text-right pr-4">Category</label>
-                    <Field
-                      as="select"
-                      name="blogCategory"
-                      className="w-3/4 p-2 border rounded-md"
+              {/* Blog Category */}
+              <label
+                className="flex items-center justify-end pr-4"
+                htmlFor="blogCategory"
+              >
+                Blog Category:
+              </label>
+              <div>
+                <select
+                  id="blogCategory"
+                  name="blogCategory"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.blogCategory}
+                  className="w-full border border-gray-300 p-2 rounded"
+                >
+                  <option value="" label="Select a category" />
+                  {blogCategories.map((category) => (
+                    <option
+                      key={category.blog_category_id}
+                      value={category.blog_category_id}
                     >
-                      <option value="">Select a category</option>
-                      {blogCategories.map((category) => (
-                        <option key={category.blog_category_id } value={category.blog_category_id }>
-                          {category.blog_category_name}
-                        </option>
-                      ))}
-                    </Field>
-                    {errors.blogCategory && touched.blogCategory && (
-                      <div className="text-red-500 text-sm">
-                        {errors.blogCategory}
-                      </div>
-                    )}
-                  </div>
+                      {category.blog_category_name}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.blogCategory && formik.errors.blogCategory && (
+                  <p className="text-red-500 text-sm">
+                    {formik.errors.blogCategory}
+                  </p>
+                )}
+              </div>
 
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                  >
-                    Submit
-                  </button>
-                </Form>
-              )}
-            </Formik>
+              {/* Submit Button */}
+              <div></div>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              >
+                Submit
+              </button>
+            </form>
           </div>
         </div>
         <div
