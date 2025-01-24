@@ -743,12 +743,13 @@ const Blog = () => {
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-2"
         >
-          <div className=" mx-auto p-5 bg-white shadow-md rounded-md">
-            <h1 className="text-2xl font-bold mb-6">Add Blog</h1>
+          <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
+            <h1 className="text-lg font-bold mb-6 border-b pb-2">Create Blog</h1>
 
             <form
               onSubmit={formik.handleSubmit}
-              className="flex flex-wrap gap-6"
+              autoComplete="off"
+              className="flex flex-wrap gap-6 text-sm"
             >
               {/* Blog Title */}
               <div className="flex w-full  items-center">
@@ -767,7 +768,7 @@ const Blog = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogTitle}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded "
                   />
                   {formik.touched.blogTitle && formik.errors.blogTitle && (
                     <p className="text-red-500 text-sm">
@@ -793,7 +794,7 @@ const Blog = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogDescription}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogDescription &&
                     formik.errors.blogDescription && (
@@ -850,7 +851,7 @@ const Blog = () => {
                     type="file"
                     accept="image/*"
                     onChange={(e) => handleImageChange(e, "desktop")}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogImage && formik.errors.blogImage && (
                     <p className="text-red-500 text-sm">
@@ -886,7 +887,7 @@ const Blog = () => {
                     type="file"
                     accept="image/*"
                     onChange={(e) => handleImageChange(e, "mobile")}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogImageMobile &&
                     formik.errors.blogImageMobile && (
@@ -925,7 +926,7 @@ const Blog = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogImgAlt}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogImgAlt && formik.errors.blogImgAlt && (
                     <p className="text-red-500 text-sm">
@@ -944,13 +945,13 @@ const Blog = () => {
                   Blog Category:
                 </label>
                 <div className="w-[80%]">
-                  <select
+                  <select 
                     id="blogCategory"
                     name="blogCategory"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogCategory}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded "
                   >
                     <option value="" label="Select a category" />
                     {blogCategories.map((category) => (
@@ -988,7 +989,7 @@ const Blog = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogKeywords}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogKeywords &&
                     formik.errors.blogKeywords && (
@@ -1016,7 +1017,7 @@ const Blog = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogMetaTitle}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogMetaTitle &&
                     formik.errors.blogMetaTitle && (
@@ -1044,7 +1045,7 @@ const Blog = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogMetaDescription}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogMetaDescription &&
                     formik.errors.blogMetaDescription && (
@@ -1072,7 +1073,7 @@ const Blog = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogMetaKeywords}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogMetaKeywords &&
                     formik.errors.blogMetaKeywords && (
@@ -1100,7 +1101,7 @@ const Blog = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogForceKeywords}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogForceKeywords &&
                     formik.errors.blogForceKeywords && (
@@ -1128,7 +1129,7 @@ const Blog = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogSKU}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogSKU && formik.errors.blogSKU && (
                     <p className="text-red-500 text-sm">
@@ -1147,15 +1148,14 @@ const Blog = () => {
                   Blog Schema:
                 </label>
                 <div className="w-[80%]">
-                  <input
+                  <textarea
                     id="blogSchema"
                     name="blogSchema"
-                    type="text"
                     placeholder="Enter Schema"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogSchema}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogSchema && formik.errors.blogSchema && (
                     <p className="text-red-500 text-sm">
@@ -1171,7 +1171,7 @@ const Blog = () => {
                   href=""
                   className="bg-black text-white py-2 px-4 rounded transition"
                 >
-                  Cancle
+                  Cancel
                 </a>
                 <button
                   type="submit"
@@ -1188,11 +1188,12 @@ const Blog = () => {
           className={`${activeTab ? "" : "hidden"}`}
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-3"
-        >
+        > <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
+            <h1 className="text-lg font-bold mb-6 border-b pb-2">Edit Blog</h1>
           {activeTab && (
             <form
               onSubmit={handleEditFormSubmit}
-              className="flex flex-wrap gap-6"
+              className="flex flex-wrap gap-6 text-sm"
             >
               <div className="flex w-full items-center">
                 <label
@@ -1210,7 +1211,7 @@ const Blog = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, blogTitle: e.target.value })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1234,7 +1235,7 @@ const Blog = () => {
                         blogDescription: e.target.value,
                       })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1271,7 +1272,7 @@ const Blog = () => {
                     accept="image/*"
                     required
                     onChange={(e) => handleEditImageChange(e, "blogImage")}
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {previewEditImage && (
                     <img
@@ -1301,7 +1302,7 @@ const Blog = () => {
                     onChange={(e) =>
                       handleEditImageChange(e, "blogImageMobile")
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                   {previewMobileEditImage && (
                     <img
@@ -1331,7 +1332,7 @@ const Blog = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, blogImgAlt: e.target.value })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1352,7 +1353,7 @@ const Blog = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, blogKeywords: e.target.value })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1372,7 +1373,7 @@ const Blog = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, blogCategory: e.target.value })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   >
                     <option value="" disabled>
                       Select a category
@@ -1408,7 +1409,7 @@ const Blog = () => {
                         blogMetaTitle: e.target.value,
                       })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1432,7 +1433,7 @@ const Blog = () => {
                         blogMetaDescription: e.target.value,
                       })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1456,7 +1457,7 @@ const Blog = () => {
                         blogMetaKeywords: e.target.value,
                       })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1480,7 +1481,7 @@ const Blog = () => {
                         blogForceKeywords: e.target.value,
                       })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1501,7 +1502,7 @@ const Blog = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, blogSKU: e.target.value })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1521,7 +1522,7 @@ const Blog = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, blogSchema: e.target.value })
                     }
-                    className="w-full border border-gray-300 p-2 rounded"
+                    className="w-full border-2 border-gray-300 p-2 rounded"
                   />
                 </div>
               </div>
@@ -1542,6 +1543,7 @@ const Blog = () => {
               </div>
             </form>
           )}
+          </div>
         </div>
       </div>
     </AdminLayout>
