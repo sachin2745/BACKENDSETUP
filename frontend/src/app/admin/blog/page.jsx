@@ -218,6 +218,75 @@ const Blog = () => {
     }),
     []
   );
+  const [formData, setFormData] = useState({
+    blogId: "",
+    blogTitle: "",
+    blogDescription: "",
+    blogImage: null,
+    blogCategory: "",
+  });
+  const [previewEditImage, setPreviewEditImage] = useState(null);
+  const [activeTab, setActiveTab] = useState(false);
+
+  const fetchUserData = async (blogId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8001/admin/get-blog/${blogId}`
+      );
+      const { blogTitle, blogDescription, blogImage, blogCategory } =
+        response.data;
+
+      console.log("response", response.data);
+      // Find the corresponding category ID
+      const category = blogCategories.find(
+        (cat) => cat.blog_category_name === blogCategory
+      );
+      const categoryId = category ? category.blog_category_id : "";
+
+      setFormData({
+        blogId,
+        blogTitle,
+        blogDescription,
+        blogImage: null,
+        blogCategory: categoryId,
+      });
+
+      setPreviewEditImage(`http://localhost:8001${blogImage}`); // Assuming image is stored in /uploads folder
+      setActiveTab(true);
+    } catch (error) {
+      console.error("Error fetching blog data:", error);
+    }
+  };
+
+  const handleEditImageChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({ ...formData, blogImage: file });
+    setPreviewEditImage(URL.createObjectURL(file));
+  };
+
+  const handleEditFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = new FormData();
+      console.log("formData", formData);
+      const blogId = formData.blogId;
+
+      data.append("blogTitle", formData.blogTitle);
+      data.append("blogDescription", formData.blogDescription);
+      if (formData.blogImage) {
+        data.append("blogImage", formData.blogImage);
+      }      data.append("blogCategory", formData.blogCategory);
+
+      await axios.post(`http://localhost:8001/admin/update-blog/${blogId}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("Blog updated successfully!");
+    } catch (error) {
+      console.error("Error updating blog:", error);
+    }
+  };
 
   return (
     <AdminLayout>
@@ -230,9 +299,10 @@ const Blog = () => {
         >
           <button
             type="button"
-            className="hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 disabled:opacity-50 disabled:pointer-events-none active"
+            className={`hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 disabled:opacity-50 disabled:pointer-events-none 
+          ${activeTab ? "" : "active"}`}
             id="tabs-with-underline-item-1"
-            aria-selected="true"
+            aria-selected={`${activeTab ? "false" : "true"}`}
             data-hs-tab="#tabs-with-underline-1"
             aria-controls="tabs-with-underline-1"
             role="tab"
@@ -252,9 +322,11 @@ const Blog = () => {
           </button>
           <button
             type="button"
-            className="hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 disabled:opacity-50 disabled:pointer-events-none"
+            className={`hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500  ${
+              activeTab ? "active" : "hidden"
+            }`}
             id="tabs-with-underline-item-3"
-            aria-selected="false"
+            aria-selected={activeTab}
             data-hs-tab="#tabs-with-underline-3"
             aria-controls="tabs-with-underline-3"
             role="tab"
@@ -268,6 +340,7 @@ const Blog = () => {
         <div
           id="tabs-with-underline-1"
           role="tabpanel"
+          className={`${activeTab ? "hidden" : ""}`}
           aria-labelledby="tabs-with-underline-item-1"
         >
           <div className="bg-white border shadow-md rounded p-4">
@@ -285,11 +358,9 @@ const Blog = () => {
                   <th>Image</th>
                   <th>Title</th>
                   <th>Category</th>
-                  {/* <th>Password</th> */}
                   <th>Keywords</th>
                   <th>Created At</th>
                   <th>Updated At</th>
-                  {/* <th>Popular</th> */}
                   <th>Sort By</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -302,7 +373,6 @@ const Blog = () => {
                     {/* <td>{user.userId}</td> */}
                     <td>
                       <Zoom>
-                        
                         {item.blogImage ? (
                           <img
                             src={`http://localhost:8001${item.blogImage}`}
@@ -417,7 +487,7 @@ const Blog = () => {
                           <div className="py-1">
                             <MenuItem>
                               <button
-                                onClick={() => fetchUserData(item.blogId)} // Replace 1 with the desired userId
+                                onClick={() => fetchUserData(item.blogId)}
                                 className="block px-4 py-2 text-sm text-gray-700"
                               >
                                 Edit
@@ -455,148 +525,273 @@ const Blog = () => {
 
             <form
               onSubmit={formik.handleSubmit}
-              className="grid grid-cols-2 gap-6"
+              className="flex flex-wrap gap-6"
             >
               {/* Blog Title */}
-              <label
-                className="flex items-center justify-end pr-4"
-                htmlFor="blogTitle"
-              >
-                Blog Title:
-              </label>
-              <div>
-                <input
-                  id="blogTitle"
-                  name="blogTitle"
-                  type="text"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.blogTitle}
-                  className="w-full border border-gray-300 p-2 rounded"
-                />
-                {formik.touched.blogTitle && formik.errors.blogTitle && (
-                  <p className="text-red-500 text-sm">
-                    {formik.errors.blogTitle}
-                  </p>
-                )}
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blogTitle"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Title:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blogTitle"
+                    name="blogTitle"
+                    type="text"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.blogTitle}
+                    className="w-full border border-gray-300 p-2 rounded"
+                  />
+                  {formik.touched.blogTitle && formik.errors.blogTitle && (
+                    <p className="text-red-500 text-sm">
+                      {formik.errors.blogTitle}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Blog Description */}
-              <label
-                className="flex items-center justify-end pr-4"
-                htmlFor="blogDescription"
-              >
-                Blog Description:
-              </label>
-              <div>
-                <JoditEditor
-                  ref={editorDescription}
-                  config={config}
-                  id="blogDescription"
-                  name="blogDescription"
-                  onChange={(newContent) => {
-                    formik.setFieldValue("blogDescription", newContent);
-                  }}
-                  onBlur={() => {
-                    formik.setFieldTouched("blogDescription", true);
-                  }}
-                  value={formik.values.blogDescription}
-                />
-                {formik.touched.blogDescription &&
-                  formik.errors.blogDescription && (
-                    <p className="text-red-500 text-sm">
-                      {formik.errors.blogDescription}
-                    </p>
-                  )}
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blogDescription"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Description:
+                </label>
+                <div className="w-[80%]">
+                  <JoditEditor
+                    ref={editorDescription}
+                    config={config}
+                    id="blogDescription"
+                    name="blogDescription"
+                    onChange={(newContent) => {
+                      formik.setFieldValue("blogDescription", newContent);
+                    }}
+                    onBlur={() => {
+                      formik.setFieldTouched("blogDescription", true);
+                    }}
+                    value={formik.values.blogDescription}
+                  />
+                  {formik.touched.blogDescription &&
+                    formik.errors.blogDescription && (
+                      <p className="text-red-500 text-sm">
+                        {formik.errors.blogDescription}
+                      </p>
+                    )}
+                </div>
               </div>
 
               {/* Blog Image */}
-              <label
-                className="flex items-center justify-end pr-4"
-                htmlFor="blogImage"
-              >
-                Blog Image:
-              </label>
-              <div>
-                <input
-                  id="blogImage"
-                  name="blogImage"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="w-full border border-gray-300 p-2 rounded"
-                />
-                {formik.touched.blogImage && formik.errors.blogImage && (
-                  <p className="text-red-500 text-sm">
-                    {formik.errors.blogImage}
-                  </p>
-                )}
-                {previewImage && (
-                  <div className="flex  justify-center justify-content-center  my-3">
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      width="100"
-                      height="100"
-                    />
-                  </div>
-                )}
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blogImage"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Image:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blogImage"
+                    name="blogImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="w-full border border-gray-300 p-2 rounded"
+                  />
+                  {formik.touched.blogImage && formik.errors.blogImage && (
+                    <p className="text-red-500 text-sm">
+                      {formik.errors.blogImage}
+                    </p>
+                  )}
+                  {previewImage && (
+                    <div className="flex justify-center my-3">
+                      <img
+                        src={previewImage}
+                        alt="Preview"
+                        className="rounded shadow"
+                        width="100"
+                        height="100"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Blog Category */}
-              <label
-                className="flex items-center justify-end pr-4"
-                htmlFor="blogCategory"
-              >
-                Blog Category:
-              </label>
-              <div>
-                <select
-                  id="blogCategory"
-                  name="blogCategory"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.blogCategory}
-                  className="w-full border border-gray-300 p-2 rounded"
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blogCategory"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  <option value="" label="Select a category" />
-                  {blogCategories.map((category) => (
-                    <option
-                      key={category.blog_category_id}
-                      value={category.blog_category_id}
-                    >
-                      {category.blog_category_name}
-                    </option>
-                  ))}
-                </select>
-                {formik.touched.blogCategory && formik.errors.blogCategory && (
-                  <p className="text-red-500 text-sm">
-                    {formik.errors.blogCategory}
-                  </p>
-                )}
+                  Blog Category:
+                </label>
+                <div className="w-[80%]">
+                  <select
+                    id="blogCategory"
+                    name="blogCategory"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.blogCategory}
+                    className="w-full border border-gray-300 p-2 rounded"
+                  >
+                    <option value="" label="Select a category" />
+                    {blogCategories.map((category) => (
+                      <option
+                        key={category.blog_category_id}
+                        value={category.blog_category_id}
+                      >
+                        {category.blog_category_name}
+                      </option>
+                    ))}
+                  </select>
+                  {formik.touched.blogCategory &&
+                    formik.errors.blogCategory && (
+                      <p className="text-red-500 text-sm">
+                        {formik.errors.blogCategory}
+                      </p>
+                    )}
+                </div>
               </div>
 
               {/* Submit Button */}
-              <div></div>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-              >
-                Submit
-              </button>
+              <div className="w-full flex justify-start gap-4">
+                <a
+                  href=""
+                  className="bg-black text-white py-2 px-4 rounded transition"
+                >
+                  Cancle
+                </a>
+                <button
+                  type="submit"
+                  className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-600 transition"
+                >
+                  Submit
+                </button>
+              </div>
             </form>
           </div>
         </div>
         <div
           id="tabs-with-underline-3"
-          className="hidden"
+          className={`${activeTab ? "" : "hidden"}`}
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-3"
         >
-          <p className="text-gray-500">
-            This is the <em className="font-semibold text-gray-800">third</em>{" "}
-            item's tab body.
-          </p>
+          {activeTab && (
+            <form
+              onSubmit={handleEditFormSubmit}
+              className="flex flex-wrap gap-6"
+            >
+              <div className="flex w-full items-center">
+                <label
+                  htmlFor="blogTitle"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Title:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blogTitle"
+                    name="blogTitle"
+                    type="text"
+                    value={formData.blogTitle}
+                    onChange={(e) =>
+                      setFormData({ ...formData, blogTitle: e.target.value })
+                    }
+                    className="w-full border border-gray-300 p-2 rounded"
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full items-center">
+                <label
+                  htmlFor="blogDescription"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Description:
+                </label>
+                <div className="w-[80%]">
+                  <JoditEditor
+                    value={formData.blogDescription}
+                    onChange={(content) =>
+                      setFormData({ ...formData, blogDescription: content })
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full items-center">
+                <label
+                  htmlFor="blogImage"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Image:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blogImage"
+                    name="blogImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleEditImageChange}
+                    className="w-full border border-gray-300 p-2 rounded"
+                  />
+                  {previewEditImage && (
+                    <img
+                      src={previewEditImage}
+                      alt="Preview"
+                      width="100"
+                      className="mt-3 rounded shadow"
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="flex w-full items-center">
+                <label
+                  htmlFor="blogCategory"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Category:
+                </label>
+                <div className="w-[80%]">
+                  <select
+                    id="blogCategory"
+                    name="blogCategory"
+                    value={formData.blogCategory || ""}
+                    onChange={(e) =>
+                      setFormData({ ...formData, blogCategory: e.target.value })
+                    }
+                    className="w-full border border-gray-300 p-2 rounded"
+                  >
+                    <option value="" disabled>
+                      Select a category
+                    </option>
+                    {blogCategories.map((category) => (
+                      <option
+                        key={category.blog_category_id}
+                        value={category.blog_category_id}
+                      >
+                        {category.blog_category_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="w-full flex justify-start gap-4">
+                <button
+                  type="submit"
+                  className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-600"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </AdminLayout>

@@ -52,7 +52,8 @@ router.put('/status/:id',adminController.updateStatus);
 //   adminController.addBlog
 // );
 
-router.post('/addblog',upload.fields([{ name: "blogImage" }]), verifyToken, adminController.addBlog
-);
+router.post('/addblog',upload.fields([{ name: "blogImage" }]), verifyToken, adminController.addBlog);
+router.get('/get-blog/:id', adminController.getBlog);
+router.post('/update-blog/:id', upload.fields([{ name: "blogImage" }]), adminController.updateBlog);
 
 module.exports = router;

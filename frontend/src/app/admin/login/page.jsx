@@ -107,7 +107,7 @@ const adminLogin = () => {
                       placeholder="Enter your email address"
                       value={formik.values.email}
                       onChange={formik.handleChange}
-                      className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-2 ring-inset ring-gray-800 placeholder:text-gray-400 focus:ring-2  focus:ring-inset focus:ring-quaternary sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-2 ring-inset ring-gray-800 placeholder:text-gray-400 focus:ring-2  focus:ring-inset focus:ring-quaternary sm:text-sm sm:leading-6"
                     />
                     {formik.touched.email && formik.errors.email ? (
                       <div className="text-red-500 text-xs">
@@ -144,7 +144,7 @@ const adminLogin = () => {
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       required
-                      className="block w-full mb-2 rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-2 ring-inset ring-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-quaternary sm:text-sm sm:leading-6"
+                      className="block w-full mb-2 rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-2 ring-inset ring-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-quaternary sm:text-sm sm:leading-6"
                     />
                     {formik.touched.password && formik.errors.password ? (
                       <div className="text-red-500 text-xs">
@@ -152,12 +152,12 @@ const adminLogin = () => {
                       </div>
                     ) : null}
 
-                    <label className=" text-sm text-spaceblack/70 hover:text-black font-medium">
+                    <label className="flex items-center text-sm text-spaceblack/70 hover:text-black font-medium">
                       <input
                         type="checkbox"
                         checked={showPassword}
                         onChange={handleCheckboxChange}
-                        className="mr-2  text-spaceblack  "
+                        className="mr-1  text-spaceblack  "
                       />
                       Show Password
                     </label>

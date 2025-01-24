@@ -150,14 +150,12 @@ const updateStatus = async (req, res) => {
 const addBlog = async(req, res) => {
   try {
     const { blogTitle, blogDescription, blogCategory } = req.body;
-    console.log(req.body);
-    // Save image
-    // const blogImage = req.files?.blogImage?.[0]?.path
-    //   ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
-    //   : null;
+
+    // Save image   
     const blogImage = req.files?.blogImage?.[0]?.path
     ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
     : null;
+
         // Insert data into blogs table
     const query = `
       INSERT INTO blogs (blogTitle, blogDescription, blogImage, blogCategory)
@@ -177,8 +175,39 @@ const addBlog = async(req, res) => {
   }
 };
 
+const getBlog = async (req, res) => {
+  const blogId  = req.params.id;
+
+  const [rows] = await db.query("SELECT blogs.*, blog_category.blog_category_name AS blogCategory FROM blogs  LEFT JOIN blog_category ON blogs.blogCategory = blog_category.blog_category_id  WHERE blogId = ?", [blogId]);
+//  console.log("rows", rows) 
+  if (rows.length) {
+    res.json(rows[0]);
+  } else {
+    res.status(404).json({ error: "Blog not found" });
+  }
+};
+
+const updateBlog = async (req, res) => {
+  const blogId = req.params.id;
+  const { blogTitle, blogDescription, blogCategory } = req.body;
+
+  const blogImage = req.files?.blogImage?.[0]?.path
+  ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
+  : null;
+  
+  await db.query(
+    "UPDATE blogs SET blogTitle = ?, blogDescription = ?, blogCategory = ?, blogImage = ? WHERE blogId = ?",
+    [blogTitle, blogDescription, blogCategory, blogImage, blogId]
+  );
+
+  res.json({ success: "Blog updated successfully" });
+};
+
+
 module.exports = {
   getBlogs,
   updateStatus,
   addBlog,
+  getBlog,
+  updateBlog,
 };
