@@ -200,7 +200,7 @@ const Blog = () => {
           }
         );
         toast.success("Blog submitted successfully!");
-        // userForm.resetForm();         
+        // userForm.resetForm();
 
         // Reload the page after a short delay
         setTimeout(() => {
@@ -342,6 +342,20 @@ const Blog = () => {
     });
   };
 
+  //Data comes from editor
+  const extractTextFromHTML = (html) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || doc.body.innerText || "";
+  };
+  
+  const truncatedDescription = (html) => {
+    const plainText = extractTextFromHTML(html);
+    return plainText
+      .split(" ") // Split the text into words
+      .slice(0, 10) // Slice the first 20 words
+      .join(" ") + (plainText.split(" ").length > 10 ? "..." : "");
+  };
+
   return (
     <AdminLayout>
       <div className="">
@@ -411,10 +425,11 @@ const Blog = () => {
                   {/* <th>Id</th> */}
                   <th>Image</th>
                   <th>Title</th>
+                  <th>Description</th>
                   <th>Category</th>
                   <th>Keywords</th>
                   <th>Created At</th>
-                  <th>Updated At</th>
+                  {/* <th>Updated At</th> */}
                   <th>Sort By</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -445,12 +460,15 @@ const Blog = () => {
                           )}
                         </Zoom>
                       </td>
-
                       <td
                         className="cursor-pointer hover:text-blue-500"
                         onClick={() => fetchUser(item.blogTitle)}
                       >
                         {item.blogTitle}
+                      </td>
+                      <td>
+                      {/* <div dangerouslySetInnerHTML={{ __html: item.blogDescription }} /> */}
+                       <div dangerouslySetInnerHTML={{ __html: truncatedDescription(item.blogDescription) }} />
                       </td>
                       <td>{item.blogCategory}</td>
                       {/* <td>{user.userPassword}</td> */}
@@ -464,7 +482,7 @@ const Blog = () => {
                             )
                           : "N/A"}
                       </td>
-                      <td>
+                      {/* <td>
                         {item.blogUpdatedTime
                           ? format(
                               new Date(item.blogUpdatedTime * 1000),
@@ -472,8 +490,7 @@ const Blog = () => {
                               { timeZone: "Asia/Kolkata" }
                             )
                           : "N/A"}
-                      </td>
-
+                      </td> */}
                       <td>
                         {editSortBy == item.blogId ? (
                           <div
@@ -508,7 +525,6 @@ const Blog = () => {
                           </button>
                         )}
                       </td>
-
                       <td>
                         <label className="inline-flex items-center cursor-pointer">
                           <input
