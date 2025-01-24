@@ -147,22 +147,28 @@ const updateStatus = async (req, res) => {
 
 const addBlog = async (req, res) => {
   try {
-    const { blogTitle, blogDescription, blogCategory } = req.body;
+    const { blogTitle, blogContent, blogDescription, blogImgAlt, blogCategory } = req.body;
 
     // Save image
     const blogImage = req.files?.blogImage?.[0]?.path
       ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
       : null;
+      const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
+      ? `/uploads/blogImage/${req.files.blogImageMobile[0].filename}`
+      : null;
 
     // Insert data into blogs table
     const query = `
-      INSERT INTO blogs (blogTitle, blogDescription, blogImage, blogCategory)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO blogs (blogTitle, blogContent , blogDescription, blogImage, blogImageMobile, blogImgAlt, blogCategory)
+      VALUES (?,?,?,?,?,?,?)
     `;
     const [result] = await db.execute(query, [
       blogTitle,
+      blogContent,
       blogDescription,
       blogImage,
+      blogImageMobile,
+      blogImgAlt,
       blogCategory,
     ]);
 

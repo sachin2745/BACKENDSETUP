@@ -148,9 +148,11 @@ const Blog = () => {
       .catch((err) => toast.error("Error updating Sort By:", err));
   };
 
+  //Add blog
   const [previewImage, setPreviewImage] = useState(null);
+  const [previewMobileImage, setPreviewMobileImage] = useState(null);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e, type) => {
     const file = e.target.files[0];
 
     if (file && file.size > 2 * 1024 * 1024) {
@@ -158,17 +160,25 @@ const Blog = () => {
       return;
     }
 
-    // Set the preview image
+    // Set the preview image based on the type (desktop or mobile)
     const imageUrl = URL.createObjectURL(file);
-    setPreviewImage(imageUrl);
-    formik.setFieldValue("blogImage", file);
+    if (type === "desktop") {
+      setPreviewImage(imageUrl);
+      formik.setFieldValue("blogImage", file);
+    } else if (type === "mobile") {
+      setPreviewMobileImage(imageUrl);
+      formik.setFieldValue("blogImageMobile", file);
+    }
   };
 
   const formik = useFormik({
     initialValues: {
       blogTitle: "",
+      blogContent: "",
       blogDescription: "",
       blogImage: null,
+      blogImageMobile: null,
+      blogImgAlt: "",
       blogCategory: "",
     },
     validationSchema: Yup.object({
@@ -178,14 +188,20 @@ const Blog = () => {
       blogDescription: Yup.string()
         .min(20, "Description must be at least 20 characters")
         .required("Description is required"),
+      blogContent: Yup.string().required("Content is required"),
       blogImage: Yup.mixed().required("Blog image is required"),
+      blogImageMobile: Yup.mixed().required("Blog image is required"),
+      blogImgAlt: Yup.string().required("Please enter a image alt text"),
       blogCategory: Yup.string().required("Please select a category"),
     }),
     onSubmit: async (values) => {
       const formData = new FormData();
       formData.append("blogTitle", values.blogTitle);
       formData.append("blogDescription", values.blogDescription);
+      formData.append("blogContent", values.blogContent);
       formData.append("blogImage", values.blogImage);
+      formData.append("blogImageMobile", values.blogImageMobile);
+      formData.append("blogImgAlt", values.blogImgAlt);
       formData.append("blogCategory", values.blogCategory);
 
       try {
@@ -213,7 +229,7 @@ const Blog = () => {
     },
   });
 
-  const editorDescription = useRef(null);
+  // const editorDescription = useRef(null);
   const editorContent = useRef(null);
 
   /* The most important point*/
@@ -226,6 +242,8 @@ const Blog = () => {
     }),
     []
   );
+
+  // Edit Blog
   const [formData, setFormData] = useState({
     blogId: "",
     blogTitle: "",
@@ -347,13 +365,15 @@ const Blog = () => {
     const doc = new DOMParser().parseFromString(html, "text/html");
     return doc.body.textContent || doc.body.innerText || "";
   };
-  
+
   const truncatedDescription = (html) => {
     const plainText = extractTextFromHTML(html);
-    return plainText
-      .split(" ") // Split the text into words
-      .slice(0, 10) // Slice the first 20 words
-      .join(" ") + (plainText.split(" ").length > 10 ? "..." : "");
+    return (
+      plainText
+        .split(" ") // Split the text into words
+        .slice(0, 10) // Slice the first 20 words
+        .join(" ") + (plainText.split(" ").length > 10 ? "..." : "")
+    );
   };
 
   return (
@@ -425,7 +445,7 @@ const Blog = () => {
                   {/* <th>Id</th> */}
                   <th>Image</th>
                   <th>Title</th>
-                  <th>Description</th>
+                  <th>Content</th>
                   <th>Category</th>
                   <th>Keywords</th>
                   <th>Created At</th>
@@ -467,8 +487,12 @@ const Blog = () => {
                         {item.blogTitle}
                       </td>
                       <td>
-                      {/* <div dangerouslySetInnerHTML={{ __html: item.blogDescription }} /> */}
-                       <div dangerouslySetInnerHTML={{ __html: truncatedDescription(item.blogDescription) }} />
+                        {/* <div dangerouslySetInnerHTML={{ __html: item.blogDescription }} /> */}
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: truncatedDescription(item.blogContent),
+                          }}
+                        />
                       </td>
                       <td>{item.blogCategory}</td>
                       {/* <td>{user.userPassword}</td> */}
@@ -618,6 +642,7 @@ const Blog = () => {
                     id="blogTitle"
                     name="blogTitle"
                     type="text"
+                    placeholder="Enter blog title"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.blogTitle}
@@ -640,18 +665,14 @@ const Blog = () => {
                   Blog Description:
                 </label>
                 <div className="w-[80%]">
-                  <JoditEditor
-                    ref={editorDescription}
-                    config={config}
+                  <textarea
                     id="blogDescription"
                     name="blogDescription"
-                    onChange={(newContent) => {
-                      formik.setFieldValue("blogDescription", newContent);
-                    }}
-                    onBlur={() => {
-                      formik.setFieldTouched("blogDescription", true);
-                    }}
+                    placeholder="Enter blog description"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     value={formik.values.blogDescription}
+                    className="w-full border border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogDescription &&
                     formik.errors.blogDescription && (
@@ -662,8 +683,39 @@ const Blog = () => {
                 </div>
               </div>
 
-              {/* Blog Image */}
+              {/* Blog Content */}
               <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blogContent"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Description:
+                </label>
+                <div className="w-[80%]">
+                  <JoditEditor
+                    ref={editorContent}
+                    config={config}
+                    id="blogContent"
+                    name="blogContent"
+                    placeholder="Enter blog description"
+                    onChange={(newContent) => {
+                      formik.setFieldValue("blogContent", newContent);
+                    }}
+                    onBlur={() => {
+                      formik.setFieldTouched("blogContent", true);
+                    }}
+                    value={formik.values.blogContent}
+                  />
+                  {formik.touched.blogContent && formik.errors.blogContent && (
+                    <p className="text-red-500 text-sm">
+                      {formik.errors.blogContent}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Blog Image */}
+              <div className="flex w-full items-center">
                 <label
                   htmlFor="blogImage"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
@@ -676,7 +728,7 @@ const Blog = () => {
                     name="blogImage"
                     type="file"
                     accept="image/*"
-                    onChange={handleImageChange}
+                    onChange={(e) => handleImageChange(e, "desktop")}
                     className="w-full border border-gray-300 p-2 rounded"
                   />
                   {formik.touched.blogImage && formik.errors.blogImage && (
@@ -694,6 +746,70 @@ const Blog = () => {
                         height="100"
                       />
                     </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Blog Image Mobile */}
+              <div className="flex w-full items-center">
+                <label
+                  htmlFor="blogImageMobile"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Image Mobile:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blogImageMobile"
+                    name="blogImageMobile"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageChange(e, "mobile")}
+                    className="w-full border border-gray-300 p-2 rounded"
+                  />
+                  {formik.touched.blogImageMobile &&
+                    formik.errors.blogImageMobile && (
+                      <p className="text-red-500 text-sm">
+                        {formik.errors.blogImageMobile}
+                      </p>
+                    )}
+                  {previewMobileImage && (
+                    <div className="flex justify-center my-3">
+                      <img
+                        src={previewMobileImage}
+                        alt="Preview"
+                        className="rounded shadow"
+                        width="100"
+                        height="100"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Blog Title */}
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blogImgAlt"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Blog Image Alt:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blogImgAlt"
+                    name="blogImgAlt"
+                    type="text"
+                    placeholder="Enter blog image alt"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.blogImgAlt}
+                    className="w-full border border-gray-300 p-2 rounded"
+                  />
+                  {formik.touched.blogImgAlt && formik.errors.blogImgAlt && (
+                    <p className="text-red-500 text-sm">
+                      {formik.errors.blogImgAlt}
+                    </p>
                   )}
                 </div>
               </div>
