@@ -20,6 +20,7 @@ import axios from "axios";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FaSortDown } from "react-icons/fa";
 import "./blog.css";
+import Swal from "sweetalert2";
 import useAppContext from "@/context/AppContext";
 // import $ from "jquery"; // Import jQuery
 // import "datatables.net"; // DataTables JS
@@ -41,6 +42,7 @@ const Blog = () => {
       const response = await axios.get(
         "http://localhost:8001/admin/blogs/getall"
       ); // Making GET request to the API endpoint
+      console.log(response.data);
       const data = response.data; // Extracting the data from the response
 
       // Setting the state with the fetched data
@@ -197,7 +199,13 @@ const Blog = () => {
             },
           }
         );
-        alert("Blog submitted successfully!");
+        toast.success("Blog submitted successfully!");
+        // userForm.resetForm();         
+
+        // Reload the page after a short delay
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000); // 2-second delay to let the notification show
       } catch (error) {
         console.error("Error submitting blog:", error);
         alert("Error submitting blog.");
@@ -275,17 +283,63 @@ const Blog = () => {
       data.append("blogDescription", formData.blogDescription);
       if (formData.blogImage) {
         data.append("blogImage", formData.blogImage);
-      }      data.append("blogCategory", formData.blogCategory);
+      }
+      data.append("blogCategory", formData.blogCategory);
 
-      await axios.post(`http://localhost:8001/admin/update-blog/${blogId}`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      alert("Blog updated successfully!");
+      await axios.post(
+        `http://localhost:8001/admin/update-blog/${blogId}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Blog updated successfully!");
+
+      // Reload the page after a short delay
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
-      console.error("Error updating blog:", error);
+      toast.error("Error updating blog:", error);
     }
+  };
+
+  const handleDelete = (blogId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this blog?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send request to update the user's status to 3
+        fetch(`http://localhost:8001/admin/status/${blogId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ blogStatus: 3 }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              toast.success("The blog has been deleted Successfully!.");
+              // Instead of reloading the page, just refresh data
+              fetchBlogs();
+            } else {
+              toast.error("Failed to delete the blog.");
+            }
+          })
+          .catch(() => {
+            toast.error("An error occurred while deleting the blog.");
+          });
+      }
+    });
   };
 
   return (
@@ -367,149 +421,157 @@ const Blog = () => {
                 </tr>
               </thead>
               <tbody>
-                {blogs.map((item) => (
-                  <tr key={item.blogId}>
-                    <td>{blogs.indexOf(item) + 1}</td>
-                    {/* <td>{user.userId}</td> */}
-                    <td>
-                      <Zoom>
-                        {item.blogImage ? (
-                          <img
-                            src={`http://localhost:8001${item.blogImage}`}
-                            alt={item.blogImgAlt || item.blogTitle} // Fallback to blog title if alt text is not provided
-                            className="h-10 w-10 object-cover" // Added object-cover for better image fitting
-                          />
-                        ) : (
-                          <p>No image available</p> // Fallback message if no image is present
-                        )}
-                      </Zoom>
-                    </td>
-
-                    <td
-                      className="cursor-pointer hover:text-blue-500"
-                      onClick={() => fetchUser(item.blogTitle)}
-                    >
-                      {item.blogTitle}
-                    </td>
-                    <td>{item.blogCategory}</td>
-                    {/* <td>{user.userPassword}</td> */}
-                    <td>{item.blogKeywords}</td>
-                    <td>
-                      {item.blogCreatedTime
-                        ? format(
-                            new Date(item.blogCreatedTime * 1000),
-                            "dd MMM yyyy hh:mm (EEE)",
-                            { timeZone: "Asia/Kolkata" }
-                          )
-                        : "N/A"}
-                    </td>
-                    <td>
-                      {item.blogUpdatedTime
-                        ? format(
-                            new Date(item.blogUpdatedTime * 1000),
-                            "dd MMM yyyy hh:mm (EEE)",
-                            { timeZone: "Asia/Kolkata" }
-                          )
-                        : "N/A"}
-                    </td>
-
-                    <td>
-                      {editSortBy == item.blogId ? (
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <input
-                            type="text"
-                            value={newSortBy}
-                            onChange={(e) => setNewSortBy(e.target.value)}
-                            maxLength="4"
-                            className="border rounded px-2 py-1 w-20"
-                          />
-                          <button
-                            onClick={() => handleSortBySubmit(item.blogId)}
-                            className="ml-2 bg-green-500 text-white px-3 py-2 rounded"
-                          >
-                            <FaCheck />
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() =>
-                            handleSortByEdit(item.blogId, item.blogSortBy)
-                          }
-                          className="text-white  bg-blue-500 px-3 py-1 rounded"
-                        >
-                          {item.blogSortBy}
-                        </button>
-                      )}
-                    </td>
-
-                    <td>
-                      <label className="inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={item.blogStatus == 0}
-                          onChange={() =>
-                            handleToggle(
-                              item.blogId,
-                              item.blogStatus,
-                              item.blogTitle
-                            )
-                          }
-                        />
-                        <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-500"></div>
-                      </label>
-                    </td>
-                    <td>
-                      <Menu
-                        as="div"
-                        className="relative inline-block text-left"
-                      >
-                        <div>
-                          <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                            Action
-                            <FaSortDown
-                              aria-hidden="true"
-                              className="-mr-1 -mt-1 size-5 text-gray-400"
-                            />
-                          </MenuButton>
-                        </div>
-
-                        <MenuItems
-                          transition
-                          className="absolute right-0 z-10 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                        >
-                          <div className="py-1">
-                            <MenuItem>
-                              <button
-                                onClick={() => fetchUserData(item.blogId)}
-                                className="block px-4 py-2 text-sm text-gray-700"
-                              >
-                                Edit
-                              </button>
-                            </MenuItem>
-                            <MenuItem>
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  handleDelete(item.blogId);
-                                }}
-                                className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
-                              >
-                                Delete
-                              </button>
-                            </MenuItem>
-                          </div>
-                        </MenuItems>
-                      </Menu>
+                {blogs.length === 0 ? (
+                  <tr>
+                    <td colSpan="10" className="text-center p-3 font-semibold">
+                      No available data
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  blogs.map((item, index) => (
+                    <tr key={item.blogId}>
+                      <td>{blogs.indexOf(item) + 1}</td>
+                      {/* <td>{user.userId}</td> */}
+                      <td>
+                        <Zoom>
+                          {item.blogImage ? (
+                            <img
+                              src={`http://localhost:8001${item.blogImage}`}
+                              alt={item.blogImgAlt || item.blogTitle} // Fallback to blog title if alt text is not provided
+                              className="h-10 w-10 object-cover" // Added object-cover for better image fitting
+                            />
+                          ) : (
+                            <p>No image available</p> // Fallback message if no image is present
+                          )}
+                        </Zoom>
+                      </td>
+
+                      <td
+                        className="cursor-pointer hover:text-blue-500"
+                        onClick={() => fetchUser(item.blogTitle)}
+                      >
+                        {item.blogTitle}
+                      </td>
+                      <td>{item.blogCategory}</td>
+                      {/* <td>{user.userPassword}</td> */}
+                      <td>{item.blogKeywords}</td>
+                      <td>
+                        {item.blogCreatedTime
+                          ? format(
+                              new Date(item.blogCreatedTime * 1000),
+                              "dd MMM yyyy hh:mm (EEE)",
+                              { timeZone: "Asia/Kolkata" }
+                            )
+                          : "N/A"}
+                      </td>
+                      <td>
+                        {item.blogUpdatedTime
+                          ? format(
+                              new Date(item.blogUpdatedTime * 1000),
+                              "dd MMM yyyy hh:mm (EEE)",
+                              { timeZone: "Asia/Kolkata" }
+                            )
+                          : "N/A"}
+                      </td>
+
+                      <td>
+                        {editSortBy == item.blogId ? (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <input
+                              type="text"
+                              value={newSortBy}
+                              onChange={(e) => setNewSortBy(e.target.value)}
+                              maxLength="4"
+                              className="border rounded px-2 py-1 w-20"
+                            />
+                            <button
+                              onClick={() => handleSortBySubmit(item.blogId)}
+                              className="ml-2 bg-green-500 text-white px-3 py-2 rounded"
+                            >
+                              <FaCheck />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() =>
+                              handleSortByEdit(item.blogId, item.blogSortBy)
+                            }
+                            className="text-white  bg-blue-500 px-3 py-1 rounded"
+                          >
+                            {item.blogSortBy}
+                          </button>
+                        )}
+                      </td>
+
+                      <td>
+                        <label className="inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="sr-only peer"
+                            checked={item.blogStatus == 0}
+                            onChange={() =>
+                              handleToggle(
+                                item.blogId,
+                                item.blogStatus,
+                                item.blogTitle
+                              )
+                            }
+                          />
+                          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-500"></div>
+                        </label>
+                      </td>
+                      <td>
+                        <Menu
+                          as="div"
+                          className="relative inline-block text-left"
+                        >
+                          <div>
+                            <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                              Action
+                              <FaSortDown
+                                aria-hidden="true"
+                                className="-mr-1 -mt-1 size-5 text-gray-400"
+                              />
+                            </MenuButton>
+                          </div>
+
+                          <MenuItems
+                            transition
+                            className="absolute right-0 z-10 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                          >
+                            <div className="py-1">
+                              <MenuItem>
+                                <button
+                                  onClick={() => fetchUserData(item.blogId)}
+                                  className="block px-4 py-2 text-sm text-gray-700"
+                                >
+                                  Edit
+                                </button>
+                              </MenuItem>
+                              <MenuItem>
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleDelete(item.blogId);
+                                  }}
+                                  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                                >
+                                  Delete
+                                </button>
+                              </MenuItem>
+                            </div>
+                          </MenuItems>
+                        </Menu>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

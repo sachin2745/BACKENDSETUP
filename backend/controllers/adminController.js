@@ -2,7 +2,6 @@ const db = require("../config/db");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-
 // Controller function to handle the blogs data fetching
 const getBlogs = async (req, res) => {
   // SQL query to fetch blogs with joined categories
@@ -15,9 +14,9 @@ const getBlogs = async (req, res) => {
       LEFT JOIN 
         blog_category 
       ON 
-        blogs.blogCategory = blog_category.blog_category_id
-      GROUP BY 
-        blogs.blogId 
+        blogs.blogCategory = blog_category.blog_category_id      
+      WHERE 
+        blogs.blogStatus != 3
       ORDER BY 
         blogs.blogSortby ASC
     `;
@@ -94,10 +93,9 @@ const updateStatus = async (req, res) => {
 //     blogSKU,
 //   } = req.body;
 
-
 //   const blogCreatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
 //   const  blogPostDate = Math.floor(Date.now() / 1000);
-  
+
 //   const blogImage = req.files?.blogImage?.[0]?.path
 //   ? `/uploads/blog/${req.files.blogImage[0].filename}`
 //   : null;
@@ -114,7 +112,7 @@ const updateStatus = async (req, res) => {
 
 //   try {
 //     await db.query(
-//       `INSERT INTO blogs (blogTitle, blogImage, blogImageMobile,  blogDescription, blogContent, blogImgAlt, blogImageName, blogImageTitle, blogCategory, blogKeywords, blogMetaTitle, blogForceKeywords, blogMetaDescription, blogMetaKeywords, blogPostDate, blogStatus, blogCreatedTime, blogSortBy, blogSchema, blogSKU) 
+//       `INSERT INTO blogs (blogTitle, blogImage, blogImageMobile,  blogDescription, blogContent, blogImgAlt, blogImageName, blogImageTitle, blogCategory, blogKeywords, blogMetaTitle, blogForceKeywords, blogMetaDescription, blogMetaKeywords, blogPostDate, blogStatus, blogCreatedTime, blogSortBy, blogSchema, blogSKU)
 //       VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)`,
 //       [
 //         blogTitle,
@@ -147,16 +145,16 @@ const updateStatus = async (req, res) => {
 //   }
 // };
 
-const addBlog = async(req, res) => {
+const addBlog = async (req, res) => {
   try {
     const { blogTitle, blogDescription, blogCategory } = req.body;
 
-    // Save image   
+    // Save image
     const blogImage = req.files?.blogImage?.[0]?.path
-    ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
-    : null;
+      ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
+      : null;
 
-        // Insert data into blogs table
+    // Insert data into blogs table
     const query = `
       INSERT INTO blogs (blogTitle, blogDescription, blogImage, blogCategory)
       VALUES (?, ?, ?, ?)
@@ -168,18 +166,23 @@ const addBlog = async(req, res) => {
       blogCategory,
     ]);
 
-    res.status(200).json({ message: 'Blog inserted successfully', blogId: result.insertId });
+    res
+      .status(200)
+      .json({ message: "Blog inserted successfully", blogId: result.insertId });
   } catch (error) {
-    console.error('Error inserting blog:', error);
-    res.status(500).json({ message: 'Error inserting blog' });
+    console.error("Error inserting blog:", error);
+    res.status(500).json({ message: "Error inserting blog" });
   }
 };
 
 const getBlog = async (req, res) => {
-  const blogId  = req.params.id;
+  const blogId = req.params.id;
 
-  const [rows] = await db.query("SELECT blogs.*, blog_category.blog_category_name AS blogCategory FROM blogs  LEFT JOIN blog_category ON blogs.blogCategory = blog_category.blog_category_id  WHERE blogId = ?", [blogId]);
-//  console.log("rows", rows) 
+  const [rows] = await db.query(
+    "SELECT blogs.*, blog_category.blog_category_name AS blogCategory FROM blogs  LEFT JOIN blog_category ON blogs.blogCategory = blog_category.blog_category_id  WHERE blogId = ?",
+    [blogId]
+  );
+  //  console.log("rows", rows)
   if (rows.length) {
     res.json(rows[0]);
   } else {
@@ -192,9 +195,9 @@ const updateBlog = async (req, res) => {
   const { blogTitle, blogDescription, blogCategory } = req.body;
 
   const blogImage = req.files?.blogImage?.[0]?.path
-  ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
-  : null;
-  
+    ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
+    : null;
+
   await db.query(
     "UPDATE blogs SET blogTitle = ?, blogDescription = ?, blogCategory = ?, blogImage = ? WHERE blogId = ?",
     [blogTitle, blogDescription, blogCategory, blogImage, blogId]
@@ -202,7 +205,6 @@ const updateBlog = async (req, res) => {
 
   res.json({ success: "Blog updated successfully" });
 };
-
 
 module.exports = {
   getBlogs,
