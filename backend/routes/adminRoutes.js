@@ -34,26 +34,9 @@ const upload = multer({
 //fetch all data of users
 router.get('/blogs/getall', adminController.getBlogs);
 router.put('/status/:id',adminController.updateStatus);
-// router.post(
-//   '/addblog',
-//   (req, res, next) => {
-//     upload.fields([{ name: "blogImage" }, { name: "blogImageMobile" }])(req, res, (err) => {
-//       if (err instanceof multer.MulterError) {
-//         console.error("Multer error:", err); // Debugging
-//         return res.status(400).json({ error: "Multer error: " + err.message });
-//       } else if (err) {
-//         console.error("File upload error:", err); // Debugging
-//         return res.status(500).json({ error: "File upload error: " + err.message });
-//       }
-//       next();
-//     });
-//   },
-//   verifyToken,
-//   adminController.addBlog
-// );
 
 router.post('/addblog',upload.fields([{ name: "blogImage" },{ name: "blogImageMobile" }]), verifyToken, adminController.addBlog);
 router.get('/get-blog/:id', adminController.getBlog);
-router.post('/update-blog/:id', upload.fields([{ name: "blogImage" }]), adminController.updateBlog);
+router.post('/update-blog/:id', upload.fields([{ name: "blogImage" },{ name: "blogImageMobile" }]), adminController.updateBlog);
 
 module.exports = router;

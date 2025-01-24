@@ -74,93 +74,42 @@ const updateStatus = async (req, res) => {
   }
 };
 
-// const addBlog = async (req, res) => {
-//   const {
-//     blogTitle,
-//     blogDescription,
-//     blogContent,
-//     blogImgAlt,
-//     blogImageName,
-//     blogImageTitle,
-//     blogCategory,
-//     blogKeywords,
-//     blogMetaTitle,
-//     blogForceKeywords,
-//     blogMetaDescription,
-//     blogMetaKeywords,
-//     blogStatus,
-//     blogSchema,
-//     blogSKU,
-//   } = req.body;
-
-//   const blogCreatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
-//   const  blogPostDate = Math.floor(Date.now() / 1000);
-
-//   const blogImage = req.files?.blogImage?.[0]?.path
-//   ? `/uploads/blog/${req.files.blogImage[0].filename}`
-//   : null;
-// const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
-//   ? `/uploads/blog/${req.files.blogImageMobile[0].filename}`
-//   : null;
-
-// console.log("Request body:", req.body);
-// console.log("Uploaded files:", req.files);
-
-//   const blogSortBy = await db
-//     .query("SELECT MAX(blogId) + 1 AS nextSort FROM blogs")
-//     .then(([rows]) => rows[0]?.nextSort || 1);
-
-//   try {
-//     await db.query(
-//       `INSERT INTO blogs (blogTitle, blogImage, blogImageMobile,  blogDescription, blogContent, blogImgAlt, blogImageName, blogImageTitle, blogCategory, blogKeywords, blogMetaTitle, blogForceKeywords, blogMetaDescription, blogMetaKeywords, blogPostDate, blogStatus, blogCreatedTime, blogSortBy, blogSchema, blogSKU)
-//       VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)`,
-//       [
-//         blogTitle,
-//         blogImage ,
-//         blogImageMobile ,
-//         blogDescription,
-//         blogContent,
-//         blogImgAlt,
-//         blogImageName,
-//         blogImageTitle,
-//         blogCategory,
-//         blogKeywords,
-//         blogMetaTitle,
-//         blogForceKeywords,
-//         blogMetaDescription,
-//         blogMetaKeywords,
-//         blogPostDate,
-//         blogStatus,
-//         blogCreatedTime,
-//         blogSortBy,
-//         blogSchema,
-//         blogSKU,
-//       ]
-//     );
-
-//     res.status(200).json({ message: "Blog added successfully" });
-//   } catch (error) {
-//     console.error("Error adding blog:", error.response ? error.response.data : error);
-//     res.status(500).json({ error: "An error occurred" });
-//   }
-// };
-
 const addBlog = async (req, res) => {
   try {
-    const { blogTitle, blogContent, blogDescription, blogImgAlt, blogCategory } = req.body;
+    const {
+      blogTitle,
+      blogContent,
+      blogDescription,
+      blogImgAlt,
+      blogCategory,
+      blogKeywords,
+      blogMetaTitle,
+      blogMetaDescription,
+      blogMetaKeywords,
+      blogForceKeywords,
+      blogSKU,
+      blogSchema,
+      blogStatus,
+    } = req.body;
 
     // Save image
     const blogImage = req.files?.blogImage?.[0]?.path
       ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
       : null;
       const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
-      ? `/uploads/blogImage/${req.files.blogImageMobile[0].filename}`
+      ? `/uploads/blogImageMobile/${req.files.blogImageMobile[0].filename}`
       : null;
+
+    const blogCreatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
+
+    const blogSortBy = await db
+      .query("SELECT MAX(blogId) + 1 AS nextSort FROM blogs")
+      .then(([rows]) => rows[0]?.nextSort || 1);
 
     // Insert data into blogs table
     const query = `
-      INSERT INTO blogs (blogTitle, blogContent , blogDescription, blogImage, blogImageMobile, blogImgAlt, blogCategory)
-      VALUES (?,?,?,?,?,?,?)
+      INSERT INTO blogs (blogTitle, blogContent , blogDescription, blogImage, blogImageMobile, blogImgAlt, blogCategory,blogKeywords, blogMetaTitle, blogMetaDescription, blogMetaKeywords, blogForceKeywords, blogSKU, blogSchema, blogStatus,blogSortBy,blogCreatedTime)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `;
     const [result] = await db.execute(query, [
       blogTitle,
@@ -170,6 +119,16 @@ const addBlog = async (req, res) => {
       blogImageMobile,
       blogImgAlt,
       blogCategory,
+      blogKeywords,
+      blogMetaTitle,
+      blogMetaDescription,
+      blogMetaKeywords,
+      blogForceKeywords,
+      blogSKU,
+      blogSchema,
+      blogStatus,
+      blogSortBy,
+      blogCreatedTime,
     ]);
 
     res
@@ -198,15 +157,50 @@ const getBlog = async (req, res) => {
 
 const updateBlog = async (req, res) => {
   const blogId = req.params.id;
-  const { blogTitle, blogDescription, blogCategory } = req.body;
+  const {
+    blogTitle,
+    blogContent,
+    blogDescription,
+    blogImgAlt,
+    blogCategory,
+    blogKeywords,
+    blogMetaTitle,
+    blogMetaDescription,
+    blogMetaKeywords,
+    blogForceKeywords,
+    blogSKU,
+    blogSchema,
+  } = req.body;
 
   const blogImage = req.files?.blogImage?.[0]?.path
     ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
     : null;
+    const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
+    ? `/uploads/blogImageMobile/${req.files.blogImageMobile[0].filename}`
+    : null;
+
+  const blogUpdatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
 
   await db.query(
-    "UPDATE blogs SET blogTitle = ?, blogDescription = ?, blogCategory = ?, blogImage = ? WHERE blogId = ?",
-    [blogTitle, blogDescription, blogCategory, blogImage, blogId]
+    "UPDATE blogs SET blogTitle = ?,blogContent = ?, blogDescription = ?,blogImgAlt =?, blogCategory = ?, blogImage = ?,blogImageMobile=?,blogKeywords=?,blogMetaTitle=?,blogMetaDescription=? ,blogMetaKeywords=?,blogForceKeywords=?,blogSKU=?,blogSchema=?,blogUpdatedTime=? WHERE blogId = ?",
+    [
+      blogTitle,
+      blogContent,
+      blogDescription,
+      blogImgAlt,
+      blogCategory,
+      blogImage,
+      blogImageMobile,
+      blogKeywords,
+      blogMetaTitle,
+      blogMetaDescription,
+      blogMetaKeywords,
+      blogForceKeywords,
+      blogSKU,
+      blogSchema,
+      blogUpdatedTime,
+      blogId
+    ]
   );
 
   res.json({ success: "Blog updated successfully" });
