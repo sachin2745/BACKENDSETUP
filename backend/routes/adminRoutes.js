@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../controllers/adminController');
 const verifyToken = require('./verifyToken');
 const app = express();
 const path = require("path");
 const multer = require('multer');
 const fs = require("fs");
+const adminController = require('../controllers/adminController');
+const blogCatController = require('../controllers/blogCatController');
 
 // Dynamic folder storage setup
 const storage = multer.diskStorage({
@@ -31,12 +32,14 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // Set file size limit to 5MB
 });
 
-//fetch all data of users
+//ROUTES FOR BLOG
 router.get('/blogs/getall', adminController.getBlogs);
 router.put('/status/:id',adminController.updateStatus);
-
 router.post('/addblog',upload.fields([{ name: "blogImage" },{ name: "blogImageMobile" }]), verifyToken, adminController.addBlog);
 router.get('/get-blog/:id', adminController.getBlog);
 router.post('/update-blog/:id', upload.fields([{ name: "blogImage" },{ name: "blogImageMobile" }]), adminController.updateBlog);
+
+//ROUTES FOR BLOG CATEGORY
+router.put('/blog-cat-status/:id', blogCatController.updateCatStatus);
 
 module.exports = router;
