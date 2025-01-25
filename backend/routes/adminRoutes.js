@@ -41,5 +41,8 @@ router.post('/update-blog/:id', upload.fields([{ name: "blogImage" },{ name: "bl
 
 //ROUTES FOR BLOG CATEGORY
 router.put('/blog-cat-status/:id', blogCatController.updateCatStatus);
+router.post('/add-blog-category',upload.none(), verifyToken, blogCatController.addBlogCategory);
+router.get('/get-blog-category/:id', blogCatController.getBlogCategory);
+router.post('/update-blog-category/:id',upload.none(), blogCatController.updateBlogCategory);
 
 module.exports = router;

@@ -26,6 +26,10 @@ const getBlogs = async (req, res) => {
         * 
       FROM 
         blog_category
+      WHERE
+        blog_category_status != 3
+      ORDER BY
+        blog_category_id DESC
     `;
 
   try {
@@ -96,7 +100,7 @@ const addBlog = async (req, res) => {
     const blogImage = req.files?.blogImage?.[0]?.path
       ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
       : null;
-      const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
+    const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
       ? `/uploads/blogImageMobile/${req.files.blogImageMobile[0].filename}`
       : null;
 
@@ -175,7 +179,7 @@ const updateBlog = async (req, res) => {
   const blogImage = req.files?.blogImage?.[0]?.path
     ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
     : null;
-    const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
+  const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
     ? `/uploads/blogImageMobile/${req.files.blogImageMobile[0].filename}`
     : null;
 
@@ -199,7 +203,7 @@ const updateBlog = async (req, res) => {
       blogSKU,
       blogSchema,
       blogUpdatedTime,
-      blogId
+      blogId,
     ]
   );
 

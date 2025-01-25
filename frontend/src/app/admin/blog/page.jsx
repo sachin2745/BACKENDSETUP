@@ -1569,7 +1569,7 @@ const Blog = () => {
                     type="submit"
                     className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-600"
                   >
-                    Submit
+                    Update
                   </button>
                 </div>
               </form>

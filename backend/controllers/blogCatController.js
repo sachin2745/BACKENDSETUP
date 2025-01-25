@@ -3,14 +3,15 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const updateCatStatus = async (req, res) => {
-  const blog_category_id  = req.params.id;
+  const blog_category_id = req.params.id;
   const { blog_category_status } = req.body;
 
   let query = "";
   const params = [];
 
   if (blog_category_status !== undefined) {
-    query = "UPDATE blog_category SET blog_category_status = ? WHERE blog_category_id = ?";
+    query =
+      "UPDATE blog_category SET blog_category_status = ? WHERE blog_category_id = ?";
     params.push(blog_category_status, blog_category_id);
   }
 
@@ -31,78 +32,53 @@ const updateCatStatus = async (req, res) => {
   }
 };
 
-const addBlog = async (req, res) => {
+const addBlogCategory = async (req, res) => {
   try {
     const {
-      blogTitle,
-      blogContent,
-      blogDescription,
-      blogImgAlt,
-      blogCategory,
-      blogKeywords,
-      blogMetaTitle,
-      blogMetaDescription,
-      blogMetaKeywords,
-      blogForceKeywords,
-      blogSKU,
-      blogSchema,
-      blogStatus,
+      blog_category_name,
+      blog_category_sku,
+      blog_category_meta_title,
+      blog_category_meta_desc,
+      blog_category_meta_keywords,
+      blog_category_status,
     } = req.body;
 
-    // Save image
-    const blogImage = req.files?.blogImage?.[0]?.path
-      ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
-      : null;
-      const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
-      ? `/uploads/blogImageMobile/${req.files.blogImageMobile[0].filename}`
-      : null;
 
-    const blogCreatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
-
-    const blogSortBy = await db
-      .query("SELECT MAX(blogId) + 1 AS nextSort FROM blogs")
-      .then(([rows]) => rows[0]?.nextSort || 1);
+    const blog_category_time = Math.floor(Date.now() / 1000); // Unix timestamp
 
     // Insert data into blogs table
     const query = `
-      INSERT INTO blogs (blogTitle, blogContent , blogDescription, blogImage, blogImageMobile, blogImgAlt, blogCategory,blogKeywords, blogMetaTitle, blogMetaDescription, blogMetaKeywords, blogForceKeywords, blogSKU, blogSchema, blogStatus,blogSortBy,blogCreatedTime)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      INSERT INTO blog_category (blog_category_name, blog_category_sku , blog_category_meta_title, blog_category_meta_desc, blog_category_meta_keywords, blog_category_status, blog_category_time)
+      VALUES (?,?,?,?,?,?,?)
     `;
+
+ 
     const [result] = await db.execute(query, [
-      blogTitle,
-      blogContent,
-      blogDescription,
-      blogImage,
-      blogImageMobile,
-      blogImgAlt,
-      blogCategory,
-      blogKeywords,
-      blogMetaTitle,
-      blogMetaDescription,
-      blogMetaKeywords,
-      blogForceKeywords,
-      blogSKU,
-      blogSchema,
-      blogStatus,
-      blogSortBy,
-      blogCreatedTime,
+      blog_category_name,
+      blog_category_sku,
+      blog_category_meta_title,
+      blog_category_meta_desc,
+      blog_category_meta_keywords,
+      blog_category_status,
+      blog_category_time,
     ]);
 
     res
       .status(200)
-      .json({ message: "Blog inserted successfully", blogId: result.insertId });
+      .json({ message: "Blog category inserted successfully" });
   } catch (error) {
-    console.error("Error inserting blog:", error);
+    console.error("Error inserting blog:", error.message); // Log the error message
+    console.error(error.stack); // Log the stack trace for more context
     res.status(500).json({ message: "Error inserting blog" });
   }
 };
 
-const getBlog = async (req, res) => {
-  const blogId = req.params.id;
+const getBlogCategory = async (req, res) => {
+  const blog_category_id  = req.params.id;
 
   const [rows] = await db.query(
-    "SELECT blogs.*, blog_category.blog_category_name AS blogCategory FROM blogs  LEFT JOIN blog_category ON blogs.blogCategory = blog_category.blog_category_id  WHERE blogId = ?",
-    [blogId]
+    "SELECT * FROM blog_category WHERE blog_category_id  = ?",
+    [blog_category_id ]
   );
   //  console.log("rows", rows)
   if (rows.length) {
@@ -112,60 +88,37 @@ const getBlog = async (req, res) => {
   }
 };
 
-const updateBlog = async (req, res) => {
-  const blogId = req.params.id;
+const updateBlogCategory = async (req, res) => {
+  const blog_category_id = req.params.id;
   const {
-    blogTitle,
-    blogContent,
-    blogDescription,
-    blogImgAlt,
-    blogCategory,
-    blogKeywords,
-    blogMetaTitle,
-    blogMetaDescription,
-    blogMetaKeywords,
-    blogForceKeywords,
-    blogSKU,
-    blogSchema,
+    blog_category_name,
+    blog_category_sku,
+    blog_category_meta_title,
+    blog_category_meta_desc,
+    blog_category_meta_keywords,
   } = req.body;
-
-  const blogImage = req.files?.blogImage?.[0]?.path
-    ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
-    : null;
-    const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
-    ? `/uploads/blogImageMobile/${req.files.blogImageMobile[0].filename}`
-    : null;
-
-  const blogUpdatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
+ 
+  const blog_category_time = Math.floor(Date.now() / 1000); // Unix timestamp
 
   await db.query(
-    "UPDATE blogs SET blogTitle = ?,blogContent = ?, blogDescription = ?,blogImgAlt =?, blogCategory = ?, blogImage = ?,blogImageMobile=?,blogKeywords=?,blogMetaTitle=?,blogMetaDescription=? ,blogMetaKeywords=?,blogForceKeywords=?,blogSKU=?,blogSchema=?,blogUpdatedTime=? WHERE blogId = ?",
+    "UPDATE blog_category SET blog_category_name = ?,blog_category_sku = ?, blog_category_meta_title = ?,blog_category_meta_desc =?, blog_category_meta_keywords = ?, blog_category_time = ? WHERE blog_category_id = ?",
     [
-      blogTitle,
-      blogContent,
-      blogDescription,
-      blogImgAlt,
-      blogCategory,
-      blogImage,
-      blogImageMobile,
-      blogKeywords,
-      blogMetaTitle,
-      blogMetaDescription,
-      blogMetaKeywords,
-      blogForceKeywords,
-      blogSKU,
-      blogSchema,
-      blogUpdatedTime,
-      blogId
+        blog_category_name,
+        blog_category_sku,
+        blog_category_meta_title,
+        blog_category_meta_desc,
+        blog_category_meta_keywords,
+        blog_category_time,
+        blog_category_id ,
     ]
   );
 
-  res.json({ success: "Blog updated successfully" });
+  res.json({ success: "Blog category updated successfully" });
 };
 
 module.exports = {
-    updateCatStatus,
-  addBlog,
-  getBlog,
-  updateBlog,
+  updateCatStatus,
+  addBlogCategory,
+  getBlogCategory,
+  updateBlogCategory,
 };

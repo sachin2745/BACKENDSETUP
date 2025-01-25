@@ -35,7 +35,7 @@ const blogCategory = () => {
       const response = await axios.get(
         "http://localhost:8001/admin/blogs/getall"
       ); // Making GET request to the API endpoint
-      console.log(response.data);
+      //   console.log(response.data);
       const data = response.data; // Extracting the data from the response
 
       // Setting the state with the fetched data
@@ -72,11 +72,15 @@ const blogCategory = () => {
   }, [blogs]);
 
   // Toggle user status
-  const handleToggle = (blog_category_id , currentStatus, blog_category_name) => {
+  const handleToggle = (
+    blog_category_id,
+    currentStatus,
+    blog_category_name
+  ) => {
     const newStatus = currentStatus == 0 ? 1 : 0; // Toggle between 0 (active) and 1 (inactive)
 
     // Update the status in the backend
-    fetch(`http://localhost:8001/admin/blog-cat-status/${blog_category_id }`, {
+    fetch(`http://localhost:8001/admin/blog-cat-status/${blog_category_id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -85,9 +89,11 @@ const blogCategory = () => {
     })
       .then((res) => {
         if (res.ok) {
-            setBlogCategories((prevData) =>
+          setBlogCategories((prevData) =>
             prevData.map((blogcat) =>
-                blogcat.blog_category_id  == blog_category_id  ? { ...blogcat, blog_category_status: newStatus } : blogcat
+              blogcat.blog_category_id == blog_category_id
+                ? { ...blogcat, blog_category_status: newStatus }
+                : blogcat
             )
           );
           const firstName = blog_category_name;
@@ -101,72 +107,31 @@ const blogCategory = () => {
     //  console.error('Error updating status:', err));
   };
 
- 
-
-  //Add blog
-  const [previewImage, setPreviewImage] = useState(null);
-  const [previewMobileImage, setPreviewMobileImage] = useState(null);
-
-  const handleImageChange = (e, type) => {
-    const file = e.target.files[0];
-
-    if (file && file.size > 2 * 1024 * 1024) {
-      alert("File size should not exceed 2MB");
-      return;
-    }
-
-    // Set the preview image based on the type (desktop or mobile)
-    const imageUrl = URL.createObjectURL(file);
-    if (type === "desktop") {
-      setPreviewImage(imageUrl);
-      formik.setFieldValue("blogImage", file);
-    } else if (type === "mobile") {
-      setPreviewMobileImage(imageUrl);
-      formik.setFieldValue("blogImageMobile", file);
-    }
-  };
-
+  //Add blog categrory
   const formik = useFormik({
     initialValues: {
-      blogTitle: "",
-      blogContent: "",
-      blogDescription: "",
-      blogImage: null,
-      blogImageMobile: null,
-      blogImgAlt: "",
-      blogCategory: "",
-      blogKeywords: "",
-      blogMetaTitle: "",
-      blogMetaDescription: "",
-      blogMetaKeywords: "",
-      blogForceKeywords: "",
-      blogSKU: "",
-      blogSchema: "",
-      blogStatus: 1,
+      blog_category_name: "",
+      blog_category_sku: "",
+      blog_category_meta_title: "",
+      blog_category_meta_desc: "",
+      blog_category_meta_keywords: "",
+      blog_category_status: 1,
     },
     validationSchema: Yup.object({
-      blogTitle: Yup.string()
-        .min(5, "Title must be at least 5 characters")
-        .required("Title is required"),
-      blogDescription: Yup.string()
-        .min(20, "Description must be at least 20 characters")
-        .required("Description is required"),
-      blogContent: Yup.string().required("Content is required"),
-      blogImage: Yup.mixed().required("Blog image is required"),
-      blogImageMobile: Yup.mixed().required("Blog image is required"),
-      blogImgAlt: Yup.string().required("Please enter a image alt text"),
-      blogCategory: Yup.string().required("Please select a category"),
-      blogKeywords: Yup.string().required("Keywords is required"),
-      blogMetaTitle: Yup.string().required("Meta title is required"),
-      blogMetaDescription: Yup.string().required(
-        "Meta description is required"
+      blog_category_name: Yup.string()
+        .min(5, "Name must be at least 5 characters")
+        .required("Name is required"),
+      blog_category_sku: Yup.string().required("Sku is required"),
+      blog_category_meta_title: Yup.string().required("Meta Title is required"),
+      blog_category_meta_desc: Yup.mixed().required(
+        "Meta Description is required"
       ),
-      blogMetaKeywords: Yup.string().required("Meta Keywords is required"),
-      blogForceKeywords: Yup.string().required("Force Keywords is required"),
-      blogSKU: Yup.string().required("Sku is required"),
-      blogSchema: Yup.string().required("Schema is required"),
+      blog_category_meta_keywords: Yup.mixed().required(
+        "Meta Keywords is required"
+      ),
     }),
     onSubmit: async (values) => {
+      console.log("Form submitted with values:", values);
       const sanitizeSlug = (sku) => {
         return sku
           .toLowerCase()
@@ -175,28 +140,28 @@ const blogCategory = () => {
           .replace(/ \\<.*?\\>/g, ""); // Remove any tags
       };
 
-      const sanitizedSKU = sanitizeSlug(values.blogSKU);
+      const sanitizedSKU = sanitizeSlug(values.blog_category_sku);
 
       const formData = new FormData();
-      formData.append("blogTitle", values.blogTitle);
-      formData.append("blogDescription", values.blogDescription);
-      formData.append("blogContent", values.blogContent);
-      formData.append("blogImage", values.blogImage);
-      formData.append("blogImageMobile", values.blogImageMobile);
-      formData.append("blogImgAlt", values.blogImgAlt);
-      formData.append("blogCategory", values.blogCategory);
-      formData.append("blogKeywords", values.blogKeywords);
-      formData.append("blogMetaTitle", values.blogMetaTitle);
-      formData.append("blogMetaDescription", values.blogMetaDescription);
-      formData.append("blogMetaKeywords", values.blogMetaKeywords);
-      formData.append("blogForceKeywords", values.blogForceKeywords);
-      formData.append("blogSKU", sanitizedSKU);
-      formData.append("blogSchema", values.blogSchema);
-      formData.append("blogStatus", values.blogStatus);
+      formData.append("blog_category_name", values.blog_category_name);
+      formData.append("blog_category_sku", sanitizedSKU);
+      formData.append("blog_category_status", values.blog_category_status);
+      formData.append(
+        "blog_category_meta_title",
+        values.blog_category_meta_title
+      );
+      formData.append(
+        "blog_category_meta_desc",
+        values.blog_category_meta_desc
+      );
+      formData.append(
+        "blog_category_meta_keywords",
+        values.blog_category_meta_keywords
+      );
 
       try {
         const response = await axios.post(
-          "http://localhost:8001/admin/addblog",
+          "http://localhost:8001/admin/add-blog-category",
           formData,
           {
             headers: {
@@ -205,127 +170,59 @@ const blogCategory = () => {
             },
           }
         );
-        toast.success("Blog submitted successfully!");
+        toast.success("Blog Category submitted successfully!");
         // userForm.resetForm();
-
+        formik.resetForm();
         // Reload the page after a short delay
         setTimeout(() => {
           window.location.reload();
         }, 2000); // 2-second delay to let the notification show
       } catch (error) {
         console.error("Error submitting blog:", error);
-        alert("Error submitting blog.");
+        const errorMessage =
+          error.response?.data?.message || "Error submitting blog.";
+        toast.error(errorMessage);
       }
     },
   });
 
-  // const editorDescription = useRef(null);
-  const editorContent = useRef(null);
-
-  /* The most important point*/
-  const config = useMemo(
-    () => ({
-      uploader: {
-        insertImageAsBase64URI: true,
-      },
-      readonly: false,
-    }),
-    []
-  );
-
   // Edit Blog
   const [formData, setFormData] = useState({
-    blogId: "",
-    blogTitle: "",
-    blogDescription: "",
-    blogContent: "",
-    blogImage: null,
-    blogImageMobile: null,
-    blogImgAlt: "",
-    blogCategory: "",
-    blogKeywords: "",
-    blogMetaTitle: "",
-    blogMetaDescription: "",
-    blogMetaKeywords: "",
-    blogForceKeywords: "",
-    blogSKU: "",
-    blogSchema: "",
+    blog_category_name: "",
+    blog_category_sku: "",
+    blog_category_meta_title: "",
+    blog_category_meta_desc: "",
+    blog_category_meta_keywords: "",
   });
-  const [previewEditImage, setPreviewEditImage] = useState(null);
-  const [previewMobileEditImage, setPreviewMobileEditImage] = useState(null);
   const [activeTab, setActiveTab] = useState(false);
 
-  const fetchBlogData = async (blogId) => {
+  const fetchBlogCatData = async (blog_category_id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8001/admin/get-blog/${blogId}`
+        `http://localhost:8001/admin/get-blog-category/${blog_category_id}`
       );
       const {
-        blogTitle,
-        blogDescription,
-        blogContent,
-        blogImage,
-        blogImageMobile,
-        blogImgAlt,
-        blogCategory,
-        blogKeywords,
-        blogMetaTitle,
-        blogMetaDescription,
-        blogMetaKeywords,
-        blogForceKeywords,
-        blogSKU,
-        blogSchema,
+        blog_category_name,
+        blog_category_sku,
+        blog_category_meta_title,
+        blog_category_meta_desc,
+        blog_category_meta_keywords,
       } = response.data;
 
       // console.log("response", response.data);
-      // Find the corresponding category ID
-      const category = blogCategories.find(
-        (cat) => cat.blog_category_name === blogCategory
-      );
-      const categoryId = category ? category.blog_category_id : "";
 
       setFormData({
-        blogId,
-        blogTitle,
-        blogDescription,
-        blogContent,
-        blogImage: blogImage ? `http://localhost:8001${blogImage}` : null,
-        blogImageMobile: blogImageMobile
-          ? `http://localhost:8001${blogImageMobile}`
-          : null,
-        blogImgAlt,
-        blogCategory: categoryId,
-        blogKeywords,
-        blogMetaTitle,
-        blogMetaDescription,
-        blogMetaKeywords,
-        blogForceKeywords,
-        blogSKU,
-        blogSchema,
+        blog_category_id,
+        blog_category_name,
+        blog_category_sku,
+        blog_category_meta_title,
+        blog_category_meta_desc,
+        blog_category_meta_keywords,
       });
 
-      // Ensure full URL for both images
-      setPreviewEditImage(
-        blogImage ? `http://localhost:8001${blogImage}` : null
-      );
-      setPreviewMobileEditImage(
-        blogImageMobile ? `http://localhost:8001${blogImageMobile}` : null
-      );
       setActiveTab(true);
     } catch (error) {
-      console.error("Error fetching blog data:", error);
-    }
-  };
-
-  const handleEditImageChange = (e, type) => {
-    const file = e.target.files[0];
-
-    if (type === "blogImage") {
-      setFormData({ ...formData, blogImage: file });
-      setPreviewEditImage(URL.createObjectURL(file));
-    } else if (type === "blogImageMobile") {
-      setFormData({ ...formData, blogImageMobile: file });
-      setPreviewMobileEditImage(URL.createObjectURL(file));
+      console.error("Error fetching blog category data:", error);
     }
   };
 
@@ -334,7 +231,7 @@ const blogCategory = () => {
     try {
       const data = new FormData();
       // console.log("formData", formData);
-      const blogId = formData.blogId;
+      const blog_category_id = formData.blog_category_id;
 
       const sanitizeSlug = (sku) => {
         return sku
@@ -344,34 +241,22 @@ const blogCategory = () => {
           .replace(/ \\<.*?\\>/g, ""); // Remove any tags
       };
 
-      const sanitizedSKU = sanitizeSlug(formData.blogSKU);
+      const sanitizedSKU = sanitizeSlug(formData.blog_category_sku);
 
-      data.append("blogTitle", formData.blogTitle);
-      data.append("blogDescription", formData.blogDescription);
-      data.append("blogContent", formData.blogContent);
-      if (formData.blogImage) {
-        data.append("blogImage", formData.blogImage);
-      } else {
-        data.append("blogImageURL", previewEditImage); // Send existing URL
-      }
-
-      if (formData.blogImageMobile) {
-        data.append("blogImageMobile", formData.blogImageMobile);
-      } else {
-        data.append("blogImageMobileURL", previewMobileEditImage); // Send existing URL
-      }
-      data.append("blogImgAlt", formData.blogImgAlt);
-      data.append("blogCategory", formData.blogCategory);
-      data.append("blogKeywords", formData.blogKeywords);
-      data.append("blogMetaTitle", formData.blogMetaTitle);
-      data.append("blogMetaDescription", formData.blogMetaDescription);
-      data.append("blogMetaKeywords", formData.blogMetaKeywords);
-      data.append("blogForceKeywords", formData.blogForceKeywords);
-      data.append("blogSKU", sanitizedSKU);
-      data.append("blogSchema", formData.blogSchema);
+      data.append("blog_category_name", formData.blog_category_name);
+      data.append("blog_category_sku", sanitizedSKU);
+      data.append(
+        "blog_category_meta_title",
+        formData.blog_category_meta_title
+      );
+      data.append("blog_category_meta_desc", formData.blog_category_meta_desc);
+      data.append(
+        "blog_category_meta_keywords",
+        formData.blog_category_meta_keywords
+      );
 
       await axios.post(
-        `http://localhost:8001/admin/update-blog/${blogId}`,
+        `http://localhost:8001/admin/update-blog-category/${blog_category_id}`,
         data,
         {
           headers: {
@@ -379,7 +264,7 @@ const blogCategory = () => {
           },
         }
       );
-      toast.success("Blog updated successfully!");
+      toast.success("Blog category updated successfully!");
 
       // Reload the page after a short delay
       setTimeout(() => {
@@ -390,10 +275,10 @@ const blogCategory = () => {
     }
   };
 
-  const handleDelete = (blogId) => {
+  const handleCatDelete = (blog_category_id) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "Do you really want to delete this blog?",
+      text: "Do you really want to delete this blog category?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -403,30 +288,33 @@ const blogCategory = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         // Send request to update the user's status to 3
-        fetch(`http://localhost:8001/admin/status/${blogId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ blogStatus: 3 }),
-        })
+        fetch(
+          `http://localhost:8001/admin/blog-cat-status/${blog_category_id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ blog_category_status: 3 }),
+          }
+        )
           .then((response) => {
             if (response.ok) {
-              toast.success("The blog has been deleted Successfully!.");
+              toast.success(
+                "The blog category has been deleted Successfully!."
+              );
               // Instead of reloading the page, just refresh data
               fetchBlogs();
             } else {
-              toast.error("Failed to delete the blog.");
+              toast.error("Failed to delete the blog category.");
             }
           })
           .catch(() => {
-            toast.error("An error occurred while deleting the blog.");
+            toast.error("An error occurred while deleting the blog category.");
           });
       }
     });
   };
-
- 
 
   return (
     <AdminLayout>
@@ -499,7 +387,7 @@ const blogCategory = () => {
                   <th>Meta Title</th>
                   <th>Meta Description</th>
                   <th>Meta Keywords</th>
-                  <th>Time</th>                
+                  <th>Time</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -512,14 +400,12 @@ const blogCategory = () => {
                     </td>
                   </tr>
                 ) : (
-                    blogCategories.map((item, index) => (
-                    <tr key={item.blog_category_id }>
+                  blogCategories.map((item, index) => (
+                    <tr key={item.blog_category_id}>
                       <td>{blogCategories.indexOf(item) + 1}</td>
-                      <td>{item.blog_category_name}</td>                     
-                      <td>
-                        {item.blog_category_sku}
-                      </td>                     
+                      <td>{item.blog_category_name}</td>
                       <td>{item.blog_category_sku}</td>
+                      <td>{item.blog_category_meta_title}</td>
                       <td>{item.blog_category_meta_desc}</td>
                       <td>{item.blog_category_meta_keywords}</td>
                       <td>
@@ -540,7 +426,7 @@ const blogCategory = () => {
                             )
                           : "N/A"}
                       </td> */}
-                      
+
                       <td>
                         <label className="inline-flex items-center cursor-pointer">
                           <input
@@ -549,7 +435,7 @@ const blogCategory = () => {
                             checked={item.blog_category_status == 0}
                             onChange={() =>
                               handleToggle(
-                                item.blog_category_id ,
+                                item.blog_category_id,
                                 item.blog_category_status,
                                 item.blog_category_name
                               )
@@ -559,7 +445,6 @@ const blogCategory = () => {
                         </label>
                       </td>
                       <td>
-                        
                         <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
                           <button
                             id="hs-dropdown-hover-event"
@@ -594,7 +479,9 @@ const blogCategory = () => {
                           >
                             <div className="p-1 space-y-0.5">
                               <div
-                                onClick={() => fetchBlogCatData(item.blog_category_id )}
+                                onClick={() =>
+                                  fetchBlogCatData(item.blog_category_id)
+                                }
                                 className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100"
                                 href="#"
                               >
@@ -604,12 +491,11 @@ const blogCategory = () => {
                                 className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  handleCatDelete(item.blog_category_id );
+                                  handleCatDelete(item.blog_category_id);
                                 }}
                               >
                                 Delete
                               </div>
-                              
                             </div>
                           </div>
                         </div>
@@ -631,10 +517,167 @@ const blogCategory = () => {
         >
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">
-              Create Blog
+              Create Blog Category
             </h1>
+            <form
+              onSubmit={formik.handleSubmit}
+              autoComplete="off"
+              className="flex flex-wrap gap-6 text-sm"
+            >
+              {/* Blog Title */}
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blog_category_name"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Name:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blog_category_name"
+                    name="blog_category_name"
+                    type="text"
+                    placeholder="Enter Blog Category Name"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.blog_category_name}
+                    className="w-full border-2 border-gray-300 p-2 rounded "
+                  />
+                  {formik.touched.blog_category_name &&
+                    formik.errors.blog_category_name && (
+                      <p className="text-red-500 text-sm">
+                        {formik.errors.blog_category_name}
+                      </p>
+                    )}
+                </div>
+              </div>
+              {/* Blog SKU */}
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blog_category_sku"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  SKU:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blog_category_sku"
+                    name="blog_category_sku"
+                    type="text"
+                    placeholder="Enter Blog Category SKU"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.blog_category_sku}
+                    className="w-full border-2 border-gray-300 p-2 rounded"
+                  />
+                  {formik.touched.blog_category_sku &&
+                    formik.errors.blog_category_sku && (
+                      <p className="text-red-500 text-sm">
+                        {formik.errors.blog_category_sku}
+                      </p>
+                    )}
+                </div>
+              </div>
 
-            
+              {/* Blog Meta Title */}
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blog_category_meta_title"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Meta Title:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blog_category_meta_title"
+                    name="blog_category_meta_title"
+                    type="text"
+                    placeholder="Enter Blog Category Meta Title"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.blog_category_meta_title}
+                    className="w-full border-2 border-gray-300 p-2 rounded"
+                  />
+                  {formik.touched.blog_category_meta_title &&
+                    formik.errors.blog_category_meta_title && (
+                      <p className="text-red-500 text-sm">
+                        {formik.errors.blog_category_meta_title}
+                      </p>
+                    )}
+                </div>
+              </div>
+
+              {/* Blog Meta Description */}
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blog_category_meta_desc"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Meta Description:
+                </label>
+                <div className="w-[80%]">
+                  <textarea
+                    id="blog_category_meta_desc"
+                    name="blog_category_meta_desc"
+                    placeholder="Enter Blog Category Meta Description"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.blog_category_meta_desc}
+                    className="w-full border-2 border-gray-300 p-2 rounded"
+                  />
+                  {formik.touched.blog_category_meta_desc &&
+                    formik.errors.blog_category_meta_desc && (
+                      <p className="text-red-500 text-sm">
+                        {formik.errors.blog_category_meta_desc}
+                      </p>
+                    )}
+                </div>
+              </div>
+
+              {/* Blog Meta Keywords */}
+              <div className="flex w-full  items-center">
+                <label
+                  htmlFor="blog_category_meta_keywords"
+                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                >
+                  Meta Keywords:
+                </label>
+                <div className="w-[80%]">
+                  <input
+                    id="blog_category_meta_keywords"
+                    name="blog_category_meta_keywords"
+                    type="text"
+                    placeholder="Enter Blog Category Meta Keywords"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.blog_category_meta_keywords}
+                    className="w-full border-2 border-gray-300 p-2 rounded"
+                  />
+                  {formik.touched.blog_category_meta_keywords &&
+                    formik.errors.blog_category_meta_keywords && (
+                      <p className="text-red-500 text-sm">
+                        {formik.errors.blog_category_meta_keywords}
+                      </p>
+                    )}
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="w-full flex justify-start gap-4">
+                <a
+                  href=""
+                  className="bg-black text-white py-2 px-4 rounded transition"
+                >
+                  Cancel
+                </a>
+                <button
+                  type="submit"
+                  className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-600 transition"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 
@@ -645,10 +688,150 @@ const blogCategory = () => {
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-3"
         >
-          {" "}
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">Edit Blog</h1>
-            
+            {activeTab && (
+              <form
+                onSubmit={handleEditFormSubmit}
+                className="flex flex-wrap gap-6 text-sm"
+              >
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blog_category_name"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                     Name:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blog_category_name"
+                      name="blog_category_name"
+                      type="text"
+                      value={formData.blog_category_name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, blog_category_name: e.target.value })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blog_category_sku"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    SKU:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                    type="text"
+                      id="blog_category_sku"
+                      name="blog_category_sku"
+                      placeholder="Enter Blog Category Sku"
+                      value={formData.blog_category_sku}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blog_category_sku: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blog_category_meta_title"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                     Meta Title:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blog_category_meta_title"
+                      name="blog_category_meta_title"
+                      type="text"
+                      value={formData.blog_category_meta_title}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blog_category_meta_title: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blog_category_meta_desc"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                     Meta Description:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blog_category_meta_desc"
+                      name="blog_category_meta_desc"
+                      type="text"
+                      value={formData.blog_category_meta_desc}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blog_category_meta_desc: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blog_category_meta_keywords"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                     Meta Keywords:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blog_category_meta_keywords"
+                      name="blog_category_meta_keywords"
+                      type="text"
+                      value={formData.blog_category_meta_keywords}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blog_category_meta_keywords: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                
+
+                <div className="w-full flex justify-start gap-4">
+                  <a
+                    href=""
+                    className="bg-black text-white py-2 px-4 rounded hover:bg-black"
+                  >
+                    Cancel
+                  </a>
+                  <button
+                    type="submit"
+                    className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-600"
+                  >
+                    Update
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>
