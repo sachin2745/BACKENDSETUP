@@ -18,7 +18,7 @@ import { Formik, Form, input, ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { FaSortDown } from "react-icons/fa";
+import { MdKeyboardArrowDown } from "react-icons/md";
 import "./blog.css";
 import Swal from "sweetalert2";
 import useAppContext from "@/context/AppContext";
@@ -138,7 +138,7 @@ const Blog = () => {
           setEditSortBy(null); // Exit editing mode
           toast.success("Sort By updated successfully!");
           //reload page
-          window.location.reload();
+          // window.location.reload();
           // Instead of reloading the page, just refresh data
           fetchBlogs();
         } else {
@@ -335,7 +335,9 @@ const Blog = () => {
         blogDescription,
         blogContent,
         blogImage: blogImage ? `http://localhost:8001${blogImage}` : null,
-        blogImageMobile: blogImageMobile ? `http://localhost:8001${blogImageMobile}` : null,
+        blogImageMobile: blogImageMobile
+          ? `http://localhost:8001${blogImageMobile}`
+          : null,
         blogImgAlt,
         blogCategory: categoryId,
         blogKeywords,
@@ -347,12 +349,14 @@ const Blog = () => {
         blogSchema,
       });
 
-      
-
       // Ensure full URL for both images
-      setPreviewEditImage(blogImage ? `http://localhost:8001${blogImage}` : null);
-    setPreviewMobileEditImage(blogImageMobile ? `http://localhost:8001${blogImageMobile}` : null);
-    setActiveTab(true);
+      setPreviewEditImage(
+        blogImage ? `http://localhost:8001${blogImage}` : null
+      );
+      setPreviewMobileEditImage(
+        blogImageMobile ? `http://localhost:8001${blogImageMobile}` : null
+      );
+      setActiveTab(true);
     } catch (error) {
       console.error("Error fetching blog data:", error);
     }
@@ -395,7 +399,7 @@ const Blog = () => {
       } else {
         data.append("blogImageURL", previewEditImage); // Send existing URL
       }
-  
+
       if (formData.blogImageMobile) {
         data.append("blogImageMobile", formData.blogImageMobile);
       } else {
@@ -540,7 +544,7 @@ const Blog = () => {
         >
           <div className="bg-white border shadow-md rounded p-4">
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
-              Manage Blog
+              Manage Blogs
             </h3>
             <table
               id="example1"
@@ -654,7 +658,7 @@ const Blog = () => {
                             />
                             <button
                               onClick={() => handleSortBySubmit(item.blogId)}
-                              className="ml-2 bg-green-500 text-white px-3 py-2 rounded"
+                              className="ml-2 bg-emerald-300 text-black px-3 py-2 rounded"
                             >
                               <FaCheck />
                             </button>
@@ -664,7 +668,7 @@ const Blog = () => {
                             onClick={() =>
                               handleSortByEdit(item.blogId, item.blogSortBy)
                             }
-                            className="text-white  bg-blue-500 px-3 py-1 rounded"
+                            className="text-black font-bold bg-emerald-300 px-3 py-1 rounded"
                           >
                             {item.blogSortBy}
                           </button>
@@ -684,51 +688,64 @@ const Blog = () => {
                               )
                             }
                           />
-                          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-500"></div>
+                          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border-gray-600 peer-checked:bg-emerald-300"></div>
                         </label>
                       </td>
                       <td>
-                        <Menu
-                          as="div"
-                          className="relative inline-block text-left"
-                        >
-                          <div>
-                            <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                              Action
-                              <FaSortDown
-                                aria-hidden="true"
-                                className="-mr-1 -mt-1 size-5 text-gray-400"
-                              />
-                            </MenuButton>
-                          </div>
-
-                          <MenuItems
-                            transition
-                            className="absolute right-0 z-10 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                        
+                        <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
+                          <button
+                            id="hs-dropdown-hover-event"
+                            type="button"
+                            className="hs-dropdown-toggle py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                            aria-haspopup="menu"
+                            aria-expanded="false"
+                            aria-label="Dropdown"
                           >
-                            <div className="py-1">
-                              <MenuItem>
-                                <button
-                                  onClick={() => fetchBlogData(item.blogId)}
-                                  className="block px-4 py-2 text-sm text-gray-700"
-                                >
-                                  Edit
-                                </button>
-                              </MenuItem>
-                              <MenuItem>
-                                <button
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    handleDelete(item.blogId);
-                                  }}
-                                  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
-                                >
-                                  Delete
-                                </button>
-                              </MenuItem>
+                            Actions
+                            <svg
+                              className="hs-dropdown-open:rotate-180 size-4"
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="m6 9 6 6 6-6" />
+                            </svg>
+                          </button>
+
+                          <div
+                            className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 z-50 hidden min-w-24 bg-white shadow-md rounded-lg mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+                            role="menu"
+                            aria-orientation="vertical"
+                            aria-labelledby="hs-dropdown-hover-event"
+                          >
+                            <div className="p-1 space-y-0.5">
+                              <div
+                                onClick={() => fetchBlogData(item.blogId)}
+                                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100"
+                                href="#"
+                              >
+                                Edit
+                              </div>
+                              <div
+                                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleDelete(item.blogId);
+                                }}
+                              >
+                                Delete
+                              </div>
+                              
                             </div>
-                          </MenuItems>
-                        </Menu>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -737,6 +754,8 @@ const Blog = () => {
             </table>
           </div>
         </div>
+
+        {/* ADD FORM */}
         <div
           id="tabs-with-underline-2"
           className="hidden"
@@ -744,7 +763,9 @@ const Blog = () => {
           aria-labelledby="tabs-with-underline-item-2"
         >
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
-            <h1 className="text-lg font-bold mb-6 border-b pb-2">Create Blog</h1>
+            <h1 className="text-lg font-bold mb-6 border-b pb-2">
+              Create Blog
+            </h1>
 
             <form
               onSubmit={formik.handleSubmit}
@@ -945,7 +966,7 @@ const Blog = () => {
                   Blog Category:
                 </label>
                 <div className="w-[80%]">
-                  <select 
+                  <select
                     id="blogCategory"
                     name="blogCategory"
                     onChange={formik.handleChange}
@@ -1183,366 +1204,376 @@ const Blog = () => {
             </form>
           </div>
         </div>
+
+        {/* EDIT FORM */}
         <div
           id="tabs-with-underline-3"
           className={`${activeTab ? "" : "hidden"}`}
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-3"
-        > <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
+        >
+          {" "}
+          <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">Edit Blog</h1>
-          {activeTab && (
-            <form
-              onSubmit={handleEditFormSubmit}
-              className="flex flex-wrap gap-6 text-sm"
-            >
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogTitle"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Title:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogTitle"
-                    name="blogTitle"
-                    type="text"
-                    value={formData.blogTitle}
-                    onChange={(e) =>
-                      setFormData({ ...formData, blogTitle: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogDescription"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Description:
-                </label>
-                <div className="w-[80%]">
-                  <textarea
-                    id="blogDescription"
-                    name="blogDescription"
-                    placeholder="Enter Blog Description"
-                    value={formData.blogDescription}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        blogDescription: e.target.value,
-                      })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogContent"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Content:
-                </label>
-                <div className="w-[80%]">
-                  <JoditEditor
-                    value={formData.blogContent}
-                    onChange={(content) =>
-                      setFormData({ ...formData, blogContent: content })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogImage"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Image:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogImage"
-                    name="blogImage"
-                    type="file"
-                    accept="image/*"
-                    required
-                    onChange={(e) => handleEditImageChange(e, "blogImage")}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {previewEditImage && (
-                    <img
-                      src={previewEditImage}
-                      alt="Preview"
-                      width="100"
-                      className="mt-3 rounded shadow"
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogImageMobile"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Image Mobile:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogImageMobile"
-                    name="blogImageMobile"
-                    type="file"
-                    accept="image/*"
-                    required
-                    onChange={(e) =>
-                      handleEditImageChange(e, "blogImageMobile")
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {previewMobileEditImage && (
-                    <img
-                      src={previewMobileEditImage}
-                      alt="Mobile Preview"
-                      width="100"
-                      className="mt-3 rounded shadow"
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogImgAlt"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Image Alt:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogImgAlt"
-                    name="blogImgAlt"
-                    type="text"
-                    value={formData.blogImgAlt}
-                    required
-                    onChange={(e) =>
-                      setFormData({ ...formData, blogImgAlt: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogKeywords"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog keywords:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogKeywords"
-                    name="blogKeywords"
-                    type="text"
-                    value={formData.blogKeywords}
-                    onChange={(e) =>
-                      setFormData({ ...formData, blogKeywords: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogCategory"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Category:
-                </label>
-                <div className="w-[80%]">
-                  <select
-                    id="blogCategory"
-                    name="blogCategory"
-                    value={formData.blogCategory || ""}
-                    onChange={(e) =>
-                      setFormData({ ...formData, blogCategory: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
+            {activeTab && (
+              <form
+                onSubmit={handleEditFormSubmit}
+                className="flex flex-wrap gap-6 text-sm"
+              >
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogTitle"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                    <option value="" disabled>
-                      Select a category
-                    </option>
-                    {blogCategories.map((category) => (
-                      <option
-                        key={category.blog_category_id}
-                        value={category.blog_category_id}
-                      >
-                        {category.blog_category_name}
+                    Blog Title:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogTitle"
+                      name="blogTitle"
+                      type="text"
+                      value={formData.blogTitle}
+                      onChange={(e) =>
+                        setFormData({ ...formData, blogTitle: e.target.value })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogDescription"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Description:
+                  </label>
+                  <div className="w-[80%]">
+                    <textarea
+                      id="blogDescription"
+                      name="blogDescription"
+                      placeholder="Enter Blog Description"
+                      value={formData.blogDescription}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blogDescription: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogContent"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Content:
+                  </label>
+                  <div className="w-[80%]">
+                    <JoditEditor
+                      value={formData.blogContent}
+                      onChange={(content) =>
+                        setFormData({ ...formData, blogContent: content })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogImage"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Image:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogImage"
+                      name="blogImage"
+                      type="file"
+                      accept="image/*"
+                      required
+                      onChange={(e) => handleEditImageChange(e, "blogImage")}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {previewEditImage && (
+                      <img
+                        src={previewEditImage}
+                        alt="Preview"
+                        width="100"
+                        className="mt-3 rounded shadow"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogImageMobile"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Image Mobile:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogImageMobile"
+                      name="blogImageMobile"
+                      type="file"
+                      accept="image/*"
+                      required
+                      onChange={(e) =>
+                        handleEditImageChange(e, "blogImageMobile")
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {previewMobileEditImage && (
+                      <img
+                        src={previewMobileEditImage}
+                        alt="Mobile Preview"
+                        width="100"
+                        className="mt-3 rounded shadow"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogImgAlt"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Image Alt:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogImgAlt"
+                      name="blogImgAlt"
+                      type="text"
+                      value={formData.blogImgAlt}
+                      required
+                      onChange={(e) =>
+                        setFormData({ ...formData, blogImgAlt: e.target.value })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogKeywords"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog keywords:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogKeywords"
+                      name="blogKeywords"
+                      type="text"
+                      value={formData.blogKeywords}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blogKeywords: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogCategory"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Category:
+                  </label>
+                  <div className="w-[80%]">
+                    <select
+                      id="blogCategory"
+                      name="blogCategory"
+                      value={formData.blogCategory || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blogCategory: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    >
+                      <option value="" disabled>
+                        Select a category
                       </option>
-                    ))}
-                  </select>
+                      {blogCategories.map((category) => (
+                        <option
+                          key={category.blog_category_id}
+                          value={category.blog_category_id}
+                        >
+                          {category.blog_category_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogMetaTitle"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Meta Title:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogMetaTitle"
-                    name="blogMetaTitle"
-                    type="text"
-                    value={formData.blogMetaTitle}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        blogMetaTitle: e.target.value,
-                      })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogMetaTitle"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Meta Title:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogMetaTitle"
+                      name="blogMetaTitle"
+                      type="text"
+                      value={formData.blogMetaTitle}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blogMetaTitle: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogMetaDescription"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Meta Description:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogMetaDescription"
-                    name="blogMetaDescription"
-                    type="text"
-                    value={formData.blogMetaDescription}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        blogMetaDescription: e.target.value,
-                      })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogMetaDescription"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Meta Description:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogMetaDescription"
+                      name="blogMetaDescription"
+                      type="text"
+                      value={formData.blogMetaDescription}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blogMetaDescription: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogMetaKeywords"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Meta Keywords:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogMetaKeywords"
-                    name="blogMetaKeywords"
-                    type="text"
-                    value={formData.blogMetaKeywords}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        blogMetaKeywords: e.target.value,
-                      })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogMetaKeywords"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Meta Keywords:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogMetaKeywords"
+                      name="blogMetaKeywords"
+                      type="text"
+                      value={formData.blogMetaKeywords}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blogMetaKeywords: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogForceKeywords"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Force Keywords:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogForceKeywords"
-                    name="blogForceKeywords"
-                    type="text"
-                    value={formData.blogForceKeywords}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        blogForceKeywords: e.target.value,
-                      })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogForceKeywords"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Force Keywords:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogForceKeywords"
+                      name="blogForceKeywords"
+                      type="text"
+                      value={formData.blogForceKeywords}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          blogForceKeywords: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogSKU"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog SKU:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogSKU"
-                    name="blogSKU"
-                    type="text"
-                    value={formData.blogSKU}
-                    onChange={(e) =>
-                      setFormData({ ...formData, blogSKU: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogSKU"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog SKU:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="blogSKU"
+                      name="blogSKU"
+                      type="text"
+                      value={formData.blogSKU}
+                      onChange={(e) =>
+                        setFormData({ ...formData, blogSKU: e.target.value })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogSchema"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Schema:
-                </label>
-                <div className="w-[80%]">
-                  <textarea
-                    id="blogSchema"
-                    name="blogSchema"
-                    value={formData.blogSchema}
-                    onChange={(e) =>
-                      setFormData({ ...formData, blogSchema: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="blogSchema"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Blog Schema:
+                  </label>
+                  <div className="w-[80%]">
+                    <textarea
+                      id="blogSchema"
+                      name="blogSchema"
+                      value={formData.blogSchema}
+                      onChange={(e) =>
+                        setFormData({ ...formData, blogSchema: e.target.value })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="w-full flex justify-start gap-4">
-                <a
-                  href=""
-                  className="bg-black text-white py-2 px-4 rounded hover:bg-black"
-                >
-                  Cancel
-                </a>
-                <button
-                  type="submit"
-                  className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-600"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          )}
+                <div className="w-full flex justify-start gap-4">
+                  <a
+                    href=""
+                    className="bg-black text-white py-2 px-4 rounded hover:bg-black"
+                  >
+                    Cancel
+                  </a>
+                  <button
+                    type="submit"
+                    className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-600"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>
