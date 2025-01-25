@@ -169,133 +169,78 @@ const User = () => {
 
   //Add blog
   const [previewImage, setPreviewImage] = useState(null);
-  const [previewMobileImage, setPreviewMobileImage] = useState(null);
-
-  const handleImageChange = (e, type) => {
-    const file = e.target.files[0];
-
-    if (file && file.size > 2 * 1024 * 1024) {
-      alert("File size should not exceed 2MB");
-      return;
-    }
-
-    // Set the preview image based on the type (desktop or mobile)
-    const imageUrl = URL.createObjectURL(file);
-    if (type === "desktop") {
-      setPreviewImage(imageUrl);
-      formik.setFieldValue("blogImage", file);
-    } else if (type === "mobile") {
-      setPreviewMobileImage(imageUrl);
-      formik.setFieldValue("blogImageMobile", file);
-    }
-  };
-
-  const formik = useFormik({
+  const userForm = useFormik({
     initialValues: {
-      blogTitle: "",
-      blogContent: "",
-      blogDescription: "",
-      blogImage: null,
-      blogImageMobile: null,
-      blogImgAlt: "",
-      blogCategory: "",
-      blogKeywords: "",
-      blogMetaTitle: "",
-      blogMetaDescription: "",
-      blogMetaKeywords: "",
-      blogForceKeywords: "",
-      blogSKU: "",
-      blogSchema: "",
-      blogStatus: 1,
+      userName: "",
+      userEmail: "",
+      userPassword: "",
+      userMobile: "",
+      userPopular: 0,
+      userSortBy: 0,
+      userStatus: 0,
+      userImage: null,
     },
     validationSchema: Yup.object({
-      blogTitle: Yup.string()
-        .min(5, "Title must be at least 5 characters")
-        .required("Title is required"),
-      blogDescription: Yup.string()
-        .min(20, "Description must be at least 20 characters")
-        .required("Description is required"),
-      blogContent: Yup.string().required("Content is required"),
-      blogImage: Yup.mixed().required("Blog image is required"),
-      blogImageMobile: Yup.mixed().required("Blog image is required"),
-      blogImgAlt: Yup.string().required("Please enter a image alt text"),
-      blogCategory: Yup.string().required("Please select a category"),
-      blogKeywords: Yup.string().required("Keywords is required"),
-      blogMetaTitle: Yup.string().required("Meta title is required"),
-      blogMetaDescription: Yup.string().required(
-        "Meta description is required"
-      ),
-      blogMetaKeywords: Yup.string().required("Meta Keywords is required"),
-      blogForceKeywords: Yup.string().required("Force Keywords is required"),
-      blogSKU: Yup.string().required("Sku is required"),
-      blogSchema: Yup.string().required("Schema is required"),
+      userName: Yup.string()
+        .min(3, "Name must be at least 3 characters long")
+        .required("Name is required"),
+      userEmail: Yup.string()
+        .email("Invalid email format")
+        .required("Email is required"),
+      userPassword: Yup.string()
+        .min(6, "Password must be at least 6 characters long")
+        .required("Password is required"),
+      userMobile: Yup.string()
+        .matches(/^\d{10}$/, "Mobile must be 10 digits")
+        .required("Mobile is required"),
+      userImage: Yup.mixed().required("Image is required"),
+      userPopular: Yup.string().required("Please select a Popular"),      
+      userStatus: Yup.string().required("Please select a Status "),
     }),
     onSubmit: async (values) => {
-      const sanitizeSlug = (sku) => {
-        return sku
-          .toLowerCase()
-          .replace(/ /g, "-") // Replace spaces with dashes
-          .replace(/[\/|?%$,;:'"]/g, "") // Remove specific characters
-          .replace(/ \\<.*?\\>/g, ""); // Remove any tags
-      };
-
-      const sanitizedSKU = sanitizeSlug(values.blogSKU);
-
       const formData = new FormData();
-      formData.append("blogTitle", values.blogTitle);
-      formData.append("blogDescription", values.blogDescription);
-      formData.append("blogContent", values.blogContent);
-      formData.append("blogImage", values.blogImage);
-      formData.append("blogImageMobile", values.blogImageMobile);
-      formData.append("blogImgAlt", values.blogImgAlt);
-      formData.append("blogCategory", values.blogCategory);
-      formData.append("blogKeywords", values.blogKeywords);
-      formData.append("blogMetaTitle", values.blogMetaTitle);
-      formData.append("blogMetaDescription", values.blogMetaDescription);
-      formData.append("blogMetaKeywords", values.blogMetaKeywords);
-      formData.append("blogForceKeywords", values.blogForceKeywords);
-      formData.append("blogSKU", sanitizedSKU);
-      formData.append("blogSchema", values.blogSchema);
-      formData.append("blogStatus", values.blogStatus);
+      formData.append("userName", values.userName);
+      formData.append("userEmail", values.userEmail);
+      formData.append("userPassword", values.userPassword);
+      formData.append("userMobile", values.userMobile);
+      formData.append("userPopular", values.userPopular);
+      formData.append("userSortBy", values.userSortBy);
+      formData.append("userStatus", values.userStatus);
+      formData.append("userImage", values.userImage); // Append image
+      formData.append("userCreatedAt", Math.floor(Date.now() / 1000)); // Add current UNIX timestamp
+
 
       try {
-        const response = await axios.post(
-          "http://localhost:8001/admin/addblog",
-          formData,
-          {
+        const res = await axios.post('http://localhost:8001/users/add-user',formData, {
             headers: {
-              "Content-Type": "multipart/form-data",
-              "x-auth-token": currentUser.token,
-            },
-          }
-        );
-        toast.success("Blog submitted successfully!");
-        // userForm.resetForm();
+                "Content-Type": "multipart/form-data",
+              },
+        });
 
-        // Reload the page after a short delay
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000); // 2-second delay to let the notification show
+        if (res.status === 200 || res.status === 201) {
+          toast.success("User added successfully!");
+          // userForm.resetForm();        
+
+          // Reload the page after a short delay
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000); // 3-second delay to let the notification show
+        } else {
+          toast.error("Something went wrong. Please try again.");
+        }
       } catch (error) {
-        console.error("Error submitting blog:", error);
-        alert("Error submitting blog.");
+        console.error(error);
+        toast.error("An error occurred. Please try again.");
       }
     },
   });
-
-  // const editorDescription = useRef(null);
-  const editorContent = useRef(null);
-
-  /* The most important point*/
-  const config = useMemo(
-    () => ({
-      uploader: {
-        insertImageAsBase64URI: true,
-      },
-      readonly: false,
-    }),
-    []
-  );
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPreviewImage(URL.createObjectURL(file));
+      userForm.setFieldValue("userImage", file); // Set image in Formik
+    }
+  };
 
   // Edit Blog
   const [formData, setFormData] = useState({
@@ -778,63 +723,65 @@ const User = () => {
         >
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">
-              Create Blog
+              Add User
             </h1>
 
             <form
-              onSubmit={formik.handleSubmit}
+              onSubmit={userForm.handleSubmit}
               autoComplete="off"
               className="flex flex-wrap gap-6 text-sm"
             >
-              {/* Blog Title */}
+              {/* Name */}
               <div className="flex w-full  items-center">
                 <label
-                  htmlFor="blogTitle"
+                  htmlFor="userName"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  Blog Title:
+                  Name:
                 </label>
                 <div className="w-[80%]">
                   <input
-                    id="blogTitle"
-                    name="blogTitle"
+                    id="userName"
+                    name="userName"
                     type="text"
-                    placeholder="Enter Blog Title"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogTitle}
+                    placeholder="Enter Name"
+                    onChange={userForm.handleChange}
+                    onBlur={userForm.handleBlur}
+                    value={userForm.values.userName}
                     className="w-full border-2 border-gray-300 p-2 rounded "
                   />
-                  {formik.touched.blogTitle && formik.errors.blogTitle && (
+                  {userForm.touched.userName && userForm.errors.userName && (
                     <p className="text-red-500 text-sm">
-                      {formik.errors.blogTitle}
+                      {userForm.errors.userName}
                     </p>
                   )}
                 </div>
               </div>
 
-              {/* Blog Description */}
+              {/* Email */}
               <div className="flex w-full  items-center">
                 <label
-                  htmlFor="blogDescription"
+                  htmlFor="userEmail"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  Blog Description:
+                  Email:
                 </label>
                 <div className="w-[80%]">
-                  <textarea
-                    id="blogDescription"
-                    name="blogDescription"
-                    placeholder="Enter Blog Description"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogDescription}
+                  <input
+                  type="email"
+                    id="userEmail"
+                    name="userEmail"
+                    placeholder="Enter Email"
+                    onChange={userForm.handleChange}
+                    onBlur={userForm.handleBlur}
+                    value={userForm.values.userEmail}
+                    autoComplete="current-email"
                     className="w-full border-2 border-gray-300 p-2 rounded"
                   />
-                  {formik.touched.blogDescription &&
-                    formik.errors.blogDescription && (
+                  {userForm.touched.userEmail &&
+                    userForm.errors.userEmail && (
                       <p className="text-red-500 text-sm">
-                        {formik.errors.blogDescription}
+                        {userForm.errors.userEmail}
                       </p>
                     )}
                 </div>
@@ -842,26 +789,26 @@ const User = () => {
 
              
 
-              {/* Blog Image */}
+              {/*  Image */}
               <div className="flex w-full items-center">
                 <label
-                  htmlFor="blogImage"
+                  htmlFor="userImage"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  Blog Image:
+                   Image:
                 </label>
                 <div className="w-[80%]">
                   <input
-                    id="blogImage"
-                    name="blogImage"
+                    id="userImage"
+                    name="userImage"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => handleImageChange(e, "desktop")}
+                    onChange={handleImageChange}
                     className="w-full border-2 border-gray-300 p-2 rounded"
                   />
-                  {formik.touched.blogImage && formik.errors.blogImage && (
+                  {userForm.touched.userImage && userForm.errors.userImage && (
                     <p className="text-red-500 text-sm">
-                      {formik.errors.blogImage}
+                      {userForm.errors.userImage}
                     </p>
                   )}
                   {previewImage && (
@@ -878,65 +825,31 @@ const User = () => {
                 </div>
               </div>
 
-              {/* Blog Image Mobile */}
-              <div className="flex w-full items-center">
-                <label
-                  htmlFor="blogImageMobile"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Image Mobile:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogImageMobile"
-                    name="blogImageMobile"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageChange(e, "mobile")}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogImageMobile &&
-                    formik.errors.blogImageMobile && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blogImageMobile}
-                      </p>
-                    )}
-                  {previewMobileImage && (
-                    <div className="flex justify-center my-3">
-                      <img
-                        src={previewMobileImage}
-                        alt="Preview"
-                        className="rounded shadow"
-                        width="100"
-                        height="100"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
+             
 
-              {/* Blog Image Alt */}
+              {/* Password */}
               <div className="flex w-full  items-center">
                 <label
-                  htmlFor="blogImgAlt"
+                  htmlFor="userPassword"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  Blog Image Alt:
+                  Password:
                 </label>
                 <div className="w-[80%]">
                   <input
-                    id="blogImgAlt"
-                    name="blogImgAlt"
-                    type="text"
-                    placeholder="Enter Blog Image Alt"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogImgAlt}
+                    id="userPassword"
+                    name="userPassword"
+                    type="password"
+                    placeholder="Enter Password"
+                    onChange={userForm.handleChange}
+                    onBlur={userForm.handleBlur}
+                    value={userForm.values.userPassword}
+                    autoComplete="current-password"
                     className="w-full border-2 border-gray-300 p-2 rounded"
                   />
-                  {formik.touched.blogImgAlt && formik.errors.blogImgAlt && (
+                  {userForm.touched.userPassword && userForm.errors.userPassword && (
                     <p className="text-red-500 text-sm">
-                      {formik.errors.blogImgAlt}
+                      {userForm.errors.userPassword}
                     </p>
                   )}
                 </div>
@@ -944,198 +857,94 @@ const User = () => {
 
              
 
-              {/* Blog Keywords */}
+              {/* Mobile */}
               <div className="flex w-full  items-center">
                 <label
-                  htmlFor="blogKeywords"
+                  htmlFor="userMobile"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  Blog Keywords:
+                  Mobile:
                 </label>
                 <div className="w-[80%]">
                   <input
-                    id="blogKeywords"
-                    name="blogKeywords"
-                    type="text"
-                    placeholder="Enter Blog Keywords"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogKeywords}
+                    id="userMobile"
+                    name="userMobile"
+                    type="tel"
+                    placeholder="Enter Mobile"
+                    maxLength={10}
+                    onChange={userForm.handleChange}
+                    onBlur={userForm.handleBlur}
+                    value={userForm.values.userMobile}
                     className="w-full border-2 border-gray-300 p-2 rounded"
                   />
-                  {formik.touched.blogKeywords &&
-                    formik.errors.blogKeywords && (
+                  {userForm.touched.userMobile &&
+                    userForm.errors.userMobile && (
                       <p className="text-red-500 text-sm">
-                        {formik.errors.blogKeywords}
+                        {userForm.errors.userMobile}
                       </p>
                     )}
                 </div>
               </div>
 
-              {/* Blog Meta Title */}
               <div className="flex w-full  items-center">
                 <label
-                  htmlFor="blogMetaTitle"
+                  htmlFor="userPopular"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  Blog Meta Title:
+                  Popular:
                 </label>
                 <div className="w-[80%]">
-                  <input
-                    id="blogMetaTitle"
-                    name="blogMetaTitle"
-                    type="text"
-                    placeholder="Enter Meta Title"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogMetaTitle}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogMetaTitle &&
-                    formik.errors.blogMetaTitle && (
+                  <select
+                    id="userPopular"
+                    name="userPopular"
+                    onChange={userForm.handleChange}
+                    onBlur={userForm.handleBlur}
+                    value={userForm.values.userPopular}
+                    className="w-full border-2 border-gray-300 p-2 rounded "
+                  >
+                    <option value="" disabled>Select Popular</option>
+                  <option value="1">No</option>
+                  <option value="0">Yes</option>
+                  </select>
+                  {userForm.touched.userPopular &&
+                    userForm.errors.userPopular && (
                       <p className="text-red-500 text-sm">
-                        {formik.errors.blogMetaTitle}
+                        {userForm.errors.userPopular}
                       </p>
                     )}
                 </div>
               </div>
 
-              {/* Blog Meta Description */}
               <div className="flex w-full  items-center">
                 <label
-                  htmlFor="blogMetaDescription"
+                  htmlFor="userStatus"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  Blog Meta Description:
+                  Status:
                 </label>
                 <div className="w-[80%]">
-                  <input
-                    id="blogMetaDescription"
-                    name="blogMetaDescription"
-                    type="text"
-                    placeholder="Enter Meta Description"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogMetaDescription}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogMetaDescription &&
-                    formik.errors.blogMetaDescription && (
+                  <select
+                    id="userStatus"
+                    name="userStatus"
+                    onChange={userForm.handleChange}
+                    onBlur={userForm.handleBlur}
+                    // value={userForm.values.userStatus}
+                    className="w-full border-2 border-gray-300 p-2 rounded "
+                  >
+                    <option value="" disabled>Select Status</option>
+                  <option value="0">Active</option>
+                  <option value="1">Inactive</option>
+                  </select>
+                  {userForm.touched.userStatus &&
+                    userForm.errors.userStatus && (
                       <p className="text-red-500 text-sm">
-                        {formik.errors.blogMetaDescription}
+                        {userForm.errors.userStatus}
                       </p>
                     )}
                 </div>
               </div>
 
-              {/* Blog Meta Keywords */}
-              <div className="flex w-full  items-center">
-                <label
-                  htmlFor="blogMetaKeywords"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Meta Keywords:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogMetaKeywords"
-                    name="blogMetaKeywords"
-                    type="text"
-                    placeholder="Enter Meta Keywords"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogMetaKeywords}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogMetaKeywords &&
-                    formik.errors.blogMetaKeywords && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blogMetaKeywords}
-                      </p>
-                    )}
-                </div>
-              </div>
-
-              {/* Blog Force Keywords */}
-              <div className="flex w-full  items-center">
-                <label
-                  htmlFor="blogForceKeywords"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Force Keywords:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogForceKeywords"
-                    name="blogForceKeywords"
-                    type="text"
-                    placeholder="Enter Force Keywords"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogForceKeywords}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogForceKeywords &&
-                    formik.errors.blogForceKeywords && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blogForceKeywords}
-                      </p>
-                    )}
-                </div>
-              </div>
-
-              {/* Blog SKU */}
-              <div className="flex w-full  items-center">
-                <label
-                  htmlFor="blogSKU"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog SKU:
-                </label>
-                <div className="w-[80%]">
-                  <input
-                    id="blogSKU"
-                    name="blogSKU"
-                    type="text"
-                    placeholder="Enter SKU"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogSKU}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogSKU && formik.errors.blogSKU && (
-                    <p className="text-red-500 text-sm">
-                      {formik.errors.blogSKU}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Blog Schema */}
-              <div className="flex w-full  items-center">
-                <label
-                  htmlFor="blogSchema"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Schema:
-                </label>
-                <div className="w-[80%]">
-                  <textarea
-                    id="blogSchema"
-                    name="blogSchema"
-                    placeholder="Enter Schema"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogSchema}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogSchema && formik.errors.blogSchema && (
-                    <p className="text-red-500 text-sm">
-                      {formik.errors.blogSchema}
-                    </p>
-                  )}
-                </div>
-              </div>
+             
 
               {/* Submit Button */}
               <div className="w-full flex justify-start gap-4">

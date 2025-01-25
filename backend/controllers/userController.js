@@ -98,9 +98,6 @@ const updateStatus = async (req, res) => {
   }
 };
 
-
-
-
 const updatePopular = async (req, res) => {
   const userId = req.params.id;
   const { userPopular } = req.body;
@@ -122,6 +119,58 @@ const updatePopular = async (req, res) => {
   }
 };
 
+const addUser = async (req, res) => {
+  const {
+    userName,
+    userEmail,
+    userPassword,
+    userMobile,
+    userPopular,
+    userStatus,
+    userCreatedAt,
+  } = req.body;
+
+  const userImage = req.files?.userImage?.[0]?.path
+  ? `/uploads/userImage/${req.files.userImage[0].filename}`
+  : null;
+
+  try {
+    // Step 1: Get the maximum userId and calculate userSortBy
+    const getMaxUserIdQuery = `SELECT MAX(userId) AS maxUserId FROM users`;
+    const [maxUserIdResult] = await db.execute(getMaxUserIdQuery);
+
+    const nextUserId = (maxUserIdResult[0].maxUserId || 0) + 1; // If no userId exists, start with 1
+    const userSortBy = nextUserId;
+
+    // Step 2: Insert the new user with the calculated userSortBy
+    const insertUserQuery = `
+      INSERT INTO users (userName, userImage, userEmail, userPassword, userMobile, userPopular, userSortBy, userStatus, userCreatedAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const [insertResult] = await db.execute(insertUserQuery, [
+      userName,
+      userImage,
+      userEmail,
+      userPassword,
+      userMobile,
+      userPopular,
+      userSortBy,
+      userStatus,
+      userCreatedAt,
+    ]);
+
+    res.status(201).send({
+      message: "User added successfully",
+      userId: insertResult.insertId,
+    });
+  } catch (err) {
+    console.error("Error adding user:", err);
+    res.status(500).send({
+      message: "Error adding user",
+      error: err.sqlMessage || err.message,
+    });
+  }
+};
 
 module.exports = {
   getUsers,
@@ -129,4 +178,5 @@ module.exports = {
   authorise,
   updateStatus,
   updatePopular,
+  addUser,
 };
