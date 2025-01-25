@@ -544,7 +544,7 @@ const Sidebar = ({ isCollapsed }) => {
                                     </div>
                                 </li>
                                 <li>
-                                    <Link
+                                    <a
                                         className={` ${pathname === '/admin/blog' ? 'bg-emerald-200' : ''} flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                                         href="/admin/blog"
                                     >
@@ -573,7 +573,7 @@ const Sidebar = ({ isCollapsed }) => {
                                         </svg>
                                         Blog
                                         
-                                    </Link>
+                                    </a>
                                 </li>
                                 <li>
                                     <a
@@ -600,8 +600,8 @@ const Sidebar = ({ isCollapsed }) => {
                                 </li>
                                 <li>
                                     <Link
-                                        className="flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold"
-                                        href="/admin/login"
+                                        className={`${pathname === '/admin/user' ? 'bg-emerald-200' : ''} flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                                        href="/admin/user"
                                     >
                                         <svg
                                             className="size-4"
@@ -618,7 +618,7 @@ const Sidebar = ({ isCollapsed }) => {
                                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                                         </svg>
-                                        Logout
+                                        User
                                     </Link>
                                 </li>
                             </ul>

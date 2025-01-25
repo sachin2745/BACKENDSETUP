@@ -65,8 +65,68 @@ const authorise = async (req, res) => {
   res.status(200).json({ allowed: true });
 };
 
+const updateStatus = async (req, res) => {
+  const userId = req.params.id;
+  const { userSortBy, userStatus } = req.body;
+
+  let query = "";
+  const params = [];
+
+  try {
+    // Build the query and parameters dynamically
+    if (userSortBy !== undefined) {
+      query = "UPDATE users SET userSortBy = ? WHERE userId = ?";
+      params.push(userSortBy, userId);
+    } else if (userStatus !== undefined) {
+      query = "UPDATE users SET userStatus = ? WHERE userId = ?";
+      params.push(userStatus, userId);
+    } else {
+      return res.status(400).send("No valid fields provided for update.");
+    }
+
+    // Execute the query
+    const [result] = await db.execute(query, params);
+
+    if (result.affectedRows === 0) {
+      res.status(404).send("User not found.");
+    } else {
+      res.status(200).send("User updated successfully.");
+    }
+  } catch (err) {
+    console.error("Error updating user:", err);
+    res.status(500).send("Error updating user.");
+  }
+};
+
+
+
+
+const updatePopular = async (req, res) => {
+  const userId = req.params.id;
+  const { userPopular } = req.body;
+
+  try {
+    const [result] = await db.execute(
+      "UPDATE users SET userPopular = ? WHERE userId = ?",
+      [userPopular, userId]
+    );
+
+    if (result.affectedRows > 0) {
+      res.status(200).send("User popularity status updated successfully.");
+    } else {
+      res.status(404).send("User not found.");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error updating user popularity status.");
+  }
+};
+
+
 module.exports = {
   getUsers,
   authenticateUsers,
   authorise,
+  updateStatus,
+  updatePopular,
 };
