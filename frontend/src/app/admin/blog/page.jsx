@@ -1295,7 +1295,6 @@ const Blog = () => {
                       name="blogImage"
                       type="file"
                       accept="image/*"
-                      required
                       onChange={(e) => handleEditImageChange(e, "blogImage")}
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
@@ -1322,8 +1321,7 @@ const Blog = () => {
                       id="blogImageMobile"
                       name="blogImageMobile"
                       type="file"
-                      accept="image/*"
-                      required
+                      accept="image/*"                      
                       onChange={(e) =>
                         handleEditImageChange(e, "blogImageMobile")
                       }

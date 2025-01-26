@@ -185,27 +185,40 @@ const updateBlog = async (req, res) => {
 
   const blogUpdatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
 
-  await db.query(
-    "UPDATE blogs SET blogTitle = ?,blogContent = ?, blogDescription = ?,blogImgAlt =?, blogCategory = ?, blogImage = ?,blogImageMobile=?,blogKeywords=?,blogMetaTitle=?,blogMetaDescription=? ,blogMetaKeywords=?,blogForceKeywords=?,blogSKU=?,blogSchema=?,blogUpdatedTime=? WHERE blogId = ?",
-    [
-      blogTitle,
-      blogContent,
-      blogDescription,
-      blogImgAlt,
-      blogCategory,
-      blogImage,
-      blogImageMobile,
-      blogKeywords,
-      blogMetaTitle,
-      blogMetaDescription,
-      blogMetaKeywords,
-      blogForceKeywords,
-      blogSKU,
-      blogSchema,
-      blogUpdatedTime,
-      blogId,
-    ]
-  );
+  let query =
+    "UPDATE blogs SET blogTitle = ?, blogContent = ?, blogDescription = ?, blogImgAlt = ?, blogCategory = ?, blogKeywords = ?, blogMetaTitle = ?, blogMetaDescription = ?, blogMetaKeywords = ?, blogForceKeywords = ?, blogSKU = ?, blogSchema = ?, blogUpdatedTime = ?";
+  const params = [
+    blogTitle,
+    blogContent,
+    blogDescription,
+    blogImgAlt,
+    blogCategory,
+    blogKeywords,
+    blogMetaTitle,
+    blogMetaDescription,
+    blogMetaKeywords,
+    blogForceKeywords,
+    blogSKU,
+    blogSchema,
+    blogUpdatedTime,
+  ];
+
+  // Update blogImage only if a new image is uploaded
+  if (blogImage) {
+    query += ", blogImage = ?";
+    params.push(blogImage);
+  }
+
+  // Update blogImageMobile only if a new image is uploaded
+  if (blogImageMobile) {
+    query += ", blogImageMobile = ?";
+    params.push(blogImageMobile);
+  }
+
+  query += " WHERE blogId = ?";
+  params.push(blogId);
+
+  await db.query(query, params);
 
   res.json({ success: "Blog updated successfully" });
 };
