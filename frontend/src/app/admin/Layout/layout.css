@@ -26,24 +26,25 @@ table {
   background: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: 400px;
+  width: 500px;
   position: relative;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .close-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 23px;
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 22px;
   cursor: pointer;
 }
 
 .close-button:hover {
   color: red;
 }
+
 div.dt-container select.dt-input {
   padding: 5px !important;
   padding-right: 18px !important;

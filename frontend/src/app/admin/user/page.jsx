@@ -400,6 +400,34 @@ const User = () => {
     });
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const fetchUser = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8001/users/get-user/${id}`
+      );
+      setUser(response.data);
+      setFormData({
+        userImage: response.data.userImage,
+        userName: response.data.userName,
+        userEmail: response.data.userEmail,
+        userMobile: response.data.userMobile,
+        userPassword: response.data.userPassword,
+        userPopular: response.data.userPopular,
+        userStatus: response.data.userStatus,
+      });
+      setIsModalOpen(true); // Open modal
+    } catch (error) {
+      toast.error("Error fetching user data:", error);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setActiveTab(false);
+    setUser(null);
+  };
+
   return (
     <AdminLayout>
       <div className="">
@@ -505,7 +533,7 @@ const User = () => {
 
                       <td
                         className="cursor-pointer hover:text-blue-500"
-                        onClick={() => fetchUser(item.userName)}
+                        onClick={() => fetchUser(item.userId)}
                       >
                         {item.userName}
                       </td>
@@ -942,11 +970,10 @@ const User = () => {
                       onChange={handleInputChange}
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
-                     {errors.userName && (
-                    <p className="text-red-500 text-sm">{errors.userName}</p>
-                  )}
+                    {errors.userName && (
+                      <p className="text-red-500 text-sm">{errors.userName}</p>
+                    )}
                   </div>
-                 
                 </div>
 
                 <div className="flex w-full items-center">
@@ -966,11 +993,10 @@ const User = () => {
                       onChange={handleInputChange}
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
-                     {errors.userEmail && (
-                    <p className="text-red-500 text-sm">{errors.userEmail}</p>
-                  )}
+                    {errors.userEmail && (
+                      <p className="text-red-500 text-sm">{errors.userEmail}</p>
+                    )}
                   </div>
-                 
                 </div>
 
                 <div className="flex w-full items-center">
@@ -985,7 +1011,7 @@ const User = () => {
                       id="userImage"
                       name="userImage"
                       type="file"
-                      accept="image/*"                      
+                      accept="image/*"
                       onChange={handleInputChange}
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
@@ -1019,12 +1045,11 @@ const User = () => {
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
                     {errors.userPassword && (
-                    <p className="text-red-500 text-sm">
-                      {errors.userPassword}
-                    </p>
-                  )}
+                      <p className="text-red-500 text-sm">
+                        {errors.userPassword}
+                      </p>
+                    )}
                   </div>
-                  
                 </div>
 
                 <div className="flex w-full items-center">
@@ -1044,10 +1069,11 @@ const User = () => {
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
                     {errors.userMobile && (
-                    <p className="text-red-500 text-sm">{errors.userMobile}</p>
-                  )}
+                      <p className="text-red-500 text-sm">
+                        {errors.userMobile}
+                      </p>
+                    )}
                   </div>
-                  
                 </div>
 
                 <div className="flex w-full  items-center">
@@ -1127,6 +1153,110 @@ const User = () => {
             )}
           </div>
         </div>
+
+        {/* Modal For View User */}
+        {isModalOpen && (
+          <div className="modal">
+            <div className="modal-content">
+              <button className="close-button" onClick={closeModal}>
+                &times;
+              </button>
+              <h2 className="text-2xl font-semibold text-quaternary mb-4 border-b pb-2">
+                User Details
+              </h2>
+              <form className="grid grid-cols-1 gap-4">
+                {/* Image */}
+                <div className="flex flex-col items-center">
+                  <img
+                    src={`http://localhost:8001${formData.userImage}`}
+                    alt={formData.userName}
+                    className="h-auto w-20 object-cover rounded-lg "
+                  />
+                </div>
+
+                {/* Name */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Name:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.userName}
+                    readOnly
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Email:
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.userEmail}
+                    readOnly
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+                
+
+                {/* Mobile */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Mobile:
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.userMobile}
+                    readOnly
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+
+
+                {/* Password */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Password:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.userPassword}
+                    readOnly
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+
+                {/* Popular */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Popular:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.userPopular == 0 ? "Yes" : "No"}
+                    readOnly
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+
+                {/* Status */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Status:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.userStatus == 0 ? "Active" : "Inactive"}
+                    readOnly
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </AdminLayout>
   );
