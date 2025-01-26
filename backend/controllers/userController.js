@@ -172,6 +172,69 @@ const addUser = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  const userId = req.params.id;
+  const query = "SELECT * FROM users WHERE userId = ?";
+
+  try {
+    const [rows] = await db.execute(query, [userId]); // Use execute for parameterized queries
+    if (rows.length === 0) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.send(rows[0]);
+  } catch (error) {
+    console.error("Database query error:", error);
+    res.status(500).send({ message: "An error occurred while fetching the user" });
+  }
+};
+
+
+const updateUser = async (req, res) => {
+  const userId = req.params.id;
+  const { userName, userEmail, userPassword, userMobile, userPopular, userStatus } = req.body;
+  const userImage = req.files?.userImage?.[0]?.path
+  ? `/uploads/userImage/${req.files.userImage[0].filename}`
+  : null;
+
+  console.log("req.file", req.file);
+  
+  let query = `
+    UPDATE users
+    SET
+      userName = ?,
+      userEmail = ?,
+      userPassword = ?,
+      userMobile = ?,
+      userPopular = ?,
+      userStatus = ?,
+      userUpdatedAt = UNIX_TIMESTAMP()
+  `;
+
+  const params = [userName, userEmail, userPassword, userMobile, userPopular, userStatus];
+
+  // Update userImage only if a new image is uploaded
+  if (userImage) {
+    query += `, userImage = ?`;
+    params.push(userImage);
+  }
+
+  query += ` WHERE userId = ?`;
+  params.push(userId);
+
+  try {
+    const [result] = await db.execute(query, params);
+    if (result.affectedRows === 0) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.send({ message: "User updated successfully" });
+  } catch (error) {
+    console.error("Database update error:", error);
+    res.status(500).send({ message: "Error updating user" });
+  }
+};
+
+
+
 module.exports = {
   getUsers,
   authenticateUsers,
@@ -179,4 +242,6 @@ module.exports = {
   updateStatus,
   updatePopular,
   addUser,
+  getUser,
+  updateUser,
 };

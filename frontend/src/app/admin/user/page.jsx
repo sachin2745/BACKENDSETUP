@@ -22,7 +22,6 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import Swal from "sweetalert2";
 import useAppContext from "@/context/AppContext";
 
-
 const User = () => {
   const { currentUser, setCurrentUser } = useAppContext();
 
@@ -30,15 +29,12 @@ const User = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8001/users/getall"
-      ); // Making GET request to the API endpoint
-      console.log(response.data);
+      const response = await axios.get("http://localhost:8001/users/getall"); // Making GET request to the API endpoint
+      // console.log(response.data);
       const data = response.data; // Extracting the data from the response
 
       // Setting the state with the fetched data
       setUsers(data);
-
     } catch (err) {
       console.log(err.message); // Catching any error and setting the error state
     }
@@ -69,14 +65,14 @@ const User = () => {
     }
   }, [users]);
 
-   // Function to toggle the popular status of a user
-   const toggleUserPopularStatus = (userId, currentStatus) => {
+  // Function to toggle the popular status of a user
+  const toggleUserPopularStatus = (userId, currentStatus) => {
     const newStatus = currentStatus === 0 ? 1 : 0; // Toggle status between 0 and 1
 
     fetch(`http://localhost:8001/users/popular/${userId}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ userPopular: newStatus }),
     })
@@ -84,17 +80,18 @@ const User = () => {
         if (res.ok) {
           setUsers((prevData) =>
             prevData.map((user) =>
-              user.userId === userId ? { ...user, userPopular: newStatus } : user
+              user.userId === userId
+                ? { ...user, userPopular: newStatus }
+                : user
             )
           );
-          toast.success('User popular status updated!');
+          toast.success("User popular status updated!");
         } else {
-          toast.error('Failed to update popular status.');
+          toast.error("Failed to update popular status.");
         }
       })
-      .catch((err) => toast.error('Error updating popular status:', err));
+      .catch((err) => toast.error("Error updating popular status:", err));
   };
-
 
   // Toggle user status
   const handleToggle = (userId, currentStatus, userName) => {
@@ -135,7 +132,6 @@ const User = () => {
     setEditSortBy(userId); // Enable editing mode for the specific user
     setNewSortBy(currentSortBy); // Pre-fill the input with the current value
   };
-
 
   //Function to handle Sort By Submit
   const handleSortBySubmit = (userId) => {
@@ -194,7 +190,7 @@ const User = () => {
         .matches(/^\d{10}$/, "Mobile must be 10 digits")
         .required("Mobile is required"),
       userImage: Yup.mixed().required("Image is required"),
-      userPopular: Yup.string().required("Please select a Popular"),      
+      userPopular: Yup.string().required("Please select a Popular"),
       userStatus: Yup.string().required("Please select a Status "),
     }),
     onSubmit: async (values) => {
@@ -209,17 +205,20 @@ const User = () => {
       formData.append("userImage", values.userImage); // Append image
       formData.append("userCreatedAt", Math.floor(Date.now() / 1000)); // Add current UNIX timestamp
 
-
       try {
-        const res = await axios.post('http://localhost:8001/users/add-user',formData, {
+        const res = await axios.post(
+          "http://localhost:8001/users/add-user",
+          formData,
+          {
             headers: {
-                "Content-Type": "multipart/form-data",
-              },
-        });
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
         if (res.status === 200 || res.status === 201) {
           toast.success("User added successfully!");
-          // userForm.resetForm();        
+          // userForm.resetForm();
 
           // Reload the page after a short delay
           setTimeout(() => {
@@ -242,167 +241,132 @@ const User = () => {
     }
   };
 
-  // Edit Blog
-  const [formData, setFormData] = useState({
-    blogId: "",
-    blogTitle: "",
-    blogDescription: "",
-    blogContent: "",
-    blogImage: null,
-    blogImageMobile: null,
-    blogImgAlt: "",
-    blogCategory: "",
-    blogKeywords: "",
-    blogMetaTitle: "",
-    blogMetaDescription: "",
-    blogMetaKeywords: "",
-    blogForceKeywords: "",
-    blogSKU: "",
-    blogSchema: "",
-  });
-  const [previewEditImage, setPreviewEditImage] = useState(null);
-  const [previewMobileEditImage, setPreviewMobileEditImage] = useState(null);
+  // FOR EDIT USER
+  const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState(false);
+  const [previewEditImage, setPreviewEditImage] = useState("");
 
-  const fetchBlogData = async (blogId) => {
+  const [formData, setFormData] = useState({
+    userName: "",
+    userEmail: "",
+    userMobile: "",
+    userPopular: 0,
+    userStatus: 0,
+  });
+
+  const fetchUserData = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8001/admin/get-blog/${blogId}`
+        `http://localhost:8001/users/get-user/${id}`
       );
-      const {
-        blogTitle,
-        blogDescription,
-        blogContent,
-        blogImage,
-        blogImageMobile,
-        blogImgAlt,
-        blogCategory,
-        blogKeywords,
-        blogMetaTitle,
-        blogMetaDescription,
-        blogMetaKeywords,
-        blogForceKeywords,
-        blogSKU,
-        blogSchema,
-      } = response.data;
-
-      // console.log("response", response.data);
-      // Find the corresponding category ID
-      const category = blogCategories.find(
-        (cat) => cat.blog_category_name === blogCategory
-      );
-      const categoryId = category ? category.blog_category_id : "";
-
+      setUser(response.data);
       setFormData({
-        blogId,
-        blogTitle,
-        blogDescription,
-        blogContent,
-        blogImage: blogImage ? `http://localhost:8001${blogImage}` : null,
-        blogImageMobile: blogImageMobile
-          ? `http://localhost:8001${blogImageMobile}`
-          : null,
-        blogImgAlt,
-        blogCategory: categoryId,
-        blogKeywords,
-        blogMetaTitle,
-        blogMetaDescription,
-        blogMetaKeywords,
-        blogForceKeywords,
-        blogSKU,
-        blogSchema,
+        userName: response.data.userName,
+        userEmail: response.data.userEmail,
+        userMobile: response.data.userMobile,
+        userPassword: response.data.userPassword,
+        userPopular: response.data.userPopular,
+        userStatus: response.data.userStatus,
+        userImage: null,
       });
 
-      // Ensure full URL for both images
-      setPreviewEditImage(
-        blogImage ? `http://localhost:8001${blogImage}` : null
-      );
-      setPreviewMobileEditImage(
-        blogImageMobile ? `http://localhost:8001${blogImageMobile}` : null
-      );
+      // Set the initial image for preview
+      if (response.data.userImage) {
+        setPreviewEditImage(`http://localhost:8001${response.data.userImage}`);
+      }
+
       setActiveTab(true);
+
+      // Show the edit tab by triggering the click event
+      // document.getElementById("editUser-styled-tab").click();
     } catch (error) {
-      console.error("Error fetching blog data:", error);
+      toast.error("Error fetching user data:", error);
     }
   };
 
-  const handleEditImageChange = (e, type) => {
-    const file = e.target.files[0];
+  const [errors, setErrors] = useState({}); // State for validation errors
 
-    if (type === "blogImage") {
-      setFormData({ ...formData, blogImage: file });
-      setPreviewEditImage(URL.createObjectURL(file));
-    } else if (type === "blogImageMobile") {
-      setFormData({ ...formData, blogImageMobile: file });
-      setPreviewMobileEditImage(URL.createObjectURL(file));
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+
+    // Check if the input is the image file input
+    if (name === "userImage" && files && files[0]) {
+      // Update the preview with the selected image
+      const file = files[0];
+      const fileURL = URL.createObjectURL(file);
+      setPreviewEditImage(fileURL); // Set preview to the selected image
+      setFormData({ ...formData, userImage: file }); // Update form data with the file
+    } else {
+      setFormData({ ...formData, [name]: value }); // For other inputs
     }
   };
 
-  const handleEditFormSubmit = async (e) => {
-    e.preventDefault();
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.userName.trim()) {
+      newErrors.userName = "Name is required.";
+    }
+    if (!formData.userEmail.trim()) {
+      newErrors.userEmail = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.userEmail)) {
+      newErrors.userEmail = "Invalid email format.";
+    }
+    if (!formData.userMobile || !formData.userMobile.toString().trim()) {
+      newErrors.userMobile = "Mobile number is required.";
+    } else if (!/^\d{10}$/.test(formData.userMobile)) {
+      newErrors.userMobile = "Mobile number must be 10 digits.";
+    }
+    if (!formData.userPassword.trim()) {
+      newErrors.userPassword = "Password is required.";
+    } else if (formData.userPassword.length < 6) {
+      newErrors.userPassword = "Password must be at least 6 characters long.";
+    }
+
+    if (!formData.userPopular.toString().trim()) {
+      newErrors.userPopular = "Please select Popularity.";
+    }
+    if (!formData.userStatus.toString().trim()) {
+      newErrors.userStatus = "Please select Status.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Returns true if no errors
+  };
+
+  const handleUpdateUser = async (e) => {
+    e.preventDefault(); // Prevent form submission default behavior
+    if (!validateForm()) {
+      return;
+    }
     try {
-      const data = new FormData();
-      // console.log("formData", formData);
-      const blogId = formData.blogId;
+      const updatedData = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        updatedData.append(key, value);
+      });
 
-      const sanitizeSlug = (sku) => {
-        return sku
-          .toLowerCase()
-          .replace(/ /g, "-") // Replace spaces with dashes
-          .replace(/[\/|?%$,;:'"]/g, "") // Remove specific characters
-          .replace(/ \\<.*?\\>/g, ""); // Remove any tags
-      };
-
-      const sanitizedSKU = sanitizeSlug(formData.blogSKU);
-
-      data.append("blogTitle", formData.blogTitle);
-      data.append("blogDescription", formData.blogDescription);
-      data.append("blogContent", formData.blogContent);
-      if (formData.blogImage) {
-        data.append("blogImage", formData.blogImage);
-      } else {
-        data.append("blogImageURL", previewEditImage); // Send existing URL
-      }
-
-      if (formData.blogImageMobile) {
-        data.append("blogImageMobile", formData.blogImageMobile);
-      } else {
-        data.append("blogImageMobileURL", previewMobileEditImage); // Send existing URL
-      }
-      data.append("blogImgAlt", formData.blogImgAlt);
-      data.append("blogCategory", formData.blogCategory);
-      data.append("blogKeywords", formData.blogKeywords);
-      data.append("blogMetaTitle", formData.blogMetaTitle);
-      data.append("blogMetaDescription", formData.blogMetaDescription);
-      data.append("blogMetaKeywords", formData.blogMetaKeywords);
-      data.append("blogForceKeywords", formData.blogForceKeywords);
-      data.append("blogSKU", sanitizedSKU);
-      data.append("blogSchema", formData.blogSchema);
-
-      await axios.post(
-        `http://localhost:8001/admin/update-blog/${blogId}`,
-        data,
+      await axios.put(
+        `http://localhost:8001/users/update-user/${user?.userId}`,
+        updatedData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      toast.success("Blog updated successfully!");
+      // setEditMode(false);
+      toast.success("User updated successfully!");
 
       // Reload the page after a short delay
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 2000); // 2-second delay to let the notification show
     } catch (error) {
-      toast.error("Error updating blog:", error);
+      toast.error("Error updating user:", error);
     }
   };
 
-  const handleDelete = (blogId) => {
+  const handleDelete = (userId) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "Do you really want to delete this blog?",
+      text: "Do you really want to delete this user?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -412,43 +376,28 @@ const User = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         // Send request to update the user's status to 3
-        fetch(`http://localhost:8001/admin/status/${blogId}`, {
+        fetch(`http://localhost:8001/users/status/${userId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ blogStatus: 3 }),
+          body: JSON.stringify({ userStatus: 3 }),
         })
           .then((response) => {
             if (response.ok) {
-              toast.success("The blog has been deleted Successfully!.");
+              toast.success("The user has been deleted Successfully!.");
               // Instead of reloading the page, just refresh data
-              fetchBlogs();
+
+              fetchUsers();
             } else {
-              toast.error("Failed to delete the blog.");
+              toast.error("Failed to delete the user.");
             }
           })
           .catch(() => {
-            toast.error("An error occurred while deleting the blog.");
+            toast.error("An error occurred while deleting the user.");
           });
       }
     });
-  };
-
-  //Data comes from editor
-  const extractTextFromHTML = (html) => {
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    return doc.body.textContent || doc.body.innerText || "";
-  };
-
-  const truncatedDescription = (html) => {
-    const plainText = extractTextFromHTML(html);
-    return (
-      plainText
-        .split(" ") // Split the text into words
-        .slice(0, 10) // Slice the first 20 words
-        .join(" ") + (plainText.split(" ").length > 10 ? "..." : "")
-    );
   };
 
   return (
@@ -520,7 +469,7 @@ const User = () => {
                   <th>Image</th>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Mobile</th>                  
+                  <th>Mobile</th>
                   <th>Created At</th>
                   <th>Updated At</th>
                   <th>Popular</th>
@@ -538,7 +487,7 @@ const User = () => {
                   </tr>
                 ) : (
                   users.map((item, index) => (
-                    <tr key={item.userId }>
+                    <tr key={item.userId}>
                       <td>{users.indexOf(item) + 1}</td>
                       <td>
                         <Zoom>
@@ -553,14 +502,14 @@ const User = () => {
                           )}
                         </Zoom>
                       </td>
-                     
+
                       <td
                         className="cursor-pointer hover:text-blue-500"
                         onClick={() => fetchUser(item.userName)}
                       >
                         {item.userName}
                       </td>
-                      
+
                       <td>{item.userEmail}</td>
                       <td>{item.userMobile}</td>
                       <td>
@@ -582,23 +531,31 @@ const User = () => {
                           : "N/A"}
                       </td>
                       <td>
-                    <button
-                      onClick={() =>
-                        toggleUserPopularStatus(item.userId, item.userPopular)
-                      }
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      {item.userPopular === 0 ? (
-                        <IoMdCheckmarkCircleOutline style={{ color: 'green', backgroundColor: 'white' }} />
-                      ) : (
-                        <FaBan style={{ color: 'red' }} />
-                      )}
-                    </button>
-                  </td>
+                        <button
+                          onClick={() =>
+                            toggleUserPopularStatus(
+                              item.userId,
+                              item.userPopular
+                            )
+                          }
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {item.userPopular === 0 ? (
+                            <IoMdCheckmarkCircleOutline
+                              style={{
+                                color: "green",
+                                backgroundColor: "white",
+                              }}
+                            />
+                          ) : (
+                            <FaBan style={{ color: "red" }} />
+                          )}
+                        </button>
+                      </td>
                       <td>
                         {editSortBy == item.userId ? (
                           <div
@@ -616,7 +573,7 @@ const User = () => {
                               className="border rounded px-2 py-1 w-20"
                             />
                             <button
-                              onClick={() => handleSortBySubmit(item.userId )}
+                              onClick={() => handleSortBySubmit(item.userId)}
                               className="ml-2 bg-emerald-300 text-black px-3 py-2 rounded"
                             >
                               <FaCheck />
@@ -625,7 +582,7 @@ const User = () => {
                         ) : (
                           <button
                             onClick={() =>
-                              handleSortByEdit(item.userId , item.userSortBy)
+                              handleSortByEdit(item.userId, item.userSortBy)
                             }
                             className="text-black font-bold bg-emerald-300 px-3 py-1 rounded"
                           >
@@ -641,7 +598,7 @@ const User = () => {
                             checked={item.userStatus == 0}
                             onChange={() =>
                               handleToggle(
-                                item.userId ,
+                                item.userId,
                                 item.userStatus,
                                 item.userName
                               )
@@ -651,7 +608,6 @@ const User = () => {
                         </label>
                       </td>
                       <td>
-                        
                         <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
                           <button
                             id="hs-dropdown-hover-event"
@@ -686,7 +642,7 @@ const User = () => {
                           >
                             <div className="p-1 space-y-0.5">
                               <div
-                                onClick={() => fetchUserData(item.userId )}
+                                onClick={() => fetchUserData(item.userId)}
                                 className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100"
                                 href="#"
                               >
@@ -696,12 +652,11 @@ const User = () => {
                                 className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  handleDelete(item.userId );
+                                  handleDelete(item.userId);
                                 }}
                               >
                                 Delete
                               </div>
-                              
                             </div>
                           </div>
                         </div>
@@ -722,9 +677,7 @@ const User = () => {
           aria-labelledby="tabs-with-underline-item-2"
         >
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
-            <h1 className="text-lg font-bold mb-6 border-b pb-2">
-              Add User
-            </h1>
+            <h1 className="text-lg font-bold mb-6 border-b pb-2">Add User</h1>
 
             <form
               onSubmit={userForm.handleSubmit}
@@ -768,7 +721,7 @@ const User = () => {
                 </label>
                 <div className="w-[80%]">
                   <input
-                  type="email"
+                    type="email"
                     id="userEmail"
                     name="userEmail"
                     placeholder="Enter Email"
@@ -778,16 +731,13 @@ const User = () => {
                     autoComplete="current-email"
                     className="w-full border-2 border-gray-300 p-2 rounded"
                   />
-                  {userForm.touched.userEmail &&
-                    userForm.errors.userEmail && (
-                      <p className="text-red-500 text-sm">
-                        {userForm.errors.userEmail}
-                      </p>
-                    )}
+                  {userForm.touched.userEmail && userForm.errors.userEmail && (
+                    <p className="text-red-500 text-sm">
+                      {userForm.errors.userEmail}
+                    </p>
+                  )}
                 </div>
               </div>
-
-             
 
               {/*  Image */}
               <div className="flex w-full items-center">
@@ -795,7 +745,7 @@ const User = () => {
                   htmlFor="userImage"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                   Image:
+                  Image:
                 </label>
                 <div className="w-[80%]">
                   <input
@@ -825,8 +775,6 @@ const User = () => {
                 </div>
               </div>
 
-             
-
               {/* Password */}
               <div className="flex w-full  items-center">
                 <label
@@ -847,15 +795,14 @@ const User = () => {
                     autoComplete="current-password"
                     className="w-full border-2 border-gray-300 p-2 rounded"
                   />
-                  {userForm.touched.userPassword && userForm.errors.userPassword && (
-                    <p className="text-red-500 text-sm">
-                      {userForm.errors.userPassword}
-                    </p>
-                  )}
+                  {userForm.touched.userPassword &&
+                    userForm.errors.userPassword && (
+                      <p className="text-red-500 text-sm">
+                        {userForm.errors.userPassword}
+                      </p>
+                    )}
                 </div>
               </div>
-
-             
 
               {/* Mobile */}
               <div className="flex w-full  items-center">
@@ -902,9 +849,11 @@ const User = () => {
                     value={userForm.values.userPopular}
                     className="w-full border-2 border-gray-300 p-2 rounded "
                   >
-                    <option value="" disabled>Select Popular</option>
-                  <option value="1">No</option>
-                  <option value="0">Yes</option>
+                    <option value="" disabled>
+                      Select Popular
+                    </option>
+                    <option value="1">No</option>
+                    <option value="0">Yes</option>
                   </select>
                   {userForm.touched.userPopular &&
                     userForm.errors.userPopular && (
@@ -931,9 +880,11 @@ const User = () => {
                     // value={userForm.values.userStatus}
                     className="w-full border-2 border-gray-300 p-2 rounded "
                   >
-                    <option value="" disabled>Select Status</option>
-                  <option value="0">Active</option>
-                  <option value="1">Inactive</option>
+                    <option value="" disabled>
+                      Select Status
+                    </option>
+                    <option value="0">Active</option>
+                    <option value="1">Inactive</option>
                   </select>
                   {userForm.touched.userStatus &&
                     userForm.errors.userStatus && (
@@ -943,8 +894,6 @@ const User = () => {
                     )}
                 </div>
               </div>
-
-             
 
               {/* Submit Button */}
               <div className="w-full flex justify-start gap-4">
@@ -976,74 +925,71 @@ const User = () => {
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">Edit Blog</h1>
             {activeTab && (
-              <form
-                onSubmit={handleEditFormSubmit}
-                className="flex flex-wrap gap-6 text-sm"
-              >
+              <form className="flex flex-wrap gap-6 text-sm">
                 <div className="flex w-full items-center">
                   <label
-                    htmlFor="blogTitle"
+                    htmlFor="userName"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                    Blog Title:
+                    Name:
                   </label>
                   <div className="w-[80%]">
                     <input
-                      id="blogTitle"
-                      name="blogTitle"
+                      id="userName"
+                      name="userName"
                       type="text"
-                      value={formData.blogTitle}
-                      onChange={(e) =>
-                        setFormData({ ...formData, blogTitle: e.target.value })
-                      }
+                      value={formData.userName}
+                      onChange={handleInputChange}
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
+                     {errors.userName && (
+                    <p className="text-red-500 text-sm">{errors.userName}</p>
+                  )}
                   </div>
+                 
                 </div>
 
                 <div className="flex w-full items-center">
                   <label
-                    htmlFor="blogDescription"
+                    htmlFor="userEmail"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                    Blog Description:
-                  </label>
-                  <div className="w-[80%]">
-                    <textarea
-                      id="blogDescription"
-                      name="blogDescription"
-                      placeholder="Enter Blog Description"
-                      value={formData.blogDescription}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogDescription: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-               
-
-                <div className="flex w-full items-center">
-                  <label
-                    htmlFor="blogImage"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Image:
+                    Email:
                   </label>
                   <div className="w-[80%]">
                     <input
-                      id="blogImage"
-                      name="blogImage"
-                      type="file"
-                      accept="image/*"
-                      required
-                      onChange={(e) => handleEditImageChange(e, "blogImage")}
+                      type="email"
+                      id="userEmail"
+                      name="userEmail"
+                      placeholder="Enter Blog Description"
+                      value={formData.userEmail}
+                      onChange={handleInputChange}
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
+                     {errors.userEmail && (
+                    <p className="text-red-500 text-sm">{errors.userEmail}</p>
+                  )}
+                  </div>
+                 
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="userImage"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Upload Image:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="userImage"
+                      name="userImage"
+                      type="file"
+                      accept="image/*"                      
+                      onChange={handleInputChange}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+
                     {previewEditImage && (
                       <img
                         src={previewEditImage}
@@ -1057,216 +1003,108 @@ const User = () => {
 
                 <div className="flex w-full items-center">
                   <label
-                    htmlFor="blogImageMobile"
+                    htmlFor="userPassword"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                    Blog Image Mobile:
+                    Password:
                   </label>
                   <div className="w-[80%]">
                     <input
-                      id="blogImageMobile"
-                      name="blogImageMobile"
-                      type="file"
-                      accept="image/*"
+                      id="userPassword"
+                      name="userPassword"
+                      type="text"
                       required
-                      onChange={(e) =>
-                        handleEditImageChange(e, "blogImageMobile")
-                      }
+                      value={formData.userPassword}
+                      onChange={handleInputChange}
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
-                    {previewMobileEditImage && (
-                      <img
-                        src={previewMobileEditImage}
-                        alt="Mobile Preview"
-                        width="100"
-                        className="mt-3 rounded shadow"
-                      />
+                    {errors.userPassword && (
+                    <p className="text-red-500 text-sm">
+                      {errors.userPassword}
+                    </p>
+                  )}
+                  </div>
+                  
+                </div>
+
+                <div className="flex w-full items-center">
+                  <label
+                    htmlFor="userMobile"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Mobile:
+                  </label>
+                  <div className="w-[80%]">
+                    <input
+                      id="userMobile"
+                      name="userMobile"
+                      type="text"
+                      value={formData.userMobile}
+                      onChange={handleInputChange}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {errors.userMobile && (
+                    <p className="text-red-500 text-sm">{errors.userMobile}</p>
+                  )}
+                  </div>
+                  
+                </div>
+
+                <div className="flex w-full  items-center">
+                  <label
+                    htmlFor="userPopular"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Popular:
+                  </label>
+                  <div className="w-[80%]">
+                    <select
+                      id="userPopular"
+                      name="userPopular"
+                      value={formData.userPopular}
+                      onChange={handleInputChange}
+                      className="w-full border-2 border-gray-300 p-2 rounded "
+                    >
+                      <option value="" disabled>
+                        Select Popular
+                      </option>
+                      <option value="1">No</option>
+                      <option value="0">Yes</option>
+                    </select>
+                    {errors.userPopular && (
+                      <p className="text-red-500 text-sm">
+                        {errors.userPopular}
+                      </p>
                     )}
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="flex w-full  items-center">
                   <label
-                    htmlFor="blogImgAlt"
+                    htmlFor="userStatus"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                    Blog Image Alt:
+                    Status:
                   </label>
                   <div className="w-[80%]">
-                    <input
-                      id="blogImgAlt"
-                      name="blogImgAlt"
-                      type="text"
-                      value={formData.blogImgAlt}
-                      required
-                      onChange={(e) =>
-                        setFormData({ ...formData, blogImgAlt: e.target.value })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex w-full items-center">
-                  <label
-                    htmlFor="blogKeywords"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog keywords:
-                  </label>
-                  <div className="w-[80%]">
-                    <input
-                      id="blogKeywords"
-                      name="blogKeywords"
-                      type="text"
-                      value={formData.blogKeywords}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogKeywords: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-               
-
-                <div className="flex w-full items-center">
-                  <label
-                    htmlFor="blogMetaTitle"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Meta Title:
-                  </label>
-                  <div className="w-[80%]">
-                    <input
-                      id="blogMetaTitle"
-                      name="blogMetaTitle"
-                      type="text"
-                      value={formData.blogMetaTitle}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogMetaTitle: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex w-full items-center">
-                  <label
-                    htmlFor="blogMetaDescription"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Meta Description:
-                  </label>
-                  <div className="w-[80%]">
-                    <input
-                      id="blogMetaDescription"
-                      name="blogMetaDescription"
-                      type="text"
-                      value={formData.blogMetaDescription}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogMetaDescription: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex w-full items-center">
-                  <label
-                    htmlFor="blogMetaKeywords"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Meta Keywords:
-                  </label>
-                  <div className="w-[80%]">
-                    <input
-                      id="blogMetaKeywords"
-                      name="blogMetaKeywords"
-                      type="text"
-                      value={formData.blogMetaKeywords}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogMetaKeywords: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex w-full items-center">
-                  <label
-                    htmlFor="blogForceKeywords"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Force Keywords:
-                  </label>
-                  <div className="w-[80%]">
-                    <input
-                      id="blogForceKeywords"
-                      name="blogForceKeywords"
-                      type="text"
-                      value={formData.blogForceKeywords}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogForceKeywords: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex w-full items-center">
-                  <label
-                    htmlFor="blogSKU"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog SKU:
-                  </label>
-                  <div className="w-[80%]">
-                    <input
-                      id="blogSKU"
-                      name="blogSKU"
-                      type="text"
-                      value={formData.blogSKU}
-                      onChange={(e) =>
-                        setFormData({ ...formData, blogSKU: e.target.value })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex w-full items-center">
-                  <label
-                    htmlFor="blogSchema"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Schema:
-                  </label>
-                  <div className="w-[80%]">
-                    <textarea
-                      id="blogSchema"
-                      name="blogSchema"
-                      value={formData.blogSchema}
-                      onChange={(e) =>
-                        setFormData({ ...formData, blogSchema: e.target.value })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
+                    <select
+                      id="userStatus"
+                      name="userStatus"
+                      value={formData.userStatus}
+                      onChange={handleInputChange}
+                      className="w-full border-2 border-gray-300 p-2 rounded "
+                    >
+                      <option value="" disabled>
+                        Select Status
+                      </option>
+                      <option value="0">Active</option>
+                      <option value="1">Inactive</option>
+                    </select>
+                    {errors.userStatus && (
+                      <p className="text-red-500 text-sm">
+                        {errors.userStatus}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -1279,6 +1117,7 @@ const User = () => {
                   </a>
                   <button
                     type="submit"
+                    onClick={handleUpdateUser}
                     className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-600"
                   >
                     Update

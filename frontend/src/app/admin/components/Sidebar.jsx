@@ -599,7 +599,7 @@ const Sidebar = ({ isCollapsed }) => {
                                     </a>
                                 </li>
                                 <li>
-                                    <Link
+                                    <a
                                         className={`${pathname === '/admin/user' ? 'bg-emerald-200' : ''} flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                                         href="/admin/user"
                                     >
@@ -619,7 +619,7 @@ const Sidebar = ({ isCollapsed }) => {
                                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                                         </svg>
                                         User
-                                    </Link>
+                                    </a>
                                 </li>
                             </ul>
                         </div>

@@ -34,8 +34,9 @@ router.get("/getall", userController.getUsers);
 router.put("/status/:id", userController.updateStatus);
 router.put("/popular/:id", userController.updatePopular);
 router.post("/add-user", upload.fields([{ name: "userImage" }]), userController.addUser);
-
-
+router.get("/get-user/:id", userController.getUser);
+router.put("/update-user/:id", upload.single("userImage"),userController.updateUser);
+  
 router.post("/authenticate", userController.authenticateUsers);
 
 router.get("/authorise", verifyToken, userController.authorise);
