@@ -34,8 +34,11 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
                   }
                   alt={currentUser.userName}
                 />
-                <span className="text-gray-600 font-medium truncate max-w-[7.5rem]">
+                <span className="hidden sm:block text-quaternary font-semibold truncate max-w-[7.5rem]">
                   {currentUser.userName}
+                </span>
+                <span className="block sm:hidden text-quaternary font-semibold truncate max-w-[7.5rem]">
+                  {currentUser.userName.split(" ")[0]}
                 </span>
                 <svg
                   className="hs-dropdown-open:rotate-180 size-4"
@@ -54,26 +57,22 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
               </button>
 
               <div
-                className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg mt-2"
+                className="hs-dropdown-menu transition-[opacity,margin] cursor-pointer duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg mt-2"
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="hs-dropdown-custom-trigger"
               >
                 <div className="p-1 space-y-0.5">
-                  <a
-                    className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                    href="#"
-                  >
+                  <div className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 ">
                     {currentUser.userEmail}
-                  </a>
+                  </div>
 
-                  <button
+                  <div
                     onClick={logout}
-                    className="flex items-center gap-x-3.5 py-2 px-3 w-100 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                    href="#"
+                    className="flex items-center gap-x-3.5 py-2 px-3 w-100 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
                   >
                     Logout
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -82,9 +81,9 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
       );
     } else {
       return (
-        <Link         
+        <Link
           href="/admin/login"
-         className="py-2 px-6 text-md font-medium text-white bg-emerald-500 rounded shadow-md hover:bg-emerald-600 focus:outline-none focus:bg-emerald-600"
+          className="py-2 px-6 text-md font-medium text-white bg-emerald-500 rounded shadow-md hover:bg-emerald-600 focus:outline-none focus:bg-emerald-600"
         >
           Login
         </Link>
@@ -101,9 +100,9 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
             href={pathname}
             aria-label="Brand"
           >
-            <span className="inline-flex items-center gap-x-2 text-xl text-emerald-500 font-bold">
+            <span className="inline-flex items-center gap-x-2 text-xl text-quaternary font-bold">
               <button
-                className=" hidden sm:block  p-2 text-emerald-500 bg-dashGray rounded-full shadow "
+                className=" hidden sm:block  p-2 text-quaternary bg-dashGray rounded-full shadow "
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 aria-label="Toggle Sidebar"
               >
@@ -115,7 +114,7 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
               </button>
               <button
                 type="button"
-                className="block sm:hidden p-2  justify-center items-center  text-start bg-quaternary text-white text-sm font-medium rounded-full shadow  hover:bg-gray-950 focus:outline-none focus:bg-gray-900"
+                className="block sm:hidden p-2  justify-center items-center  text-start bg-dashGray text-quaternary text-sm font-medium rounded-full shadow  hover:bg-gray-950 focus:outline-none focus:bg-gray-900"
                 aria-haspopup="dialog"
                 aria-expanded="false"
                 aria-controls="hs-sidebar-footer"

@@ -1089,6 +1089,7 @@ const User = () => {
                       id="userMobile"
                       name="userMobile"
                       type="text"
+                      maxLength={10}
                       value={formData.userMobile}
                       onChange={handleInputChange}
                       className="w-full border-2 border-gray-300 p-2 rounded"
