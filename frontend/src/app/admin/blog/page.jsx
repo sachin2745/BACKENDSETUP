@@ -770,17 +770,17 @@ const Blog = () => {
             <form
               onSubmit={formik.handleSubmit}
               autoComplete="off"
-              className="flex flex-wrap gap-6 text-sm"
+              className="flex flex-wrap gap-4 sm:gap-6 text-sm"
             >
               {/* Blog Title */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogTitle"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Title:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogTitle"
                     name="blogTitle"
@@ -800,14 +800,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Description */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogDescription"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Description:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <textarea
                     id="blogDescription"
                     name="blogDescription"
@@ -827,14 +827,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Content */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogContent"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Description:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <JoditEditor
                     ref={editorContent}
                     config={config}
@@ -858,14 +858,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Image */}
-              <div className="flex w-full items-center">
+              <div className="sm:flex w-full items-center">
                 <label
                   htmlFor="blogImage"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Image:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogImage"
                     name="blogImage"
@@ -894,14 +894,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Image Mobile */}
-              <div className="flex w-full items-center">
+              <div className="sm:flex w-full items-center">
                 <label
                   htmlFor="blogImageMobile"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Image Mobile:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogImageMobile"
                     name="blogImageMobile"
@@ -931,14 +931,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Image Alt */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogImgAlt"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Image Alt:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogImgAlt"
                     name="blogImgAlt"
@@ -958,14 +958,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Category */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogCategory"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Category:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <select
                     id="blogCategory"
                     name="blogCategory"
@@ -994,14 +994,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Keywords */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogKeywords"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Keywords:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogKeywords"
                     name="blogKeywords"
@@ -1022,14 +1022,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Meta Title */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogMetaTitle"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Meta Title:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogMetaTitle"
                     name="blogMetaTitle"
@@ -1050,14 +1050,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Meta Description */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogMetaDescription"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Meta Description:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogMetaDescription"
                     name="blogMetaDescription"
@@ -1078,14 +1078,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Meta Keywords */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogMetaKeywords"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Meta Keywords:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogMetaKeywords"
                     name="blogMetaKeywords"
@@ -1106,14 +1106,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Force Keywords */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogForceKeywords"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Force Keywords:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogForceKeywords"
                     name="blogForceKeywords"
@@ -1134,14 +1134,14 @@ const Blog = () => {
               </div>
 
               {/* Blog SKU */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogSKU"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog SKU:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blogSKU"
                     name="blogSKU"
@@ -1161,14 +1161,14 @@ const Blog = () => {
               </div>
 
               {/* Blog Schema */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blogSchema"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Blog Schema:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <textarea
                     id="blogSchema"
                     name="blogSchema"
@@ -1213,21 +1213,21 @@ const Blog = () => {
           aria-labelledby="tabs-with-underline-item-3"
         >
           {" "}
-          <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
+          <div className="mx-auto p-4 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">Edit Blog</h1>
             {activeTab && (
               <form
                 onSubmit={handleEditFormSubmit}
-                className="flex flex-wrap gap-6 text-sm"
+                className="flex flex-wrap gap-4 sm:gap-6 text-sm"
               >
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogTitle"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Title:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogTitle"
                       name="blogTitle"
@@ -1241,14 +1241,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogDescription"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Description:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <textarea
                       id="blogDescription"
                       name="blogDescription"
@@ -1265,14 +1265,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogContent"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Content:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <JoditEditor
                       value={formData.blogContent}
                       onChange={(content) =>
@@ -1282,14 +1282,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogImage"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Image:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogImage"
                       name="blogImage"
@@ -1309,14 +1309,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogImageMobile"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Image Mobile:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogImageMobile"
                       name="blogImageMobile"
@@ -1338,14 +1338,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogImgAlt"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Image Alt:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogImgAlt"
                       name="blogImgAlt"
@@ -1360,14 +1360,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogKeywords"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog keywords:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogKeywords"
                       name="blogKeywords"
@@ -1384,14 +1384,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogCategory"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Category:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <select
                       id="blogCategory"
                       name="blogCategory"
@@ -1419,14 +1419,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogMetaTitle"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Meta Title:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogMetaTitle"
                       name="blogMetaTitle"
@@ -1443,14 +1443,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogMetaDescription"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Meta Description:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogMetaDescription"
                       name="blogMetaDescription"
@@ -1467,14 +1467,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogMetaKeywords"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Meta Keywords:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogMetaKeywords"
                       name="blogMetaKeywords"
@@ -1491,14 +1491,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogForceKeywords"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Force Keywords:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogForceKeywords"
                       name="blogForceKeywords"
@@ -1515,14 +1515,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogSKU"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog SKU:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blogSKU"
                       name="blogSKU"
@@ -1536,14 +1536,14 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blogSchema"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Blog Schema:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <textarea
                       id="blogSchema"
                       name="blogSchema"

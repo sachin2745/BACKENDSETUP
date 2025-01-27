@@ -45,25 +45,48 @@ const User = () => {
   }, []);
 
   // Initialize DataTable
+  // useEffect(() => {
+  //   if (users.length > 0) {
+  //     $("#example1").DataTable({
+  //       responsive: true,
+  //       destroy: true, // Prevent reinitialization issues
+  //       dom: "Bfrtip", // Add buttons layout
+  //       buttons: ["copy", "csv", "excel", "pdf", "print"], // Export options
+  //       pageLength: 10,
+  //       language: {
+  //         searchPlaceholder: "...",
+  //         paginate: {
+  //           previous: "<", // Replaces "Previous" with "<"
+  //           next: ">", // Replaces "Next" with ">"
+  //         },
+  //       },
+  //       pagingType: "simple_numbers", // Options: 'simple', 'simple_numbers', 'full', 'full_numbers'
+  //     });
+  //   }
+  // }, [users]);
+
   useEffect(() => {
     if (users.length > 0) {
-      $("#example1").DataTable({
+      const table = $("#example1").DataTable({
         responsive: true,
-        destroy: true, // Prevent reinitialization issues
-        dom: "Bfrtip", // Add buttons layout
-        buttons: ["copy", "csv", "excel", "pdf", "print"], // Export options
+        autoWidth: false,
+        destroy: true,
+        dom: "Bfrtip",
+        buttons: ["copy", "csv", "excel", "pdf", "print"],
         pageLength: 10,
         language: {
           searchPlaceholder: "...",
           paginate: {
-            previous: "<", // Replaces "Previous" with "<"
-            next: ">", // Replaces "Next" with ">"
+            previous: "<",
+            next: ">",
           },
         },
-        pagingType: "simple_numbers", // Options: 'simple', 'simple_numbers', 'full', 'full_numbers'
+        pagingType: "simple_numbers",
       });
+       
     }
   }, [users]);
+  
 
   // Function to toggle the popular status of a user
   const toggleUserPopularStatus = (userId, currentStatus) => {
@@ -487,213 +510,215 @@ const User = () => {
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
               Manage Users
             </h3>
-            <table
-              id="example1"
-              className="display  nowwrap w-100 table-auto  "
-            >
-              <thead>
-                <tr>
-                  <th>S.No.</th>
-                  <th>Image</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Mobile</th>
-                  <th>Created At</th>
-                  <th>Updated At</th>
-                  <th>Popular</th>
-                  <th>Sort By</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.length === 0 ? (
+            {/* <div className="overflow-hidden"> */}
+              <table id="example1" className="display  nowwrap w-full table-auto">
+                <thead>
                   <tr>
-                    <td colSpan="10" className="text-center p-3 font-semibold">
-                      No available data
-                    </td>
+                    <th>S.No.</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Popular</th>
+                    <th>Sort By</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
-                ) : (
-                  users.map((item, index) => (
-                    <tr key={item.userId}>
-                      <td>{users.indexOf(item) + 1}</td>
-                      <td>
-                        <Zoom>
-                          {item.userImage ? (
-                            <img
-                              src={`http://localhost:8001${item.userImage}`}
-                              alt={item.userName} // Fallback to blog title if alt text is not provided
-                              className="h-10 w-10 object-cover" // Added object-cover for better image fitting
-                            />
-                          ) : (
-                            <p>No image available</p> // Fallback message if no image is present
-                          )}
-                        </Zoom>
-                      </td>
-
+                </thead>
+                <tbody>
+                  {users.length === 0 ? (
+                    <tr>
                       <td
-                        className="cursor-pointer hover:text-blue-500"
-                        onClick={() => fetchUser(item.userId)}
+                        colSpan="10"
+                        className="text-center p-3 font-semibold"
                       >
-                        {item.userName}
+                        No available data
                       </td>
+                    </tr>
+                  ) : (
+                    users.map((item, index) => (
+                      <tr key={item.userId}>
+                        <td>{users.indexOf(item) + 1}</td>
+                        <td>
+                          <Zoom>
+                            {item.userImage ? (
+                              <img
+                                src={`http://localhost:8001${item.userImage}`}
+                                alt={item.userName} // Fallback to blog title if alt text is not provided
+                                className="h-10 w-10 object-cover" // Added object-cover for better image fitting
+                              />
+                            ) : (
+                              <p>No image available</p> // Fallback message if no image is present
+                            )}
+                          </Zoom>
+                        </td>
 
-                      <td>{item.userEmail}</td>
-                      <td>{item.userMobile}</td>
-                      <td>
-                        {item.userCreatedAt
-                          ? format(
-                              new Date(item.userCreatedAt * 1000),
-                              "dd MMM yyyy hh:mm (EEE)",
-                              { timeZone: "Asia/Kolkata" }
-                            )
-                          : "N/A"}
-                      </td>
-                      <td>
-                        {item.userUpdatedAt
-                          ? format(
-                              new Date(item.userUpdatedAt * 1000),
-                              "dd MMM yyyy hh:mm (EEE)",
-                              { timeZone: "Asia/Kolkata" }
-                            )
-                          : "N/A"}
-                      </td>
-                      <td>
-                        <button
-                          onClick={() =>
-                            toggleUserPopularStatus(
-                              item.userId,
-                              item.userPopular
-                            )
-                          }
-                          style={{
-                            background: "transparent",
-                            border: "none",
-                            cursor: "pointer",
-                          }}
+                        <td
+                          className="cursor-pointer hover:text-blue-500"
+                          onClick={() => fetchUser(item.userId)}
                         >
-                          {item.userPopular === 0 ? (
-                            <IoMdCheckmarkCircleOutline
-                              style={{
-                                color: "green",
-                                backgroundColor: "white",
-                              }}
-                            />
-                          ) : (
-                            <FaBan style={{ color: "red" }} />
-                          )}
-                        </button>
-                      </td>
-                      <td>
-                        {editSortBy == item.userId ? (
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <input
-                              type="text"
-                              value={newSortBy}
-                              onChange={(e) => setNewSortBy(e.target.value)}
-                              maxLength="4"
-                              className="border rounded px-2 py-1 w-20"
-                            />
-                            <button
-                              onClick={() => handleSortBySubmit(item.userId)}
-                              className="ml-2 bg-emerald-300 text-black px-3 py-2 rounded"
-                            >
-                              <FaCheck />
-                            </button>
-                          </div>
-                        ) : (
+                          {item.userName}
+                        </td>
+
+                        <td>{item.userEmail}</td>
+                        <td>{item.userMobile}</td>
+                        <td>
+                          {item.userCreatedAt
+                            ? format(
+                                new Date(item.userCreatedAt * 1000),
+                                "dd MMM yyyy hh:mm (EEE)",
+                                { timeZone: "Asia/Kolkata" }
+                              )
+                            : "N/A"}
+                        </td>
+                        <td>
+                          {item.userUpdatedAt
+                            ? format(
+                                new Date(item.userUpdatedAt * 1000),
+                                "dd MMM yyyy hh:mm (EEE)",
+                                { timeZone: "Asia/Kolkata" }
+                              )
+                            : "N/A"}
+                        </td>
+                        <td>
                           <button
                             onClick={() =>
-                              handleSortByEdit(item.userId, item.userSortBy)
-                            }
-                            className="text-black font-bold bg-emerald-300 px-3 py-1 rounded"
-                          >
-                            {item.userSortBy}
-                          </button>
-                        )}
-                      </td>
-                      <td>
-                        <label className="inline-flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            className="sr-only peer"
-                            checked={item.userStatus == 0}
-                            onChange={() =>
-                              handleToggle(
+                              toggleUserPopularStatus(
                                 item.userId,
-                                item.userStatus,
-                                item.userName
+                                item.userPopular
                               )
                             }
-                          />
-                          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border-gray-600 peer-checked:bg-emerald-300"></div>
-                        </label>
-                      </td>
-                      <td>
-                        <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
-                          <button
-                            id="hs-dropdown-hover-event"
-                            type="button"
-                            className="hs-dropdown-toggle py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
-                            aria-haspopup="menu"
-                            aria-expanded="false"
-                            aria-label="Dropdown"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                            }}
                           >
-                            Actions
-                            <svg
-                              className="hs-dropdown-open:rotate-180 size-4"
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <path d="m6 9 6 6 6-6" />
-                            </svg>
-                          </button>
-
-                          <div
-                            className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 z-50 hidden min-w-24 bg-white shadow-md rounded-lg mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-                            role="menu"
-                            aria-orientation="vertical"
-                            aria-labelledby="hs-dropdown-hover-event"
-                          >
-                            <div className="p-1 space-y-0.5">
-                              <div
-                                onClick={() => fetchUserData(item.userId)}
-                                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100"
-                                href="#"
-                              >
-                                Edit
-                              </div>
-                              <div
-                                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  handleDelete(item.userId);
+                            {item.userPopular === 0 ? (
+                              <IoMdCheckmarkCircleOutline
+                                style={{
+                                  color: "green",
+                                  backgroundColor: "white",
                                 }}
+                              />
+                            ) : (
+                              <FaBan style={{ color: "red" }} />
+                            )}
+                          </button>
+                        </td>
+                        <td>
+                          {editSortBy == item.userId ? (
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <input
+                                type="text"
+                                value={newSortBy}
+                                onChange={(e) => setNewSortBy(e.target.value)}
+                                maxLength="4"
+                                className="border rounded px-2 py-1 w-20"
+                              />
+                              <button
+                                onClick={() => handleSortBySubmit(item.userId)}
+                                className="ml-2 bg-emerald-300 text-black px-3 py-2 rounded"
                               >
-                                Delete
+                                <FaCheck />
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                handleSortByEdit(item.userId, item.userSortBy)
+                              }
+                              className="text-black font-bold bg-emerald-300 px-3 py-1 rounded"
+                            >
+                              {item.userSortBy}
+                            </button>
+                          )}
+                        </td>
+                        <td>
+                          <label className="inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              className="sr-only peer"
+                              checked={item.userStatus == 0}
+                              onChange={() =>
+                                handleToggle(
+                                  item.userId,
+                                  item.userStatus,
+                                  item.userName
+                                )
+                              }
+                            />
+                            <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border-gray-600 peer-checked:bg-emerald-300"></div>
+                          </label>
+                        </td>
+                        <td>
+                          <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
+                            <button
+                              id="hs-dropdown-hover-event"
+                              type="button"
+                              className="hs-dropdown-toggle py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                              aria-haspopup="menu"
+                              aria-expanded="false"
+                              aria-label="Dropdown"
+                            >
+                              Actions
+                              <svg
+                                className="hs-dropdown-open:rotate-180 size-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="m6 9 6 6 6-6" />
+                              </svg>
+                            </button>
+
+                            <div
+                              className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 z-50 hidden min-w-24 bg-white shadow-md rounded-lg mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+                              role="menu"
+                              aria-orientation="vertical"
+                              aria-labelledby="hs-dropdown-hover-event"
+                            >
+                              <div className="p-1 space-y-0.5">
+                                <div
+                                  onClick={() => fetchUserData(item.userId)}
+                                  className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100"
+                                  href="#"
+                                >
+                                  Edit
+                                </div>
+                                <div
+                                  className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleDelete(item.userId);
+                                  }}
+                                >
+                                  Delete
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            {/* </div> */}
           </div>
         </div>
 
@@ -704,23 +729,23 @@ const User = () => {
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-2"
         >
-          <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
+          <div className=" mx-auto p-3 sm:p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">Add User</h1>
 
             <form
               onSubmit={userForm.handleSubmit}
               autoComplete="off"
-              className="flex flex-wrap gap-6 text-sm"
+              className="flex flex-wrap gap-4 sm:gap-6 text-sm"
             >
               {/* Name */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="userName"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Name:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="userName"
                     name="userName"
@@ -740,14 +765,14 @@ const User = () => {
               </div>
 
               {/* Email */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="userEmail"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Email:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     type="email"
                     id="userEmail"
@@ -768,14 +793,14 @@ const User = () => {
               </div>
 
               {/*  Image */}
-              <div className="flex w-full items-center">
+              <div className="sm:flex w-full items-center">
                 <label
                   htmlFor="userImage"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Image:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="userImage"
                     name="userImage"
@@ -804,14 +829,14 @@ const User = () => {
               </div>
 
               {/* Password */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="userPassword"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Password:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="userPassword"
                     name="userPassword"
@@ -833,14 +858,14 @@ const User = () => {
               </div>
 
               {/* Mobile */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="userMobile"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Mobile:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="userMobile"
                     name="userMobile"
@@ -861,14 +886,14 @@ const User = () => {
                 </div>
               </div>
 
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="userPopular"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Popular:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <select
                     id="userPopular"
                     name="userPopular"
@@ -892,14 +917,14 @@ const User = () => {
                 </div>
               </div>
 
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="userStatus"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Status:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <select
                     id="userStatus"
                     name="userStatus"
@@ -953,15 +978,15 @@ const User = () => {
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">Edit Blog</h1>
             {activeTab && (
-              <form className="flex flex-wrap gap-6 text-sm">
-                <div className="flex w-full items-center">
+              <form className="flex flex-wrap gap-4 sm:gap-6 text-sm">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="userName"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Name:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="userName"
                       name="userName"
@@ -976,14 +1001,14 @@ const User = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="userEmail"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Email:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       type="email"
                       id="userEmail"
@@ -999,14 +1024,14 @@ const User = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="userImage"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="w-full sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Upload Image:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="userImage"
                       name="userImage"
@@ -1027,14 +1052,14 @@ const User = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="userPassword"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Password:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="userPassword"
                       name="userPassword"
@@ -1052,14 +1077,14 @@ const User = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="userMobile"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Mobile:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="userMobile"
                       name="userMobile"
@@ -1076,14 +1101,14 @@ const User = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full  items-center">
+                <div className="sm:flex w-full  items-center">
                   <label
                     htmlFor="userPopular"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Popular:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <select
                       id="userPopular"
                       name="userPopular"
@@ -1105,14 +1130,14 @@ const User = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full  items-center">
+                <div className="sm:flex w-full  items-center">
                   <label
                     htmlFor="userStatus"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Status:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <select
                       id="userStatus"
                       name="userStatus"
@@ -1199,7 +1224,6 @@ const User = () => {
                     className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   />
                 </div>
-                
 
                 {/* Mobile */}
                 <div className="flex flex-col">
@@ -1213,7 +1237,6 @@ const User = () => {
                     className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   />
                 </div>
-
 
                 {/* Password */}
                 <div className="flex flex-col">

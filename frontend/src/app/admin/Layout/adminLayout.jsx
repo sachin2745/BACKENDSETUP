@@ -29,7 +29,7 @@ export default function AdminLayout({ children }) {
                 <Header isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
                 {/* Main Content */}
-                <main className="p-6 bg-white min-h-screen  w-full font-RedditSans">
+                <main className="p-3 sm:p-6 bg-white min-h-screen  w-full font-RedditSans">
                     {children}
                 </main>
                 <Footer />

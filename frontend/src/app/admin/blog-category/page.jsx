@@ -522,17 +522,17 @@ const blogCategory = () => {
             <form
               onSubmit={formik.handleSubmit}
               autoComplete="off"
-              className="flex flex-wrap gap-6 text-sm"
+              className="flex flex-wrap gap-4 sm:gap-6 text-sm"
             >
               {/* Blog Title */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blog_category_name"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Name:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blog_category_name"
                     name="blog_category_name"
@@ -552,14 +552,14 @@ const blogCategory = () => {
                 </div>
               </div>
               {/* Blog SKU */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blog_category_sku"
                   className="w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   SKU:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blog_category_sku"
                     name="blog_category_sku"
@@ -580,14 +580,14 @@ const blogCategory = () => {
               </div>
 
               {/* Blog Meta Title */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blog_category_meta_title"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Meta Title:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blog_category_meta_title"
                     name="blog_category_meta_title"
@@ -608,14 +608,14 @@ const blogCategory = () => {
               </div>
 
               {/* Blog Meta Description */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blog_category_meta_desc"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Meta Description:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <textarea
                     id="blog_category_meta_desc"
                     name="blog_category_meta_desc"
@@ -635,14 +635,14 @@ const blogCategory = () => {
               </div>
 
               {/* Blog Meta Keywords */}
-              <div className="flex w-full  items-center">
+              <div className="sm:flex w-full  items-center">
                 <label
                   htmlFor="blog_category_meta_keywords"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Meta Keywords:
                 </label>
-                <div className="w-[80%]">
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
                     id="blog_category_meta_keywords"
                     name="blog_category_meta_keywords"
@@ -693,16 +693,16 @@ const blogCategory = () => {
             {activeTab && (
               <form
                 onSubmit={handleEditFormSubmit}
-                className="flex flex-wrap gap-6 text-sm"
+                className="flex flex-wrap gap-4 sm:gap-6 text-sm"
               >
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blog_category_name"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
                      Name:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blog_category_name"
                       name="blog_category_name"
@@ -716,14 +716,14 @@ const blogCategory = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blog_category_sku"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     SKU:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                     type="text"
                       id="blog_category_sku"
@@ -742,14 +742,14 @@ const blogCategory = () => {
                 </div>
 
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blog_category_meta_title"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                      Meta Title:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blog_category_meta_title"
                       name="blog_category_meta_title"
@@ -766,14 +766,14 @@ const blogCategory = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blog_category_meta_desc"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                      Meta Description:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blog_category_meta_desc"
                       name="blog_category_meta_desc"
@@ -790,14 +790,14 @@ const blogCategory = () => {
                   </div>
                 </div>
 
-                <div className="flex w-full items-center">
+                <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blog_category_meta_keywords"
-                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                      Meta Keywords:
                   </label>
-                  <div className="w-[80%]">
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
                       id="blog_category_meta_keywords"
                       name="blog_category_meta_keywords"

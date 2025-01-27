@@ -8,6 +8,8 @@ table {
   border-collapse: collapse;
   width: 100%;
   font-size: 14px;
+  table-layout: auto;
+  word-wrap: break-word;
 }
 .modal {
   position: fixed;
@@ -105,3 +107,4 @@ div.dt-container select.dt-input {
   }
 }
 .jodit-wysiwyg{height:200px !important}
+
