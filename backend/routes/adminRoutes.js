@@ -7,6 +7,7 @@ const multer = require('multer');
 const fs = require("fs");
 const adminController = require('../controllers/adminController');
 const blogCatController = require('../controllers/blogCatController');
+const dashboardController = require('../controllers/dashboardController');
 
 // Dynamic folder storage setup
 const storage = multer.diskStorage({
@@ -44,5 +45,8 @@ router.put('/blog-cat-status/:id', blogCatController.updateCatStatus);
 router.post('/add-blog-category',upload.none(), verifyToken, blogCatController.addBlogCategory);
 router.get('/get-blog-category/:id', blogCatController.getBlogCategory);
 router.post('/update-blog-category/:id',upload.none(), blogCatController.updateBlogCategory);
+
+//ROUTES FOR DASHBOARD
+router.get("/getCounts", dashboardController.getCounts);
 
 module.exports = router;

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
@@ -22,16 +21,15 @@ export default function AdminLayout({ children }) {
             <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
 
-            <div
-                className={`flex-1 transition-all duration-300 ${isCollapsed ? 'sm:ml-0' : 'sm:ml-64' }`}
-            >
+            <div className={`flex-1 transition-all duration-300 ${isCollapsed ? 'sm:ml-0' : 'sm:ml-64' }`} >
                 {/* Header */}
                 <Header isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
                 {/* Main Content */}
-                <main className="p-3 sm:px-6 sm:py-2 bg-white min-h-screen  w-full font-RedditSans">
+                <main className="p-3 sm:px-6 sm:py-2 bg-dashGray min-h-screen  w-full font-RedditSans">
                     {children}
                 </main>
+                
                 <Footer />
             </div>
             

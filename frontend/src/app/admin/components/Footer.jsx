@@ -2,7 +2,7 @@ import React from 'react'
 
 const Footer = () => {
     return (
-        <footer className="mt-auto w-full  py-4 px-4 sm:px-6 lg:px-8 mx-auto">
+        <footer className="mt-auto w-full bg-white border-t py-4 px-4 sm:px-6 lg:px-8 mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 items-center text-center md:text-left">
                 <div>
                     <div className="flex-none text-md md:text-sm font-RedditSans  text-gray-500 focus:outline-none" href="#" aria-label="Brand">

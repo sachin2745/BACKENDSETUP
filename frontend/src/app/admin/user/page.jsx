@@ -1,11 +1,5 @@
 "use client";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, {useEffect,useState} from "react";
 import AdminLayout from "../Layout/adminLayout";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import Zoom from "react-medium-image-zoom";
@@ -17,8 +11,6 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { Formik, Form, input, ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import Swal from "sweetalert2";
 import useAppContext from "@/context/AppContext";
 
@@ -68,9 +60,7 @@ const User = () => {
   useEffect(() => {
     if (users.length > 0) {
       const table = $("#example1").DataTable({
-        responsive: true,
-        autoWidth: false,
-        destroy: true,
+        responsive: true,       
         dom: "Bfrtip",
         buttons: ["copy", "csv", "excel", "pdf", "print"],
         pageLength: 10,
@@ -83,10 +73,8 @@ const User = () => {
         },
         pagingType: "simple_numbers",
       });
-       
     }
   }, [users]);
-  
 
   // Function to toggle the popular status of a user
   const toggleUserPopularStatus = (userId, currentStatus) => {
@@ -510,14 +498,18 @@ const User = () => {
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
               Manage Users
             </h3>
-            {/* <div className="overflow-hidden"> */}
-              <table id="example1" className="display  nowwrap w-full table-auto">
+            <div className="overflow-x-auto">
+              <table
+                id="example1"
+                className="display  nowwrap w-full table-auto"
+              >
                 <thead>
                   <tr>
                     <th>S.No.</th>
                     <th>Image</th>
                     <th>Name</th>
                     <th>Email</th>
+
                     <th>Mobile</th>
                     <th>Created At</th>
                     <th>Updated At</th>
@@ -563,6 +555,7 @@ const User = () => {
                         </td>
 
                         <td>{item.userEmail}</td>
+
                         <td>{item.userMobile}</td>
                         <td>
                           {item.userCreatedAt
@@ -718,7 +711,7 @@ const User = () => {
                   )}
                 </tbody>
               </table>
-            {/* </div> */}
+            </div>
           </div>
         </div>
 
