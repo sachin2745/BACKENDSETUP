@@ -1,8 +1,9 @@
-import Meta from "./meta";
+// pages/about.js
 
+import Meta from "../meta";
 
 export const metadata = {
-  title: "Home Page",
+  title: "About Us",
   description: "We are passionate about creating modern and user-friendly web applications.",
   keywords: "web development, user-friendly, modern applications",
   schema: {
@@ -18,31 +19,22 @@ export const metadata = {
     ]
   }
 };
-export default function HomePage() {
-  
+
+export default function AboutPage() {
+   
   return (
     <>
-     <Meta 
+      <Meta 
         title={metadata.title} 
         description={metadata.description} 
         keywords={metadata.keywords} 
         schema={metadata.schema} 
       />
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="mx-auto p-24 text-center border-2 border-sky-500 bg-sky-500 text-white rounded-lg">
-          <h1 className="text-3xl font-bold">Welcome to TailAdmin Dashboard</h1>
-          <p className="mt-2">
-            Click below to explore:
-            <br />
-            <a
-              href="http://localhost:3000/admin/dashboard"
-              className="text-white font-bold underline"
-            >
-              Admin Dashboard
-            </a>
-          </p>
-        </div>
-      </div>
+
+      <section>
+        <h1>About Us</h1>
+        <p>We are passionate about creating modern and user-friendly web applications.</p>
+      </section>
     </>
   );
 }
