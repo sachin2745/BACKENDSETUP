@@ -8,6 +8,7 @@ require("dotenv").config();
 
 const userRoutes = require('./routes/userRoutes'); 
 const adminRoutes = require('./routes/adminRoutes'); 
+const webRoutes = require('./routes/webRoutes'); 
 const utilRouter = require('./routes/util');
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
+app.use('/web', webRoutes);
 app.use('/util', utilRouter);
 
 
