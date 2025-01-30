@@ -1,33 +1,29 @@
-import Meta from "./meta";
+
+export function generateMetadata() {
+  return {
+    title: "Home Page",
+    description:
+      "We are passionate about creating modern and user-friendly web applications.",
+    keywords: "web development, user-friendly, modern applications",
+    openGraph: {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Blog Portal",
+      url: "https://www.blogportal.com",
+      logo: "https://www.blogportal.com/logo.png",
+      sameAs: [
+        "https://www.facebook.com/blogportal",
+        "https://www.twitter.com/blogportal",
+        "https://www.linkedin.com/in/blogportal",
+      ],
+    },
+  };
+}
 
 
-export const metadata = {
-  title: "Home Page",
-  description: "We are passionate about creating modern and user-friendly web applications.",
-  keywords: "web development, user-friendly, modern applications",
-  schema: {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Your Company Name",
-    "url": "https://www.yourcompany.com",
-    "logo": "https://www.yourcompany.com/logo.png",
-    "sameAs": [
-      "https://www.facebook.com/yourprofile",
-      "https://www.twitter.com/yourprofile",
-      "https://www.linkedin.com/in/yourprofile"
-    ]
-  }
-};
 export default function HomePage() {
-  
   return (
     <>
-     <Meta 
-        title={metadata.title} 
-        description={metadata.description} 
-        keywords={metadata.keywords} 
-        schema={metadata.schema} 
-      />
       <div className="flex items-center justify-center min-h-screen">
         <div className="mx-auto p-24 text-center border-2 border-sky-500 bg-sky-500 text-white rounded-lg">
           <h1 className="text-3xl font-bold">Welcome to TailAdmin Dashboard</h1>
