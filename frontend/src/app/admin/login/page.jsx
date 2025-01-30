@@ -172,15 +172,15 @@ const adminLogin = () => {
                 </button>
               </form>
 
-              <p className="mt-10 mb-5 text-center text-sm text-gray-700">
+              <div className="mt-10 mb-5 text-center text-sm text-gray-700">
                 Not a member?{" "}
                 <Link
-                  href="/Signup"
+                  href=""
                   className="font-semibold  leading-6 text-spaceblack/90 hover:text-black"
                 >
                   Register for an account
                 </Link>
-              </p>
+              </div>
             </div>
           </div>
         </div>

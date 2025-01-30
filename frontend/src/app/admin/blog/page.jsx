@@ -555,7 +555,7 @@ const Blog = () => {
                   <th>S.No.</th>
                   {/* <th>Id</th> */}
                   <th>Image</th>
-                  <th>Image</th>
+                  {/* <th>Image</th> */}
                   <th>Title</th>
                   <th>Content</th>
                   <th>Category</th>
@@ -592,23 +592,8 @@ const Blog = () => {
                           )}
                         </Zoom>
                       </td>
+
                       <td>
-                        <Zoom>
-                          {item.blogImageMobile ? (
-                            <img
-                              src={`http://localhost:8001${item.blogImageMobile}`}
-                              alt={item.blogImgAlt || item.blogTitle} // Fallback to blog title if alt text is not provided
-                              className="h-10 w-10 object-cover" // Added object-cover for better image fitting
-                            />
-                          ) : (
-                            <p>No image available</p> // Fallback message if no image is present
-                          )}
-                        </Zoom>
-                      </td>
-                      <td
-                        className="cursor-pointer hover:text-blue-500"
-                        onClick={() => fetchUser(item.blogTitle)}
-                      >
                         {item.blogTitle}
                       </td>
                       <td>
@@ -692,7 +677,6 @@ const Blog = () => {
                         </label>
                       </td>
                       <td>
-                        
                         <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
                           <button
                             id="hs-dropdown-hover-event"
@@ -742,7 +726,6 @@ const Blog = () => {
                               >
                                 Delete
                               </div>
-                              
                             </div>
                           </div>
                         </div>
@@ -832,7 +815,7 @@ const Blog = () => {
                   htmlFor="blogContent"
                   className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  Blog Description:
+                  Blog Content:
                 </label>
                 <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <JoditEditor
@@ -1021,118 +1004,6 @@ const Blog = () => {
                 </div>
               </div>
 
-              {/* Blog Meta Title */}
-              <div className="sm:flex w-full  items-center">
-                <label
-                  htmlFor="blogMetaTitle"
-                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Meta Title:
-                </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <input
-                    id="blogMetaTitle"
-                    name="blogMetaTitle"
-                    type="text"
-                    placeholder="Enter Meta Title"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogMetaTitle}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogMetaTitle &&
-                    formik.errors.blogMetaTitle && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blogMetaTitle}
-                      </p>
-                    )}
-                </div>
-              </div>
-
-              {/* Blog Meta Description */}
-              <div className="sm:flex w-full  items-center">
-                <label
-                  htmlFor="blogMetaDescription"
-                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Meta Description:
-                </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <input
-                    id="blogMetaDescription"
-                    name="blogMetaDescription"
-                    type="text"
-                    placeholder="Enter Meta Description"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogMetaDescription}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogMetaDescription &&
-                    formik.errors.blogMetaDescription && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blogMetaDescription}
-                      </p>
-                    )}
-                </div>
-              </div>
-
-              {/* Blog Meta Keywords */}
-              <div className="sm:flex w-full  items-center">
-                <label
-                  htmlFor="blogMetaKeywords"
-                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Meta Keywords:
-                </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <input
-                    id="blogMetaKeywords"
-                    name="blogMetaKeywords"
-                    type="text"
-                    placeholder="Enter Meta Keywords"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogMetaKeywords}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogMetaKeywords &&
-                    formik.errors.blogMetaKeywords && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blogMetaKeywords}
-                      </p>
-                    )}
-                </div>
-              </div>
-
-              {/* Blog Force Keywords */}
-              <div className="sm:flex w-full  items-center">
-                <label
-                  htmlFor="blogForceKeywords"
-                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Force Keywords:
-                </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <input
-                    id="blogForceKeywords"
-                    name="blogForceKeywords"
-                    type="text"
-                    placeholder="Enter Force Keywords"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogForceKeywords}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogForceKeywords &&
-                    formik.errors.blogForceKeywords && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blogForceKeywords}
-                      </p>
-                    )}
-                </div>
-              </div>
-
               {/* Blog SKU */}
               <div className="sm:flex w-full  items-center">
                 <label
@@ -1160,31 +1031,147 @@ const Blog = () => {
                 </div>
               </div>
 
-              {/* Blog Schema */}
-              <div className="sm:flex w-full  items-center">
-                <label
-                  htmlFor="blogSchema"
-                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Blog Schema:
-                </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <textarea
-                    id="blogSchema"
-                    name="blogSchema"
-                    placeholder="Enter Schema"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blogSchema}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blogSchema && formik.errors.blogSchema && (
-                    <p className="text-red-500 text-sm">
-                      {formik.errors.blogSchema}
-                    </p>
-                  )}
+              <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
+                <legend className="text-xl font-semibold">
+                  Meta Details :
+                </legend>
+                {/* Blog Meta Title */}
+                <div className="sm:flex w-full  items-center">
+                  <label
+                    htmlFor="blogMetaTitle"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Title:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="blogMetaTitle"
+                      name="blogMetaTitle"
+                      type="text"
+                      placeholder="Enter Meta Title"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.blogMetaTitle}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {formik.touched.blogMetaTitle &&
+                      formik.errors.blogMetaTitle && (
+                        <p className="text-red-500 text-sm">
+                          {formik.errors.blogMetaTitle}
+                        </p>
+                      )}
+                  </div>
                 </div>
-              </div>
+
+                {/* Blog Meta Description */}
+                <div className="sm:flex w-full  items-center">
+                  <label
+                    htmlFor="blogMetaDescription"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Description:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <textarea
+                      id="blogMetaDescription"
+                      name="blogMetaDescription"
+                      placeholder="Enter Meta Description"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.blogMetaDescription}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {formik.touched.blogMetaDescription &&
+                      formik.errors.blogMetaDescription && (
+                        <p className="text-red-500 text-sm">
+                          {formik.errors.blogMetaDescription}
+                        </p>
+                      )}
+                  </div>
+                </div>
+
+                {/* Blog Meta Keywords */}
+                <div className="sm:flex w-full  items-center">
+                  <label
+                    htmlFor="blogMetaKeywords"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Keywords:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="blogMetaKeywords"
+                      name="blogMetaKeywords"
+                      type="text"
+                      placeholder="Enter Meta Keywords"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.blogMetaKeywords}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {formik.touched.blogMetaKeywords &&
+                      formik.errors.blogMetaKeywords && (
+                        <p className="text-red-500 text-sm">
+                          {formik.errors.blogMetaKeywords}
+                        </p>
+                      )}
+                  </div>
+                </div>
+
+                {/* Blog Force Keywords */}
+                <div className="sm:flex w-full  items-center">
+                  <label
+                    htmlFor="blogForceKeywords"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Keywords:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="blogForceKeywords"
+                      name="blogForceKeywords"
+                      type="text"
+                      placeholder="Enter Force Keywords"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.blogForceKeywords}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {formik.touched.blogForceKeywords &&
+                      formik.errors.blogForceKeywords && (
+                        <p className="text-red-500 text-sm">
+                          {formik.errors.blogForceKeywords}
+                        </p>
+                      )}
+                  </div>
+                </div>
+
+                {/* Blog Schema */}
+                <div className="sm:flex w-full  items-center">
+                  <label
+                    htmlFor="blogSchema"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Schema:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <textarea
+                      id="blogSchema"
+                      name="blogSchema"
+                      placeholder="Enter Schema"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.blogSchema}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {formik.touched.blogSchema && formik.errors.blogSchema && (
+                      <p className="text-red-500 text-sm">
+                        {formik.errors.blogSchema}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </fieldset>
 
               {/* Submit Button */}
               <div className="w-full flex justify-start gap-4">
@@ -1321,7 +1308,7 @@ const Blog = () => {
                       id="blogImageMobile"
                       name="blogImageMobile"
                       type="file"
-                      accept="image/*"                      
+                      accept="image/*"
                       onChange={(e) =>
                         handleEditImageChange(e, "blogImageMobile")
                       }
@@ -1421,102 +1408,6 @@ const Blog = () => {
 
                 <div className="sm:flex w-full items-center">
                   <label
-                    htmlFor="blogMetaTitle"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Meta Title:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="blogMetaTitle"
-                      name="blogMetaTitle"
-                      type="text"
-                      value={formData.blogMetaTitle}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogMetaTitle: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="blogMetaDescription"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Meta Description:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="blogMetaDescription"
-                      name="blogMetaDescription"
-                      type="text"
-                      value={formData.blogMetaDescription}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogMetaDescription: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="blogMetaKeywords"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Meta Keywords:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="blogMetaKeywords"
-                      name="blogMetaKeywords"
-                      type="text"
-                      value={formData.blogMetaKeywords}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogMetaKeywords: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="blogForceKeywords"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Force Keywords:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="blogForceKeywords"
-                      name="blogForceKeywords"
-                      type="text"
-                      value={formData.blogForceKeywords}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blogForceKeywords: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
                     htmlFor="blogSKU"
                     className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
@@ -1536,26 +1427,128 @@ const Blog = () => {
                   </div>
                 </div>
 
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="blogSchema"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Blog Schema:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <textarea
-                      id="blogSchema"
-                      name="blogSchema"
-                      value={formData.blogSchema}
-                      onChange={(e) =>
-                        setFormData({ ...formData, blogSchema: e.target.value })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
+                <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
+                  <legend className="text-xl font-semibold">
+                    Meta Details :
+                  </legend>
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="blogMetaTitle"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Title:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="blogMetaTitle"
+                        name="blogMetaTitle"
+                        type="text"
+                        value={formData.blogMetaTitle}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            blogMetaTitle: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
                   </div>
-                </div>
 
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="blogMetaDescription"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Description:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <textarea
+                        id="blogMetaDescription"
+                        name="blogMetaDescription"
+                        value={formData.blogMetaDescription}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            blogMetaDescription: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="blogMetaKeywords"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Keywords:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="blogMetaKeywords"
+                        name="blogMetaKeywords"
+                        type="text"
+                        value={formData.blogMetaKeywords}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            blogMetaKeywords: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="blogForceKeywords"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Keywords:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="blogForceKeywords"
+                        name="blogForceKeywords"
+                        type="text"
+                        value={formData.blogForceKeywords}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            blogForceKeywords: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="blogSchema"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Schema:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <textarea
+                        id="blogSchema"
+                        name="blogSchema"
+                        value={formData.blogSchema}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            blogSchema: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+                </fieldset>
                 <div className="w-full flex justify-start gap-4">
                   <a
                     href=""

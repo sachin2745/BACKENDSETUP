@@ -52,7 +52,7 @@ const blogCategory = () => {
 
   // Initialize DataTable
   useEffect(() => {
-    if (blogs.length > 0) {
+    if (blogCategories.length > 0) {
       $("#example1").DataTable({
         responsive: true,
         destroy: true, // Prevent reinitialization issues
@@ -69,7 +69,7 @@ const blogCategory = () => {
         pagingType: "simple_numbers", // Options: 'simple', 'simple_numbers', 'full', 'full_numbers'
       });
     }
-  }, [blogs]);
+  }, [blogCategories]);
 
   // Toggle user status
   const handleToggle = (
@@ -122,13 +122,18 @@ const blogCategory = () => {
         .min(5, "Name must be at least 5 characters")
         .required("Name is required"),
       blog_category_sku: Yup.string().required("Sku is required"),
-      blog_category_meta_title: Yup.string().required("Meta Title is required"),
-      blog_category_meta_desc: Yup.mixed().required(
-        "Meta Description is required"
-      ),
-      blog_category_meta_keywords: Yup.mixed().required(
-        "Meta Keywords is required"
-      ),
+
+      blog_category_meta_title: Yup.string()
+        .max(60, "Meta Title must be at most 60 characters")
+        .required("Meta Title is required"),
+
+      blog_category_meta_desc: Yup.string()
+        .max(160, "Meta Description must be at most 160 characters")
+        .required("Meta Description is required"),
+        
+      blog_category_meta_keywords: Yup.string()
+        .max(255, "Meta Keywords must be at most 255 characters")
+        .required("Meta Keywords is required"),
     }),
     onSubmit: async (values) => {
       console.log("Form submitted with values:", values);
@@ -700,7 +705,7 @@ const blogCategory = () => {
                     htmlFor="blog_category_name"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                     Name:
+                    Name:
                   </label>
                   <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
@@ -709,7 +714,10 @@ const blogCategory = () => {
                       type="text"
                       value={formData.blog_category_name}
                       onChange={(e) =>
-                        setFormData({ ...formData, blog_category_name: e.target.value })
+                        setFormData({
+                          ...formData,
+                          blog_category_name: e.target.value,
+                        })
                       }
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
@@ -725,7 +733,7 @@ const blogCategory = () => {
                   </label>
                   <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
-                    type="text"
+                      type="text"
                       id="blog_category_sku"
                       name="blog_category_sku"
                       placeholder="Enter Blog Category Sku"
@@ -741,13 +749,12 @@ const blogCategory = () => {
                   </div>
                 </div>
 
-
                 <div className="sm:flex w-full items-center">
                   <label
                     htmlFor="blog_category_meta_title"
                     className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                     Meta Title:
+                    Meta Title:
                   </label>
                   <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
@@ -771,7 +778,7 @@ const blogCategory = () => {
                     htmlFor="blog_category_meta_desc"
                     className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                     Meta Description:
+                    Meta Description:
                   </label>
                   <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
@@ -795,7 +802,7 @@ const blogCategory = () => {
                     htmlFor="blog_category_meta_keywords"
                     className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                     Meta Keywords:
+                    Meta Keywords:
                   </label>
                   <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
@@ -813,8 +820,6 @@ const blogCategory = () => {
                     />
                   </div>
                 </div>
-
-                
 
                 <div className="w-full flex justify-start gap-4">
                   <a

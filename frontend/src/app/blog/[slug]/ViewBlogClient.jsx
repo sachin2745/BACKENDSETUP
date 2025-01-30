@@ -4,13 +4,14 @@ import React, { useEffect, useState } from "react";
 const ViewBlog = ({ slug }) => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  console.log("Slug:", slug);
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/post/getbysku/${slug}`);
         if (res.ok) {
           const data = await res.json();
+          
           setBlog(data);
         } else {
           console.error("Failed to fetch blog data");
