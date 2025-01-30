@@ -29,9 +29,22 @@ export default function BlogPage() {
         <h3 className="text-sm font-Montserrat">Home &rsaquo; My Blog</h3>
       </div>
       <div className="container px-5 py-24 mx-auto">
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
+        {loading ?  (
+            <div className="flex flex-wrap -m-4">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="p-4 md:w-1/3">
+                  <div className="h-full relative border-2 shadow-xl border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
+                    <div className="lg:h-48 md:h-36 w-full bg-gray-300" />
+                    <div className="p-6">
+                      <div className="h-4 bg-gray-300 mb-2" />
+                      <div className="h-4 bg-gray-300 mb-2 w-1/2" />
+                      <div className="h-16 bg-gray-300" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
           <div className="flex flex-wrap -m-4">
             {blogs.map((post, index) => (
               <div key={post.blogId} className="p-4 md:w-1/3">

@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export function generateMetadata() {
   return {
@@ -29,13 +30,13 @@ export default function HomePage() {
           <h1 className="text-3xl font-bold">Welcome to TailAdmin Dashboard</h1>
           <p className="mt-2">
             Click below to explore:
-            <br />
-            <a
+            <br />{""}
+            <Link
               href="http://localhost:3000/admin/dashboard"
-              className="text-white font-bold underline"
+              className="text-white font-bold "
             >
               Admin Dashboard
-            </a>
+            </Link>
           </p>
         </div>
       </div>
