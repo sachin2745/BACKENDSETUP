@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import AdminLayout from "../Layout/adminLayout";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import Zoom from "react-medium-image-zoom";
@@ -35,13 +35,12 @@ const User = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
- 
 
   useEffect(() => {
     if (users.length > 0) {
       const table = $("#example1").DataTable({
-        responsive: true,   
-        destroy: true,    
+        responsive: true,
+        destroy: true,
         dom: "Bfrtip",
         buttons: ["copy", "csv", "excel", "pdf", "print"],
         pageLength: 10,
@@ -235,7 +234,7 @@ const User = () => {
 
   // FOR EDIT USER
   const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
   const [previewEditImage, setPreviewEditImage] = useState("");
 
   const [formData, setFormData] = useState({
@@ -267,7 +266,7 @@ const User = () => {
         setPreviewEditImage(`http://localhost:8001${response.data.userImage}`);
       }
 
-      setActiveTab(true);
+      setActiveTab(2);
 
       // Show the edit tab by triggering the click event
       // document.getElementById("editUser-styled-tab").click();
@@ -416,52 +415,44 @@ const User = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setActiveTab(false);
+    setActiveTab(0);
     setUser(null);
   };
 
   return (
     <AdminLayout>
       <div className="">
-        <nav
-          className="flex gap-x-1"
-          aria-label="Tabs"
-          role="tablist"
-          aria-orientation="horizontal"
-        >
+        <nav className="flex gap-x-1">
           <button
-            type="button"
-            className={`hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 disabled:opacity-50 disabled:pointer-events-none 
-          ${activeTab ? "" : "active"}`}
-            id="tabs-with-underline-item-1"
-            aria-selected={`${activeTab ? "false" : "true"}`}
-            data-hs-tab="#tabs-with-underline-1"
-            aria-controls="tabs-with-underline-1"
-            role="tab"
+            className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+              activeTab === 0
+                ? "font-semibold border-emerald-500 text-emerald-500"
+                : ""
+            }`}
+            onClick={() => setActiveTab(0)}
+            aria-selected={activeTab === 0}
           >
             User List
           </button>
           <button
-            type="button"
-            className="hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 disabled:opacity-50 disabled:pointer-events-none"
-            id="tabs-with-underline-item-2"
-            aria-selected="false"
-            data-hs-tab="#tabs-with-underline-2"
-            aria-controls="tabs-with-underline-2"
-            role="tab"
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+              activeTab === 1
+                ? "font-semibold border-emerald-500 text-emerald-500"
+                : ""
+            }`}
+            onClick={() => setActiveTab(1)}
+            aria-selected={activeTab === 1}
           >
             Add User
           </button>
           <button
-            type="button"
-            className={`hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500  ${
-              activeTab ? "active" : "hidden"
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+              activeTab === 2
+                ? "font-semibold border-emerald-500 text-emerald-500"
+                : "hidden"
             }`}
-            id="tabs-with-underline-item-3"
-            aria-selected={activeTab}
-            data-hs-tab="#tabs-with-underline-3"
-            aria-controls="tabs-with-underline-3"
-            role="tab"
+            onClick={() => setActiveTab(2)}
+            aria-selected={activeTab === 2}
           >
             Edit User
           </button>
@@ -472,7 +463,7 @@ const User = () => {
         <div
           id="tabs-with-underline-1"
           role="tabpanel"
-          className={`${activeTab ? "hidden" : ""}`}
+          className={`${activeTab === 0 ? "" : "hidden"}`}
           aria-labelledby="tabs-with-underline-item-1"
         >
           <div className="bg-white border shadow-md rounded p-4">
@@ -699,7 +690,7 @@ const User = () => {
         {/* ADD FORM */}
         <div
           id="tabs-with-underline-2"
-          className="hidden"
+          className={`${activeTab === 1 ? "" : "hidden"}`}
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-2"
         >
@@ -944,7 +935,7 @@ const User = () => {
         {/* EDIT FORM */}
         <div
           id="tabs-with-underline-3"
-          className={`${activeTab ? "" : "hidden"}`}
+          className={`${activeTab === 2 ? "" : "hidden"}`}
           role="tabpanel"
           aria-labelledby="tabs-with-underline-item-3"
         >

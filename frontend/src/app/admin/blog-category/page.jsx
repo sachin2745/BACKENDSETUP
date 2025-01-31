@@ -307,29 +307,39 @@ const blogCategory = () => {
       }
     });
   };
-  
 
   return (
     <AdminLayout>
       <div className="">
-      <nav
-          className="flex gap-x-1"  >
+        <nav className="flex gap-x-1">
           <button
-            className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${activeTab === 0 ? "font-semibold border-emerald-500 text-emerald-500" : ""}`}
+            className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+              activeTab === 0
+                ? "font-semibold border-emerald-500 text-emerald-500"
+                : ""
+            }`}
             onClick={() => setActiveTab(0)}
             aria-selected={activeTab === 0}
           >
             Blog Category List
           </button>
           <button
-            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${activeTab === 1 ? "font-semibold border-emerald-500 text-emerald-500" : ""}`}
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+              activeTab === 1
+                ? "font-semibold border-emerald-500 text-emerald-500"
+                : ""
+            }`}
             onClick={() => setActiveTab(1)}
             aria-selected={activeTab === 1}
           >
             Add Blog Category
           </button>
           <button
-            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${activeTab === 2 ? "font-semibold border-emerald-500 text-emerald-500" : "hidden"}`}
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+              activeTab === 2
+                ? "font-semibold border-emerald-500 text-emerald-500"
+                : "hidden"
+            }`}
             onClick={() => setActiveTab(2)}
             aria-selected={activeTab === 2}
           >
@@ -339,17 +349,12 @@ const blogCategory = () => {
       </div>
 
       <div className="mt-3">
-        <div
-          className={`${activeTab === 0 ? "" : "hidden"}`}
-        >
+        <div className={`${activeTab === 0 ? "" : "hidden"}`}>
           <div className="bg-white border shadow-md rounded p-4">
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
               Manage Blog Categories
             </h3>
-            <table
-              id="example1"
-              className="display nowwrap w-full table-auto"
-            >
+            <table id="example1" className="display nowwrap w-full table-auto">
               <thead>
                 <tr>
                   <th>S.No.</th>
@@ -480,9 +485,7 @@ const blogCategory = () => {
         </div>
 
         {/* ADD FORM */}
-        <div
-          className={`${activeTab === 1 ? "" : "hidden"}`}
-        >
+        <div className={`${activeTab === 1 ? "" : "hidden"}`}>
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">
               Create Blog Category
@@ -653,8 +656,7 @@ const blogCategory = () => {
         </div>
 
         {/* EDIT FORM */}
-        <div className={`${activeTab === 2 ? "" : "hidden"}`}
-                   >
+        <div className={`${activeTab === 2 ? "" : "hidden"}`}>
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">Edit Blog</h1>
             {activeTab && (
