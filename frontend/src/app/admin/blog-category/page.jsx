@@ -186,7 +186,7 @@ const blogCategory = () => {
     blog_category_meta_desc: "",
     blog_category_meta_keywords: "",
   });
-  const [activeTab, setActiveTab] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
   const fetchBlogCatData = async (blog_category_id) => {
     try {
@@ -212,7 +212,7 @@ const blogCategory = () => {
         blog_category_meta_keywords,
       });
 
-      setActiveTab(true);
+      setActiveTab(2);
     } catch (error) {
       console.error("Error fetching blog category data:", error);
     }
@@ -307,49 +307,31 @@ const blogCategory = () => {
       }
     });
   };
+  
 
   return (
     <AdminLayout>
       <div className="">
-        <nav
-          className="flex gap-x-1"
-          aria-label="Tabs"
-          role="tablist"
-          aria-orientation="horizontal"
-        >
+      <nav
+          className="flex gap-x-1"  >
           <button
-            type="button"
-            className={`hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 disabled:opacity-50 disabled:pointer-events-none 
-          ${activeTab ? "" : "active"}`}
-            id="tabs-with-underline-item-1"
-            aria-selected={`${activeTab ? "false" : "true"}`}
-            data-hs-tab="#tabs-with-underline-1"
-            aria-controls="tabs-with-underline-1"
-            role="tab"
+            className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${activeTab === 0 ? "font-semibold border-emerald-500 text-emerald-500" : ""}`}
+            onClick={() => setActiveTab(0)}
+            aria-selected={activeTab === 0}
           >
             Blog Category List
           </button>
           <button
-            type="button"
-            className="hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 disabled:opacity-50 disabled:pointer-events-none"
-            id="tabs-with-underline-item-2"
-            aria-selected="false"
-            data-hs-tab="#tabs-with-underline-2"
-            aria-controls="tabs-with-underline-2"
-            role="tab"
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${activeTab === 1 ? "font-semibold border-emerald-500 text-emerald-500" : ""}`}
+            onClick={() => setActiveTab(1)}
+            aria-selected={activeTab === 1}
           >
             Add Blog Category
           </button>
           <button
-            type="button"
-            className={`hs-tab-active:font-semibold hs-tab-active:border-emerald-500 hs-tab-active:text-emerald-500 py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500  ${
-              activeTab ? "active" : "hidden"
-            }`}
-            id="tabs-with-underline-item-3"
-            aria-selected={activeTab}
-            data-hs-tab="#tabs-with-underline-3"
-            aria-controls="tabs-with-underline-3"
-            role="tab"
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${activeTab === 2 ? "font-semibold border-emerald-500 text-emerald-500" : "hidden"}`}
+            onClick={() => setActiveTab(2)}
+            aria-selected={activeTab === 2}
           >
             Edit Blog Category
           </button>
@@ -358,10 +340,7 @@ const blogCategory = () => {
 
       <div className="mt-3">
         <div
-          id="tabs-with-underline-1"
-          role="tabpanel"
-          className={`${activeTab ? "hidden" : ""}`}
-          aria-labelledby="tabs-with-underline-item-1"
+          className={`${activeTab === 0 ? "" : "hidden"}`}
         >
           <div className="bg-white border shadow-md rounded p-4">
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
@@ -369,7 +348,7 @@ const blogCategory = () => {
             </h3>
             <table
               id="example1"
-              className="display  nowwrap w-100 table-auto  "
+              className="display nowwrap w-full table-auto"
             >
               <thead>
                 <tr>
@@ -502,10 +481,7 @@ const blogCategory = () => {
 
         {/* ADD FORM */}
         <div
-          id="tabs-with-underline-2"
-          className="hidden"
-          role="tabpanel"
-          aria-labelledby="tabs-with-underline-item-2"
+          className={`${activeTab === 1 ? "" : "hidden"}`}
         >
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">
@@ -677,12 +653,8 @@ const blogCategory = () => {
         </div>
 
         {/* EDIT FORM */}
-        <div
-          id="tabs-with-underline-3"
-          className={`${activeTab ? "" : "hidden"}`}
-          role="tabpanel"
-          aria-labelledby="tabs-with-underline-item-3"
-        >
+        <div className={`${activeTab === 2 ? "" : "hidden"}`}
+                   >
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">Edit Blog</h1>
             {activeTab && (

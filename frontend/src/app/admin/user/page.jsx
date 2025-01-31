@@ -35,27 +35,7 @@ const User = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
-  // Initialize DataTable
-  // useEffect(() => {
-  //   if (users.length > 0) {
-  //     $("#example1").DataTable({
-  //       responsive: true,
-  //       destroy: true, // Prevent reinitialization issues
-  //       dom: "Bfrtip", // Add buttons layout
-  //       buttons: ["copy", "csv", "excel", "pdf", "print"], // Export options
-  //       pageLength: 10,
-  //       language: {
-  //         searchPlaceholder: "...",
-  //         paginate: {
-  //           previous: "<", // Replaces "Previous" with "<"
-  //           next: ">", // Replaces "Next" with ">"
-  //         },
-  //       },
-  //       pagingType: "simple_numbers", // Options: 'simple', 'simple_numbers', 'full', 'full_numbers'
-  //     });
-  //   }
-  // }, [users]);
+ 
 
   useEffect(() => {
     if (users.length > 0) {
