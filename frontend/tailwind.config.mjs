@@ -16,6 +16,7 @@ export default {
         spaceblack: "#414A4C",
         dashgreen: "#1BCFB4",
         dashGray:"#F8F9FA",
+        lightBlue:"#5A4BDA",
       },
 
     },

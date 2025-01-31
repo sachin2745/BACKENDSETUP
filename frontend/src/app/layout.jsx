@@ -97,7 +97,7 @@ export default function RootLayout({ children }) {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
       </head>
 
-      <body>
+      <body className="">
         {!isAdminPage && <Header />}
         <main>{children}</main>
         {!isAdminPage && <Footer />}
