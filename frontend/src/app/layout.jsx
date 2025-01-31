@@ -1,11 +1,16 @@
+"use client";
+import { usePathname } from "next/navigation";
+import Footer from "./(components)/Footer";
+import Header from "./(components)/Header";
 import "./globals.css";
 
-
-
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  const isAdminPage = pathname.startsWith("/admin");
+
   return (
     <html lang="en">
-      <head>       
+      <head>
         <link rel="icon" href="/logo.png" />
         <link
           href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
@@ -93,9 +98,10 @@ export default function RootLayout({ children }) {
       </head>
 
       <body>
+        {!isAdminPage && <Header />}
         <main>{children}</main>
+        {!isAdminPage && <Footer />}
       </body>
-
     </html>
   );
 }

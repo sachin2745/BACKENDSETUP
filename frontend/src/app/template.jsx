@@ -6,17 +6,16 @@ import React, { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 
 const Template = ({ children }) => {
-
   useEffect(() => {
-    require("preline/dist/preline.js");
-  }, []);
+    if (typeof window !== "undefined") {
+        require("preline/dist/preline.js");
+    }
+}, []);
 
   return (
     <div>
       <Toaster position="top-center" />
-      <AppProvider>
-        {children}
-      </AppProvider>
+      <AppProvider>{children}</AppProvider>
       <PrelineScript />
     </div>
   );

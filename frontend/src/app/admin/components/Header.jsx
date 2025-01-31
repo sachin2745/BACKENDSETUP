@@ -114,7 +114,7 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
               </button>
               <button
                 type="button"
-                className="block sm:hidden p-2  justify-center items-center  text-start bg-dashGray text-quaternary text-sm font-medium rounded-full shadow  hover:bg-gray-950 focus:outline-none focus:bg-gray-900"
+                className="block sm:hidden p-2  justify-center items-center  text-start bg-dashGray text-quaternary text-sm font-medium rounded-full shadow  hover:bg-dashGray focus:outline-none focus:bg-dashGray"
                 aria-haspopup="dialog"
                 aria-expanded="false"
                 aria-controls="hs-sidebar-footer"

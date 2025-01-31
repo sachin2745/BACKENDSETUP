@@ -1,8 +1,9 @@
 
+
 const DashboardPage = () => {
     return (
-        <div className=" ">
-            <h1 className="text-3xl font-bold">ADMIN DASHBOARD LAYOUT </h1>
+        <div className="flex text-center justify-center items-center h-screen">
+            <h1 className="text-3xl font-bold">ADMIN DASHBOARD</h1>
         </div>
     );
 };
