@@ -42,7 +42,7 @@ const Blog = () => {
       const response = await axios.get(
         "http://localhost:8001/admin/blogs/getall"
       ); // Making GET request to the API endpoint
-      console.log(response.data);
+      // console.log(response.data);
       const data = response.data; // Extracting the data from the response
 
       // Setting the state with the fetched data
@@ -593,9 +593,7 @@ const Blog = () => {
                         </Zoom>
                       </td>
 
-                      <td>
-                        {item.blogTitle}
-                      </td>
+                      <td>{item.blogTitle}</td>
                       <td>
                         {/* <div dangerouslySetInnerHTML={{ __html: item.blogDescription }} /> */}
                         <div
@@ -1124,7 +1122,7 @@ const Blog = () => {
                     htmlFor="blogForceKeywords"
                     className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                    Keywords:
+                    Force Keywords:
                   </label>
                   <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
@@ -1507,7 +1505,7 @@ const Blog = () => {
                       htmlFor="blogForceKeywords"
                       className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                     >
-                      Keywords:
+                      Force Keywords:
                     </label>
                     <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                       <input

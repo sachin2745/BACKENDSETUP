@@ -9,13 +9,18 @@ import './layout.css'
 
 export default function AdminLayout({ children }) {
     const [isCollapsed, setIsCollapsed] = useState(null);
+    const [width, setWidth] = useState(null);
 
     // UseEffect to update the state after component is mounted
     useEffect(() => {
         setIsCollapsed(false); // Set your initial state here
+        setWidth(window.innerWidth);
+        // console.log(window.innerWidth);
     }, []);
 
     if (isCollapsed == null) return null;
+
+   
 
     return (
         <div className="flex">

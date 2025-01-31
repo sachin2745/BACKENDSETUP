@@ -60,7 +60,8 @@ const User = () => {
   useEffect(() => {
     if (users.length > 0) {
       const table = $("#example1").DataTable({
-        responsive: true,       
+        responsive: true,   
+        destroy: true,    
         dom: "Bfrtip",
         buttons: ["copy", "csv", "excel", "pdf", "print"],
         pageLength: 10,

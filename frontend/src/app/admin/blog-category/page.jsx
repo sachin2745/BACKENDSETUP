@@ -1,28 +1,15 @@
 "use client";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import AdminLayout from "../Layout/adminLayout";
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
-import { FaEdit, FaCheck, FaBan } from "react-icons/fa";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { Formik, Form, input, ErrorMessage, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import Swal from "sweetalert2";
 import useAppContext from "@/context/AppContext";
-import dynamic from "next/dynamic";
-const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const blogCategory = () => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -130,7 +117,7 @@ const blogCategory = () => {
       blog_category_meta_desc: Yup.string()
         .max(160, "Meta Description must be at most 160 characters")
         .required("Meta Description is required"),
-        
+
       blog_category_meta_keywords: Yup.string()
         .max(255, "Meta Keywords must be at most 255 characters")
         .required("Meta Keywords is required"),
@@ -583,90 +570,93 @@ const blogCategory = () => {
                     )}
                 </div>
               </div>
-
-              {/* Blog Meta Title */}
-              <div className="sm:flex w-full  items-center">
-                <label
-                  htmlFor="blog_category_meta_title"
-                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Meta Title:
-                </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <input
-                    id="blog_category_meta_title"
-                    name="blog_category_meta_title"
-                    type="text"
-                    placeholder="Enter Blog Category Meta Title"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blog_category_meta_title}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blog_category_meta_title &&
-                    formik.errors.blog_category_meta_title && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blog_category_meta_title}
-                      </p>
-                    )}
+              <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
+                <legend className="text-xl font-semibold">
+                  Meta Details :
+                </legend>
+                {/* Blog Meta Title */}
+                <div className="sm:flex w-full  items-center">
+                  <label
+                    htmlFor="blog_category_meta_title"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Title:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="blog_category_meta_title"
+                      name="blog_category_meta_title"
+                      type="text"
+                      placeholder="Enter Blog Category Meta Title"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.blog_category_meta_title}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {formik.touched.blog_category_meta_title &&
+                      formik.errors.blog_category_meta_title && (
+                        <p className="text-red-500 text-sm">
+                          {formik.errors.blog_category_meta_title}
+                        </p>
+                      )}
+                  </div>
                 </div>
-              </div>
 
-              {/* Blog Meta Description */}
-              <div className="sm:flex w-full  items-center">
-                <label
-                  htmlFor="blog_category_meta_desc"
-                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Meta Description:
-                </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <textarea
-                    id="blog_category_meta_desc"
-                    name="blog_category_meta_desc"
-                    placeholder="Enter Blog Category Meta Description"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blog_category_meta_desc}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blog_category_meta_desc &&
-                    formik.errors.blog_category_meta_desc && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blog_category_meta_desc}
-                      </p>
-                    )}
+                {/* Blog Meta Description */}
+                <div className="sm:flex w-full  items-center">
+                  <label
+                    htmlFor="blog_category_meta_desc"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Description:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <textarea
+                      id="blog_category_meta_desc"
+                      name="blog_category_meta_desc"
+                      placeholder="Enter Blog Category Meta Description"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.blog_category_meta_desc}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {formik.touched.blog_category_meta_desc &&
+                      formik.errors.blog_category_meta_desc && (
+                        <p className="text-red-500 text-sm">
+                          {formik.errors.blog_category_meta_desc}
+                        </p>
+                      )}
+                  </div>
                 </div>
-              </div>
 
-              {/* Blog Meta Keywords */}
-              <div className="sm:flex w-full  items-center">
-                <label
-                  htmlFor="blog_category_meta_keywords"
-                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Meta Keywords:
-                </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <input
-                    id="blog_category_meta_keywords"
-                    name="blog_category_meta_keywords"
-                    type="text"
-                    placeholder="Enter Blog Category Meta Keywords"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.blog_category_meta_keywords}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {formik.touched.blog_category_meta_keywords &&
-                    formik.errors.blog_category_meta_keywords && (
-                      <p className="text-red-500 text-sm">
-                        {formik.errors.blog_category_meta_keywords}
-                      </p>
-                    )}
+                {/* Blog Meta Keywords */}
+                <div className="sm:flex w-full  items-center">
+                  <label
+                    htmlFor="blog_category_meta_keywords"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Keywords:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="blog_category_meta_keywords"
+                      name="blog_category_meta_keywords"
+                      type="text"
+                      placeholder="Enter Blog Category Meta Keywords"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.blog_category_meta_keywords}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {formik.touched.blog_category_meta_keywords &&
+                      formik.errors.blog_category_meta_keywords && (
+                        <p className="text-red-500 text-sm">
+                          {formik.errors.blog_category_meta_keywords}
+                        </p>
+                      )}
+                  </div>
                 </div>
-              </div>
-
+              </fieldset>
               {/* Submit Button */}
               <div className="w-full flex justify-start gap-4">
                 <a
@@ -748,79 +738,81 @@ const blogCategory = () => {
                     />
                   </div>
                 </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="blog_category_meta_title"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Meta Title:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="blog_category_meta_title"
-                      name="blog_category_meta_title"
-                      type="text"
-                      value={formData.blog_category_meta_title}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blog_category_meta_title: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
+                <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
+                  <legend className="text-xl font-semibold">
+                    Meta Details :
+                  </legend>
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="blog_category_meta_title"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Title:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="blog_category_meta_title"
+                        name="blog_category_meta_title"
+                        type="text"
+                        value={formData.blog_category_meta_title}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            blog_category_meta_title: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="blog_category_meta_desc"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Meta Description:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="blog_category_meta_desc"
-                      name="blog_category_meta_desc"
-                      type="text"
-                      value={formData.blog_category_meta_desc}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blog_category_meta_desc: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="blog_category_meta_desc"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Description:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <textarea
+                        id="blog_category_meta_desc"
+                        name="blog_category_meta_desc"
+                        value={formData.blog_category_meta_desc}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            blog_category_meta_desc: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="blog_category_meta_keywords"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Meta Keywords:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="blog_category_meta_keywords"
-                      name="blog_category_meta_keywords"
-                      type="text"
-                      value={formData.blog_category_meta_keywords}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          blog_category_meta_keywords: e.target.value,
-                        })
-                      }
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="blog_category_meta_keywords"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Keywords:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="blog_category_meta_keywords"
+                        name="blog_category_meta_keywords"
+                        type="text"
+                        value={formData.blog_category_meta_keywords}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            blog_category_meta_keywords: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
                   </div>
-                </div>
-
+                </fieldset>
                 <div className="w-full flex justify-start gap-4">
                   <a
                     href=""
