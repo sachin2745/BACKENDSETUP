@@ -35,7 +35,7 @@ const Dashboard = () => {
         <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Blog Card */}
-          <div className="bg-[url('/green.webp')] shadow-md border  rounded-lg p-3">
+          <a href="/admin/blog" className="bg-[url('/green.webp')] shadow-md border  rounded-lg p-3 cursor-pointer">
             <div className="flex items-center justify-between">
               <div className="ml-4">
                 <h2 className="font-semibold text-4xl text-white mb-2">{counts.blogs}</h2>
@@ -46,10 +46,10 @@ const Dashboard = () => {
 
               </div>
             </div>
-          </div>
+          </a>
 
           {/* Blog Categories Card */}
-          <div className="bg-[url('/green.webp')] shadow-md border  rounded-lg p-3">
+          <a href="/admin/blog-category" className="bg-[url('/green.webp')] shadow-md border  rounded-lg p-3 cursor-pointer">
             <div className="flex items-center justify-between">
               <div className="ml-4">
                 <h2 className="font-semibold text-4xl text-white mb-2">{counts.categories} </h2>
@@ -60,10 +60,10 @@ const Dashboard = () => {
 
               </div>
             </div>
-          </div>
+          </a>
 
           {/* Users Card */}
-          <div className="bg-[url('/green.webp')] shadow-md border  rounded-lg p-3">
+          <a  href="/admin/user" className="bg-[url('/green.webp')] shadow-md border  rounded-lg p-3 cursor-pointer">
             <div className="flex items-center justify-between">
               <div className="ml-4">
                 <h2 className="font-semibold text-4xl text-white mb-2">{counts.users}</h2>
@@ -74,7 +74,7 @@ const Dashboard = () => {
                <img src="/users.png" alt="Users Icon" className="w-16 h-16" />
               </div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </AdminLayout>
