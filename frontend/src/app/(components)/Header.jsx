@@ -1,8 +1,12 @@
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
+
+    const pathname = usePathname();
+  
   return (
     <>
       <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white shadow-md text-sm py-1 font-RedditSans">
@@ -74,26 +78,26 @@ const Header = () => {
           <div className=" hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
             <div className="flex flex-col gap-10 text-[16px] mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
               <Link
-                className="font-semibold text-spaceblack hover:text-lightBlue focus:outline-none focus:text-lightBlue"
+                className={`${ pathname === "/" ? "text-primary  " : ""} font-semibold text-spaceblack hover:text-lightBlue focus:outline-none focus:text-lightBlue`}
                 href="/"
                 aria-current="page"
               >
                 Home
               </Link>
               <Link
-                className="font-semibold text-spaceblack hover:text-lightBlue focus:outline-none focus:text-lightBlue"
+                className={`${ pathname === "/about" ? "text-primary " : ""} font-semibold text-spaceblack hover:text-primary focus:outline-none focus:text-primary`}
                 href="/about"
               >
                 About
               </Link>
               <Link
-                className="font-semibold text-spaceblack hover:text-lightBlue focus:outline-none focus:text-lightBlue"
+                className={`${ pathname === "/blog" ? "text-primary " : ""} font-semibold text-spaceblack hover:text-primary focus:outline-none focus:text-primary`}
                 href="/blog"
               >
                 Blog
               </Link>
               <Link
-                className="font-semibold text-spaceblack hover:text-lightBlue focus:outline-none focus:text-lightBlue"
+                className={`${ pathname === "/contact-us" ? "text-primary " : ""} font-semibold text-spaceblack hover:text-primary focus:outline-none focus:text-primary`}
                 href="/contact-us"
               >
                 Contact Us
