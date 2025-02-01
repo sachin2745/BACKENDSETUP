@@ -9,13 +9,13 @@ export async function generateMetadata() {
       title: "Blog Portal",
       description: "We are passionate about creating modern and user-friendly web applications.",
       type: "website",
-      url: "https://www.yourcompany.com",
+      url: "https://www.blogportal.com",
       images: [
         {
-          url: "https://www.yourcompany.com/logo.png",
+          url: "https://www.blogportal.com/logo.png",
           width: 800,
           height: 600,
-          alt: "Your Company Logo",
+          alt: "Logo",
         },
       ],
     },

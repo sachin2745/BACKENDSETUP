@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -78,7 +79,7 @@ const Header = () => {
           <div className=" hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
             <div className="flex flex-col gap-10 text-[16px] mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
               <Link
-                className={`${ pathname === "/" ? "text-primary  " : ""} font-semibold text-spaceblack hover:text-lightBlue focus:outline-none focus:text-lightBlue`}
+                className={`${ pathname === "/" ? "text-primary  " : ""} font-semibold text-spaceblack hover:text-primary focus:outline-none focus:text-lightBlue`}
                 href="/"
                 aria-current="page"
               >
