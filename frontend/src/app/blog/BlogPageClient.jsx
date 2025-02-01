@@ -66,9 +66,11 @@ export default function BlogPage() {
                     alt={post.blogTitle}
                   />
                   <div className="px-6 py-3  text-center space-y-3">
-                    <h2 className="text-lg font-RedditSans font-semibold capitalize text-quaternary">
+                    <Link 
+                     href={`/blog/${post.blogSKU}`}
+                      className="text-lg font-RedditSans font-semibold capitalize text-quaternary">
                       {post.blogTitle}
-                    </h2>
+                    </Link>
                     <p className="text-sm text-gray-600 font-RedditSans line-clamp-2">
                       {post.blogDescription.split(" ").slice(0, 30).join(" ")}
                       ...

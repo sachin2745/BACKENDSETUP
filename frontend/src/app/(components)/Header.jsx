@@ -5,9 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Header = () => {
+  const pathname = usePathname();
 
-    const pathname = usePathname();
-  
   return (
     <>
       <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white shadow-md text-sm py-1 font-RedditSans">
@@ -79,26 +78,34 @@ const Header = () => {
           <div className=" hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
             <div className="flex flex-col gap-10 text-[16px] mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
               <Link
-                className={`${ pathname === "/" ? "text-primary  " : ""} font-semibold text-spaceblack hover:text-primary focus:outline-none focus:text-lightBlue`}
+                className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
+                  pathname === "/" ? "text-primary" : "text-spaceblack"
+                }`}
                 href="/"
                 aria-current="page"
               >
                 Home
               </Link>
               <Link
-                className={`${ pathname === "/about" ? "text-primary " : ""} font-semibold text-spaceblack hover:text-primary focus:outline-none focus:text-primary`}
+                className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
+                  pathname === "/about" ? "text-primary" : "text-spaceblack"
+                }`}
                 href="/about"
               >
                 About
               </Link>
               <Link
-                className={`${ pathname === "/blog" ? "text-primary " : ""} font-semibold text-spaceblack hover:text-primary focus:outline-none focus:text-primary`}
+                className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
+                  pathname === "/blog" ? "text-primary" : "text-spaceblack"
+                }`}
                 href="/blog"
               >
                 Blog
               </Link>
               <Link
-                className={`${ pathname === "/contact-us" ? "text-primary " : ""} font-semibold text-spaceblack hover:text-primary focus:outline-none focus:text-primary`}
+                className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
+                  pathname === "/contact-us" ? "text-primary" : "text-spaceblack"
+                }`}
                 href="/contact-us"
               >
                 Contact Us
