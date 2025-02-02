@@ -24,4 +24,8 @@ body {
   top: 10px !important;
 }
 
-
+.btnShape {
+  background: #ffffff;
+  box-shadow: inset 13px 13px 26px #cccccc,
+              inset -13px -13px 26px #ffffff;
+}

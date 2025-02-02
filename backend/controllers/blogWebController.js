@@ -93,33 +93,78 @@ const getRecentBlogs = async (req, res) => {
   }
 };
 
-
 const searchBlog = async (req, res) => {
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     const { query } = req.query;
 
     // console.log("Search query:", query);
-    
+
     try {
       const [rows] = await db.execute(
-        'SELECT  blogId, blogTitle, blogSKU  FROM blogs WHERE blogTitle LIKE ? AND blogStatus = 0 LIMIT 10',
+        "SELECT  blogId, blogTitle, blogSKU  FROM blogs WHERE blogTitle LIKE ? AND blogStatus = 0 LIMIT 10",
         [`%${query}%`]
       );
 
       res.status(200).json(rows);
     } catch (error) {
       console.error("Error fetching data:", error);
-      res.status(500).json({ message: 'Error fetching data' });
+      res.status(500).json({ message: "Error fetching data" });
     }
   } else {
-    res.status(405).json({ message: 'Method Not Allowed' });
+    res.status(405).json({ message: "Method Not Allowed" });
   }
 };
 
+const addComment = async (req, res) => {
+  const blogId = req.params.id;
+  const { commentText, name, email } = req.body;
+
+  const commentAddedDate = Math.floor(Date.now() / 1000);
+
+  const query =
+    "INSERT INTO blogcomments (commentBlogId, commentText, commentAddedByName, commentAddedByEmail, commentAddedDate, commentStatus) VALUES (?, ?, ?, ?, ?, ?)";
+  const params = [blogId, commentText, name, email, commentAddedDate, "2"]; //'2' as a String bacause using enum
+  try {
+    const [result] = await db.execute(query, params);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Failed to add comment." });
+    } else {
+      return res.status(200).json({
+        message: "Comment added successfully",
+        comment: { commentText, name, email, commentAddedDate },
+      });
+    }
+  } catch (err) {
+    console.error("Error adding comment:", err);
+    return res.status(500).json({ message: "Error adding comment." });
+  }
+};
+
+const getComments = async (req, res) => {
+  const { blogSlug } = req.params; // Destructure to get blogSlug from params
+
+  const query = `SELECT blogcomments.*, blogs.blogSKU FROM blogcomments
+  LEFT JOIN blogs ON blogcomments.commentBlogId = blogs.blogId
+  WHERE blogs.blogSKU LIKE ? AND blogcomments.commentStatus = '0' 
+  ORDER BY blogCommentId  DESC`;
+
+  try {
+    const [rows] = await db.execute(query, [`%${blogSlug}%`]);
+    // console.log("rows", rows);
+
+    return res.status(200).json(rows);
+  } catch (err) {
+    console.error("Error fetching comments:", err);
+    return res.status(500).json({ message: "Error fetching comments." });
+  }
+};
 
 module.exports = {
   getBlogs,
   getBlogBySku,
   getRecentBlogs,
   searchBlog,
+  addComment,
+  getComments,
 };

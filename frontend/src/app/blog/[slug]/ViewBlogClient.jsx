@@ -1,4 +1,5 @@
 "use client";
+import CommentSection from "@/app/(components)/CommentSection";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -176,7 +177,7 @@ const ViewBlog = ({ slug }) => {
   return (
     <section className="min-h-screen">
       <div className="p-5 xl:p-10">
-        <div className="max-w-8xl mx-auto xl:flex flex-row items-start  space-x-4 ">
+        <div className="max-w-8xl mx-auto xl:flex flex-row items-start">
           {/* <!-- Main Content --> */}
           <div className="xl:w-[77%] bg-white overflow-visible ">
             <h1 className="text-2xl text-wrap sm:text-4xl font-bold mb-4 text-start font-Montserrat">
@@ -197,7 +198,6 @@ const ViewBlog = ({ slug }) => {
                 {blog.blogCategory}
               </span>
             </div>
-
             <div className="flex flex-row items-start space-x-4 ">
               {/* <!-- Social Media Icons --> */}
               <div className="sticky top-10 flex flex-col space-y-4 mb-4">
@@ -285,16 +285,18 @@ const ViewBlog = ({ slug }) => {
                 </p>
               </div>
             </div>
+            <div >{slug && <CommentSection blogId={blog.blogId} blogSlug={blog.blogSKU} />}</div>
+
           </div>
 
           {/* <!-- Sidebar --> */}
-          <div className="sm:sticky top-10  xl:w-[27%] bg-white sm:px-6 py-7 xl:py-2 min-h-[400px] font-RedditSans">
+          <div className="xl:sticky rounded top-10  xl:w-[27%] bg-white sm:px-6 py-7 xl:py-2 min-h-[400px] font-RedditSans">
             <input
               type="text"
               placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full p-2 border border-gray-300 text-sm font-medium  bg-darkGray rounded "
+              className="w-full p-2 border border-gray-300 text-sm font-medium  bg-darkGray rounded focus:outline-none focus:ring-1 focus:ring-lightBlue "
             />
             {results.length > 0 && (
               <ul className="absolute bg-white border mt-2 border-gray-300 rounded w-[86%] sm:w-[95%] xl:w-[87%] max-h-60 overflow-y-auto">
@@ -340,6 +342,7 @@ const ViewBlog = ({ slug }) => {
             </div>
           </div>
         </div>
+
       </div>
     </section>
   );
