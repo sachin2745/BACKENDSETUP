@@ -11,7 +11,18 @@ import { RiTwitterXLine } from "react-icons/ri";
 const ViewBlog = ({ slug }) => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log("Slug:", slug);
+
+  const [currentUrl, setCurrentUrl] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = window.location.href;
+      // console.log("Current URL:", url); // Debugging
+      setCurrentUrl(url);
+    }
+  }, []);
+
+  // console.log("Slug:", slug);
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
@@ -42,6 +53,9 @@ const ViewBlog = ({ slug }) => {
       <div className="text-center py-10 text-red-600">Blog not found.</div>
     );
 
+    if (!currentUrl) return null;
+
+
   return (
     <section className="min-h-screen">
       <div className="p-5 xl:p-10">
@@ -66,26 +80,65 @@ const ViewBlog = ({ slug }) => {
                 {blog.blogCategory}
               </span>
             </div>
-            
+
             <div className="flex flex-row items-start space-x-4 ">
               {/* <!-- Social Media Icons --> */}
-              <div className="sticky  top-10  flex flex-col space-x-0 space-y-4 mb-4 ">
-                <a href="#" className="p-2 shape">
+              <div className="sticky top-10 flex flex-col space-y-4 mb-4">
+                {/* WhatsApp */}
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                    blog.blogTitle
+                  )}%20${encodeURIComponent(currentUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 shape"
+                >
                   <FaWhatsapp />
                 </a>
-                <a href="#" className="p-2 shape">
+
+                {/* Instagram (No direct share link, using profile link as placeholder) */}
+                <a
+                  href="https://www.instagram.com/blog_portal"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 shape"
+                >
                   <FaInstagram />
                 </a>
-                <a href="#" className="p-2 shape">
+
+                {/* LinkedIn */}
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${(currentUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 shape"
+                >
                   <FaLinkedinIn />
                 </a>
-                <a href="#" className="p-2 shape">
+
+                {/* Facebook */}
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${(currentUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 shape"
+                >
                   <FaFacebook />
                 </a>
-                <a href="#" className="p-2 shape">
+
+                {/* Twitter (Now X) */}
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    blog.blogTitle
+                  )}&url=${encodeURIComponent(currentUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 shape"
+                >
                   <RiTwitterXLine />
                 </a>
               </div>
+
               {/* <!-- Blog Image --> */}
               <div>
                 <img
@@ -93,7 +146,7 @@ const ViewBlog = ({ slug }) => {
                   alt={blog.blogImgAlt}
                   className="w-full hidden sm:block h-[503px] rounded-lg"
                 />
-                 <img
+                <img
                   src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImageMobile}`}
                   alt={blog.blogImgAlt}
                   className="w-full block sm:hidden h-[158px] rounded-lg"
@@ -110,8 +163,9 @@ const ViewBlog = ({ slug }) => {
                   />
                 </div>
                 <p className="pt-4 text-md border-t-2">
-                  <span className="font-semibold">Tags :</span>  {blog.blogKeywords}
-                  </p>
+                  <span className="font-semibold">Tags :</span>{" "}
+                  {blog.blogKeywords}
+                </p>
               </div>
             </div>
           </div>
