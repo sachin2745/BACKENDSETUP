@@ -8,6 +8,7 @@ const blogWebController = require('../controllers/blogWebController');
 //ROUTES FOR BLOG
 router.get('/blogs/getall', blogWebController.getBlogs);
 router.get('/post/getbysku/:slug', blogWebController.getBlogBySku);
+router.get('/recent-blogs', blogWebController.getRecentBlogs);
 
 
 module.exports = router;

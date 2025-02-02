@@ -1,4 +1,6 @@
 "use client";
+import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import {
   FaFacebook,
@@ -46,6 +48,27 @@ const ViewBlog = ({ slug }) => {
     fetchBlogData();
   }, [slug]);
 
+  const [recentBlogs, setRecentBlogs] = useState([]);
+
+  const fetchRecentBlogs = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/web/recent-blogs`
+      ); // Making GET request to the API endpoint
+      // console.log(response.data);
+      const data = response.data; // Extracting the data from the response
+
+      // Setting the state with the fetched data
+      setRecentBlogs(data.recentBlogs);
+    } catch (err) {
+      console.log(err.message); // Catching any error and setting the error state
+    }
+  };
+
+  useEffect(() => {
+    fetchRecentBlogs();
+  }, []);
+
   if (loading) return <div className="text-center py-10">Loading...</div>;
 
   if (!blog)
@@ -53,8 +76,7 @@ const ViewBlog = ({ slug }) => {
       <div className="text-center py-10 text-red-600">Blog not found.</div>
     );
 
-    if (!currentUrl) return null;
-
+  if (!currentUrl) return null;
 
   return (
     <section className="min-h-screen">
@@ -91,7 +113,7 @@ const ViewBlog = ({ slug }) => {
                   )}%20${encodeURIComponent(currentUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 shape"
+                  className="p-2 shape hover:text-lightBlue"
                 >
                   <FaWhatsapp />
                 </a>
@@ -101,27 +123,27 @@ const ViewBlog = ({ slug }) => {
                   href="https://www.instagram.com/blog_portal"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 shape"
+                  className="p-2 shape hover:text-lightBlue"
                 >
                   <FaInstagram />
                 </a>
 
                 {/* LinkedIn */}
                 <a
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${(currentUrl)}`}
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 shape"
+                  className="p-2 shape hover:text-lightBlue"
                 >
                   <FaLinkedinIn />
                 </a>
 
                 {/* Facebook */}
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${(currentUrl)}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 shape"
+                  className="p-2 shape hover:text-lightBlue"
                 >
                   <FaFacebook />
                 </a>
@@ -133,7 +155,7 @@ const ViewBlog = ({ slug }) => {
                   )}&url=${encodeURIComponent(currentUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 shape"
+                  className="p-2 shape hover:text-lightBlue"
                 >
                   <RiTwitterXLine />
                 </a>
@@ -181,36 +203,28 @@ const ViewBlog = ({ slug }) => {
             <div className="border shadow-md rounded px-5 py-4 font-RedditSans">
               <h2 className="text-xl font-bold mb-4">Recent Posts</h2>
               <ul className="space-y-4 font-medium text-gray-900">
-                <li className="flex items-center space-x-4 border-b-2">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImage}`}
-                    alt="Gen AI"
-                    className="w-16 h-16 rounded"
-                  />
-                  <span className="text-sm ">
-                    What Is Generative AI? Meaning, Uses, and Features
-                  </span>
-                </li>
-                <li className="flex items-center space-x-4 border-b-2">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImage}`}
-                    alt="AI Blog"
-                    className="w-16 h-16 rounded"
-                  />
-                  <span className="text-sm ">
-                    The Good and Bad of AI for the Future of Humans | Is AI...
-                  </span>
-                </li>
-                <li className="flex items-center space-x-4 border-b-2">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImage}`}
-                    alt="Real Estate"
-                    className="w-16 h-16 rounded"
-                  />
-                  <span className="text-sm ">
-                    Best Real Estate Software Development Company in...
-                  </span>
-                </li>
+                {recentBlogs.length > 0 ? (
+                  recentBlogs.map((blog) => (
+                    <li
+                      key={blog.blogId}
+                      className="flex items-center space-x-4 border-b-2 pb-2"
+                    >
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImage}`}
+                        alt={blog.blogImgAlt}
+                        className="w-16 h-16 rounded"
+                      />
+                      <Link
+                        href={`/blog/${blog.blogSKU}`}
+                        className="text-sm cursor-pointer hover:text-lightBlue"
+                      >
+                        {blog.blogTitle}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-gray-500">No recent posts available.</p>
+                )}
               </ul>
             </div>
           </div>
