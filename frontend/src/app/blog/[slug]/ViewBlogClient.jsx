@@ -14,6 +14,7 @@ const ViewBlog = ({ slug }) => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Get current URL
   const [currentUrl, setCurrentUrl] = useState("");
 
   useEffect(() => {
@@ -23,8 +24,9 @@ const ViewBlog = ({ slug }) => {
       setCurrentUrl(url);
     }
   }, []);
+  //END
 
-  // console.log("Slug:", slug);
+  // Fetching blog data
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
@@ -47,7 +49,9 @@ const ViewBlog = ({ slug }) => {
 
     fetchBlogData();
   }, [slug]);
+  //END
 
+  // Fetching recent blogs
   const [recentBlogs, setRecentBlogs] = useState([]);
 
   const fetchRecentBlogs = async () => {
@@ -68,6 +72,42 @@ const ViewBlog = ({ slug }) => {
   useEffect(() => {
     fetchRecentBlogs();
   }, []);
+  //END
+
+  //Search Functionality
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    if (search.trim()) {
+      const fetchData = async () => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/search?query=${search}`);
+        const data = await response.json();
+        setResults(data);
+        
+      };
+
+      fetchData();
+    } else {
+      setResults([]);
+    }
+  }, [search]);
+
+  const highlightText = (text, query) => {
+    if (!query) return text;
+
+    const parts = text.split(new RegExp(`(${query})`, "gi"));
+    return parts.map((part, index) =>
+      part.toLowerCase() === query.toLowerCase() ? (
+        <span key={index} className="bg-emerald-100 text-black">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+  //END 
 
   if (loading) return <div className="text-center py-10">Loading...</div>;
 
@@ -193,13 +233,29 @@ const ViewBlog = ({ slug }) => {
           </div>
 
           {/* <!-- Sidebar --> */}
-          <div className="sm:sticky top-10  xl:w-[27%] bg-white sm:px-6 py-7 sm:py-2 min-h-[400px]">
+          <div className="sm:sticky top-10  xl:w-[27%] bg-white sm:px-6 py-7 xl:py-2 min-h-[400px] font-RedditSans">
             <input
               type="text"
               placeholder="Search..."
-              className="w-full p-2 border border-gray-300 bg-darkGray rounded mb-4 "
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full p-2 border border-gray-300 text-sm font-medium  bg-darkGray rounded "
             />
-            <hr className="mb-4" />
+            {results.length > 0 && (
+              <ul className="absolute bg-white border mt-2 border-gray-300 rounded w-[86%] sm:w-[95%] xl:w-[87%] max-h-60 overflow-y-auto">
+                {results.map((result) => (
+                  <li
+                    key={result.blogId }
+                    className="p-2 cursor-pointer text-sm font-medium text-spaceblack hover:bg-emerald-100"
+                  >
+                    <a href={`/blog/${result.blogSKU}`}>
+                      {highlightText(result.blogTitle, search)}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <hr className="my-4" />
             <div className="border shadow-md rounded px-5 py-4 font-RedditSans">
               <h2 className="text-xl font-bold mb-4">Recent Posts</h2>
               <ul className="space-y-4 font-medium text-gray-900">

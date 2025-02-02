@@ -93,8 +93,33 @@ const getRecentBlogs = async (req, res) => {
   }
 };
 
+
+const searchBlog = async (req, res) => {
+  if (req.method === 'GET') {
+    const { query } = req.query;
+
+    // console.log("Search query:", query);
+    
+    try {
+      const [rows] = await db.execute(
+        'SELECT  blogId, blogTitle, blogSKU  FROM blogs WHERE blogTitle LIKE ? AND blogStatus = 0 LIMIT 10',
+        [`%${query}%`]
+      );
+
+      res.status(200).json(rows);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).json({ message: 'Error fetching data' });
+    }
+  } else {
+    res.status(405).json({ message: 'Method Not Allowed' });
+  }
+};
+
+
 module.exports = {
   getBlogs,
   getBlogBySku,
   getRecentBlogs,
+  searchBlog,
 };
