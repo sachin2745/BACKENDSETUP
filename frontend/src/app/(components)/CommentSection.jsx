@@ -6,30 +6,9 @@ import toast from "react-hot-toast";
 const CommentSection = ({ blogId, blogSlug }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    const fetchBlogData = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/web/get-comments/${blogSlug}`
-        );
-        if (res.ok) {
-          const data = await res.json();
-
-          setComments(data);
-          console.log("Comments data:", data);
-        } else {
-          console.error("Failed to fetch blog data");
-        }
-      } catch (error) {
-        console.error("Error fetching blog data:", error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBlogData();
-  }, [blogSlug]);
+  
 
   // Submit new comment
   const validationSchema = Yup.object({
@@ -41,24 +20,32 @@ const CommentSection = ({ blogId, blogSlug }) => {
   });
 
   const handleCommentSubmit = async (values) => {
+    setSubmitting(true); // Set submitting to true
     const { commentText, name, email } = values;
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/web/add-comment/${blogId}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ commentText, name, email }),
-      }
-    );
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/web/add-comment/${blogId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ commentText, name, email }),
+        }
+      );
 
-    if (response.ok) {
-      const newComment = await response.json();
-      setComments([newComment, ...comments]);
-      formik.resetForm();
-      toast.success("Comment posted successfully");
-    } else {
-      console.log("Failed to post comment");
+      if (response.ok) {
+        await response.json();        
+        formik.resetForm();
+        toast.success("Comment posted successfully");
+      } else {
+        console.log("Failed to post comment");
+        toast.error("Failed to post comment. Please try again."); // Optional: Show error toast
+      }
+    } catch (error) {
+      console.error("Error posting comment:", error);
+      toast.error("An error occurred while posting your comment."); // Optional: Show error toast
+    } finally {
+      setSubmitting(false); // Reset submitting state
     }
   };
 
@@ -71,6 +58,30 @@ const CommentSection = ({ blogId, blogSlug }) => {
     validationSchema,
     onSubmit: handleCommentSubmit,
   });
+
+  const fetchComments = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/web/get-comments/${blogSlug}`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setComments(data);
+        console.log("Comments data:", data);
+      } else {
+        console.error("Failed to fetch blog data");
+      }
+    } catch (error) {
+      console.error("Error fetching blog data:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments(); // Fetch comments on component mount
+  }, [blogSlug]);
   
   if (loading) return <div>Loading...</div>;
 
@@ -155,9 +166,9 @@ const CommentSection = ({ blogId, blogSlug }) => {
           </div>
 
           <div className="comments-list space-y-6 font-RedditSans">
-            {comments.map((comment) => (
+            {comments.map((comment, index) => (
               <div
-                key={comment.blogCommentId}
+                key={comment.blogCommentId || index}
                 className="comment-item p-4 bg-white border border-spaceblack border-b-4 shadow-lg rounded-lg"
               >
                 <div className="flex items-center justify-between">
@@ -165,20 +176,21 @@ const CommentSection = ({ blogId, blogSlug }) => {
                     {comment.commentAddedByName}
                   </p>
                   <p className="text-xs  text-spaceblack ">
-                    {new Date(comment.commentAddedDate * 1000).toLocaleDateString(
-                    "en-US",
-                    {
+                    {new Date(
+                      comment.commentAddedDate * 1000
+                    ).toLocaleDateString("en-US", {
                       month: "short",
                       day: "2-digit",
                       year: "numeric",
-                    }
-                  )}
+                    })}
                   </p>
                 </div>
-                <p className="text-xs xl:w-96 font-medium text-gray-500 border-b-2 border-spaceblack pb-2">                  
+                <p className="text-xs xl:w-96 font-medium text-gray-500 border-b-2 border-spaceblack pb-2">
                   {comment.commentAddedByEmail}
                 </p>
-                <p className="mt-2 font-medium text-spaceblack">{comment.commentText}</p>
+                <p className="mt-2 font-medium text-spaceblack">
+                  {comment.commentText}
+                </p>
               </div>
             ))}
           </div>

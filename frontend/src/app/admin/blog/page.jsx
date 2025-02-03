@@ -1,6 +1,5 @@
 "use client";
-import React, {
-  useCallback,
+import React, {  
   useEffect,
   useMemo,
   useRef,
@@ -12,18 +11,12 @@ import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
-import { FaEdit, FaCheck, FaBan } from "react-icons/fa";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { Formik, Form, input, ErrorMessage, useFormik } from "formik";
+import {  FaCheck, FaBan } from "react-icons/fa";
+import {  useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import {
-  MdKeyboardArrowDown,
-  MdOutlineVerified,
-  MdVerified,
-} from "react-icons/md";
-import "./blog.css";
+import {  MdVerified} from "react-icons/md";
+import { FaCircleCheck } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import useAppContext from "@/context/AppContext";
 // import $ from "jquery"; // Import jQuery
@@ -34,7 +27,6 @@ import useAppContext from "@/context/AppContext";
 // import "datatables.net-buttons/js/buttons.print";
 import dynamic from "next/dynamic";
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
-import { FaCircleCheck, FaRegCircleCheck } from "react-icons/fa6";
 
 const Blog = () => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -54,7 +46,6 @@ const Blog = () => {
       // Setting the state with the fetched data
       setBlogs(data.blogs);
       setBlogCategories(data.blogCategories);
-      // setBlogComments(data.blogComments);
     } catch (err) {
       console.log(err.message); // Catching any error and setting the error state
     }
@@ -80,7 +71,7 @@ const Blog = () => {
     fetchBlogComments();
   }, []);
 
-  // Initialize DataTable
+  // Initialize DataTable for 1st table
   useEffect(() => {
     if (blogs.length > 0) {
       $("#example1").DataTable({
@@ -101,6 +92,7 @@ const Blog = () => {
     }
   }, [blogs]);
 
+  // Initialize DataTable for 2nd table
   useEffect(() => {
     if (blogComments.length > 0) {
       $("#example2").DataTable({
@@ -530,7 +522,7 @@ const Blog = () => {
     );
   };
 
-  // const [comments, setComments] = useState([]);
+  //Update Comment Status
   const toggleCommentStatus = async (blogCommentId, commentStatus) => {
     try {
       const response = await axios.post(
@@ -1680,10 +1672,8 @@ const Blog = () => {
 
         {/* BLOG COMMENTS */}
         <div
-          id="tabs-with-underline-1"
           role="tabpanel"
           className={`${activeTab === 3 ? "" : "hidden"}`}
-          aria-labelledby="tabs-with-underline-item-1"
         >
           <div className="bg-white border shadow-md rounded p-4">
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
@@ -1691,7 +1681,7 @@ const Blog = () => {
             </h3>
             <table
               id="example2"
-              className="display  nowwrap w-100 table-auto  "
+              className="display  text-balance w-full table-auto"
             >
               <thead>
                 <tr>
@@ -1714,7 +1704,7 @@ const Blog = () => {
                   </tr>
                 ) : (
                   blogComments.map((item, index) => (
-                    <tr key={item.blogCommentId}>
+                    <tr key={item.blogCommentId || index}>
                       <td>{blogComments.indexOf(item) + 1}</td>
                       <td>{item.blogTitle}</td>
                       <td>{item.commentText}</td>

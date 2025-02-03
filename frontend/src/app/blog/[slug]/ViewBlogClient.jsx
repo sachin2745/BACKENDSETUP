@@ -276,12 +276,12 @@ const ViewBlog = ({ slug }) => {
                     className="w-full block sm:hidden h-[158px] rounded-lg"
                   />
                 </picture>
-                <div className="my-6  w-full bg-white font-RedditSans ">
+                <div className="my-6  w-full bg-white font-RedditSans">
                   <p className="pb-4 text-md border-b-2">
                     {blog.blogDescription}
                   </p>
                   <div
-                    className="pt-4 text-lg leading-relaxed"
+                    className="pt-4 text-md leading-relaxed font-RedditSans"
                     dangerouslySetInnerHTML={{
                       __html: blog.blogContent || "No content available.",
                     }}
