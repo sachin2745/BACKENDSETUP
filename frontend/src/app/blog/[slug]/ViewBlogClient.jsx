@@ -258,16 +258,24 @@ const ViewBlog = ({ slug }) => {
 
               {/* <!-- Blog Image --> */}
               <div>
-                <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImage}`}
-                  alt={blog.blogImgAlt}
-                  className="w-full hidden sm:block h-[503px] rounded-lg"
-                />
-                <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImageMobile}`}
-                  alt={blog.blogImgAlt}
-                  className="w-full block sm:hidden h-[158px] rounded-lg"
-                />
+                <picture>
+                  <source
+                    srcSet={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImage}`}
+                    media="(min-width: 768px)"
+                  />
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImage}`}
+                    alt={blog.blogImgAlt}
+                    className="w-full hidden sm:block h-[503px] rounded-lg"
+                  />
+                  <img
+                    width={690}
+                    height={450}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImageMobile}`}
+                    alt={blog.blogImgAlt}
+                    className="w-full block sm:hidden h-[158px] rounded-lg"
+                  />
+                </picture>
                 <div className="my-6  w-full bg-white font-RedditSans ">
                   <p className="pb-4 text-md border-b-2">
                     {blog.blogDescription}
@@ -285,8 +293,11 @@ const ViewBlog = ({ slug }) => {
                 </p>
               </div>
             </div>
-            <div >{slug && <CommentSection blogId={blog.blogId} blogSlug={blog.blogSKU} />}</div>
-
+            <div>
+              {slug && (
+                <CommentSection blogId={blog.blogId} blogSlug={blog.blogSKU} />
+              )}
+            </div>
           </div>
 
           {/* <!-- Sidebar --> */}
@@ -342,7 +353,6 @@ const ViewBlog = ({ slug }) => {
             </div>
           </div>
         </div>
-
       </div>
     </section>
   );

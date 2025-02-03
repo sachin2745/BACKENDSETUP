@@ -18,7 +18,11 @@ import { Formik, Form, input, ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import {
+  MdKeyboardArrowDown,
+  MdOutlineVerified,
+  MdVerified,
+} from "react-icons/md";
 import "./blog.css";
 import Swal from "sweetalert2";
 import useAppContext from "@/context/AppContext";
@@ -30,12 +34,14 @@ import useAppContext from "@/context/AppContext";
 // import "datatables.net-buttons/js/buttons.print";
 import dynamic from "next/dynamic";
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
+import { FaCircleCheck, FaRegCircleCheck } from "react-icons/fa6";
 
 const Blog = () => {
   const { currentUser, setCurrentUser } = useAppContext();
 
   const [blogs, setBlogs] = useState([]);
   const [blogCategories, setBlogCategories] = useState([]);
+  const [blogComments, setBlogComments] = useState([]);
 
   const fetchBlogs = async () => {
     try {
@@ -48,6 +54,7 @@ const Blog = () => {
       // Setting the state with the fetched data
       setBlogs(data.blogs);
       setBlogCategories(data.blogCategories);
+      // setBlogComments(data.blogComments);
     } catch (err) {
       console.log(err.message); // Catching any error and setting the error state
     }
@@ -55,6 +62,22 @@ const Blog = () => {
 
   useEffect(() => {
     fetchBlogs();
+  }, []);
+
+  const fetchBlogComments = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8001/admin/blogs/getall"
+      );
+      const data = response.data;
+      setBlogComments(data.blogComments);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlogComments();
   }, []);
 
   // Initialize DataTable
@@ -77,6 +100,26 @@ const Blog = () => {
       });
     }
   }, [blogs]);
+
+  useEffect(() => {
+    if (blogComments.length > 0) {
+      $("#example2").DataTable({
+        responsive: true,
+        destroy: true, // Prevent reinitialization issues
+        dom: "Bfrtip", // Add buttons layout
+        buttons: ["copy", "csv", "excel", "pdf", "print"], // Export options
+        pageLength: 10,
+        language: {
+          searchPlaceholder: "...",
+          paginate: {
+            previous: "<", // Replaces "Previous" with "<"
+            next: ">", // Replaces "Next" with ">"
+          },
+        },
+        pagingType: "simple_numbers", // Options: 'simple', 'simple_numbers', 'full', 'full_numbers'
+      });
+    }
+  }, [blogComments]);
 
   // Toggle user status
   const handleToggle = (blogId, currentStatus, blogTitle) => {
@@ -191,7 +234,7 @@ const Blog = () => {
     },
     validationSchema: Yup.object({
       blogTitle: Yup.string()
-        .min(5, "Title must be at least 5 characters")
+        .min(65, "Title must be at least 65 characters")
         .required("Title is required"),
       blogDescription: Yup.string()
         .min(20, "Description must be at least 20 characters")
@@ -487,15 +530,80 @@ const Blog = () => {
     );
   };
 
+  // const [comments, setComments] = useState([]);
+  const toggleCommentStatus = async (blogCommentId, commentStatus) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/update-comment-status`,
+        {
+          blogCommentId,
+          commentStatus,
+        }
+      );
+
+      if (response.data.success) {
+        setBlogComments((prevComments) =>
+          prevComments.map((comment) =>
+            comment.blogCommentId === blogCommentId
+              ? { ...comment, commentStatus: response.data.newStatus }
+              : comment
+          )
+        );
+        if (response.data.newStatus === "0") {
+          toast.success("Comment active successfully!", { autoClose: 3000 });
+        } else {
+          toast.success("Comment Inactive successfully!", { autoClose: 3000 });
+        }
+      }
+    } catch (error) {
+      console.error("Error updating comment status", error);
+    }
+  };
+
+  const handleCommentDelete = (blogCommentId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this comment?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:8001/admin/comment-delete/${blogCommentId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ commentStatus: "3" }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              toast.success("The comment has been deleted Successfully!.");
+              setActiveTab(3);
+              fetchBlogComments();
+            } else {
+              toast.error("Failed to delete the comment.");
+            }
+          })
+          .catch(() => {
+            toast.error("An error occurred while deleting the comment.");
+          });
+      }
+    });
+  };
+
   return (
     <AdminLayout>
       <div className="">
         <nav className="flex gap-x-1">
           <button
-            className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+            className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2  text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
               activeTab === 0
                 ? "font-semibold border-emerald-500 text-emerald-500"
-                : ""
+                : " border-transparent text-gray-500"
             }`}
             onClick={() => setActiveTab(0)}
             aria-selected={activeTab === 0}
@@ -503,10 +611,10 @@ const Blog = () => {
             Blog List
           </button>
           <button
-            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2  text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
               activeTab === 1
                 ? "font-semibold border-emerald-500 text-emerald-500"
-                : ""
+                : " border-transparent text-gray-500"
             }`}
             onClick={() => setActiveTab(1)}
             aria-selected={activeTab === 1}
@@ -514,15 +622,26 @@ const Blog = () => {
             Add Blog
           </button>
           <button
-            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2  text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
               activeTab === 2
                 ? "font-semibold border-emerald-500 text-emerald-500"
-                : "hidden"
+                : "hidden border-transparent text-gray-500"
             }`}
             onClick={() => setActiveTab(2)}
             aria-selected={activeTab === 2}
           >
             Edit Blog
+          </button>
+          <button
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2  text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+              activeTab === 3
+                ? "font-semibold border-emerald-500 text-emerald-500"
+                : " border-transparent text-gray-500"
+            }`}
+            onClick={() => setActiveTab(3)}
+            aria-selected={activeTab === 3}
+          >
+            Blog Comments
           </button>
         </nav>
       </div>
@@ -872,7 +991,8 @@ const Blog = () => {
                   htmlFor="blogImageMobile"
                   className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
-                  Blog Image Mobile:
+                  Blog Image Mobile <br />
+                  (420 * 220) :
                 </label>
                 <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                   <input
@@ -1555,6 +1675,136 @@ const Blog = () => {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+
+        {/* BLOG COMMENTS */}
+        <div
+          id="tabs-with-underline-1"
+          role="tabpanel"
+          className={`${activeTab === 3 ? "" : "hidden"}`}
+          aria-labelledby="tabs-with-underline-item-1"
+        >
+          <div className="bg-white border shadow-md rounded p-4">
+            <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
+              Manage Comments
+            </h3>
+            <table
+              id="example2"
+              className="display  nowwrap w-100 table-auto  "
+            >
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Blog</th>
+                  <th>Comment</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Posted At</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {blogComments.length === 0 ? (
+                  <tr>
+                    <td colSpan="10" className="text-center p-3 font-semibold">
+                      No available data
+                    </td>
+                  </tr>
+                ) : (
+                  blogComments.map((item, index) => (
+                    <tr key={item.blogCommentId}>
+                      <td>{blogComments.indexOf(item) + 1}</td>
+                      <td>{item.blogTitle}</td>
+                      <td>{item.commentText}</td>
+                      <td>{item.commentAddedByName}</td>
+                      <td>{item.commentAddedByEmail}</td>
+                      <td>
+                        {item.commentAddedDate
+                          ? format(
+                              new Date(item.commentAddedDate * 1000),
+                              "dd MMM yyyy hh:mm (EEE)",
+                              { timeZone: "Asia/Kolkata" }
+                            )
+                          : "N/A"}
+                      </td>
+
+                      <td className="px-4 py-2">
+                        <div className="flex justify-center items-center">
+                          <button
+                            onClick={() =>
+                              toggleCommentStatus(
+                                item.blogCommentId,
+                                item.commentStatus
+                              )
+                            }
+                            className="flex justify-center items-center w-8 h-8 rounded-lg transition-all duration-300 
+                                  bg-transparent  border-2 border-gray-300 "
+                          >
+                            {item.commentStatus === "2" ? (
+                              <MdVerified className="text-orange-500 text-lg" /> // Not Verified
+                            ) : item.commentStatus === "0" ? (
+                              <FaCircleCheck className="text-green-500 text-lg" /> // Active
+                            ) : (
+                              <FaBan className="text-red-500 text-lg" /> // Hidden
+                            )}
+                          </button>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
+                          <button
+                            id="hs-dropdown-hover-event"
+                            type="button"
+                            className="hs-dropdown-toggle py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                            aria-haspopup="menu"
+                            aria-expanded="false"
+                            aria-label="Dropdown"
+                          >
+                            Actions
+                            <svg
+                              className="hs-dropdown-open:rotate-180 size-4"
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="m6 9 6 6 6-6" />
+                            </svg>
+                          </button>
+
+                          <div
+                            className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 z-50 hidden min-w-24 bg-white shadow-md rounded-lg mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+                            role="menu"
+                            aria-orientation="vertical"
+                            aria-labelledby="hs-dropdown-hover-event"
+                          >
+                            <div className="p-1 space-y-0.5">
+                              <div
+                                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleCommentDelete(item.blogCommentId);
+                                }}
+                              >
+                                Delete
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

@@ -71,6 +71,7 @@ const CommentSection = ({ blogId, blogSlug }) => {
     validationSchema,
     onSubmit: handleCommentSubmit,
   });
+  
   if (loading) return <div>Loading...</div>;
 
   return (

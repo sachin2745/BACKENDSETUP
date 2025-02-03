@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
@@ -26,7 +27,6 @@ export default function BlogPage() {
 
   return (
     <section className="body-font ">
-     
       <div className="text-center font-RedditSans text-quaternary p-4 sm:pt-10 max-w-[900px] mx-auto">
         <h1 className="font-bold text-xl sm:text-3xl pb-4">
           Explore, Discover & Inspire – Welcome to My Blog!
@@ -61,14 +61,22 @@ export default function BlogPage() {
               <div key={post.blogId} className="p-4 w-full md:w-1/3">
                 <div className="h-full border border-gray-200 shadow-lg rounded-lg overflow-hidden ">
                   <img
-                    className="h-48 lg:h-48 md:h-36 w-full object-fit opacity-80 hover:opacity-100 transition-opacity duration-300"
+                    width={424}
+                    height={220}
+                    className="block sm:hidden h-48 lg:h-48 md:h-36 w-full object-fit opacity-80 hover:opacity-100 transition-opacity duration-300"
                     src={`${process.env.NEXT_PUBLIC_API_URL}${post.blogImageMobile}`}
                     alt={post.blogTitle}
                   />
+                  <img
+                    className="hidden sm:block h-48 lg:h-48 md:h-36 w-full object-fit opacity-80 hover:opacity-100 transition-opacity duration-300"
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${post.blogImage}`}
+                    alt={post.blogTitle}
+                  />
                   <div className="px-6 py-3  text-center space-y-3">
-                    <Link 
-                     href={`/blog/${post.blogSKU}`}
-                      className="text-lg font-RedditSans font-semibold capitalize text-quaternary">
+                    <Link
+                      href={`/blog/${post.blogSKU}`}
+                      className="text-lg font-RedditSans font-semibold capitalize text-quaternary"
+                    >
                       {post.blogTitle}
                     </Link>
                     <p className="text-sm text-gray-600 font-RedditSans line-clamp-2">

@@ -424,10 +424,10 @@ const User = () => {
       <div className="">
         <nav className="flex gap-x-1">
           <button
-            className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+            className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2  text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
               activeTab === 0
                 ? "font-semibold border-emerald-500 text-emerald-500"
-                : ""
+                : "border-transparent text-gray-500"
             }`}
             onClick={() => setActiveTab(0)}
             aria-selected={activeTab === 0}
@@ -435,10 +435,10 @@ const User = () => {
             User List
           </button>
           <button
-            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2  text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
               activeTab === 1
                 ? "font-semibold border-emerald-500 text-emerald-500"
-                : ""
+                : "border-transparent text-gray-500"
             }`}
             onClick={() => setActiveTab(1)}
             aria-selected={activeTab === 1}

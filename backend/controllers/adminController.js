@@ -32,6 +32,18 @@ const getBlogs = async (req, res) => {
         blog_category_id DESC
     `;
 
+  const commentSql = `
+    SELECT 
+     blogcomments. *, blogs.blogTitle AS blogTitle
+    FROM 
+      blogcomments   
+    LEFT JOIN blogs ON  blogcomments.commentBlogId = blogs.blogId
+    WHERE
+        blogcomments.commentStatus != "3"
+    ORDER BY
+      blogcomments.blogCommentId DESC
+  `;
+
   try {
     // Execute the query for blogs
     const [blogs] = await db.execute(sql);
@@ -39,8 +51,10 @@ const getBlogs = async (req, res) => {
     // Execute the query for blog categories
     const [blogCategories] = await db.execute(categoriesSql);
 
+    const [blogComments] = await db.execute(commentSql);
+
     // Return the data as JSON
-    return res.status(200).json({ blogs, blogCategories });
+    return res.status(200).json({ blogs, blogCategories, blogComments });
   } catch (err) {
     console.error("Error fetching blogs:", err);
     return res.status(500).json({ error: err.message }); // Handle errors
@@ -223,10 +237,74 @@ const updateBlog = async (req, res) => {
   res.json({ success: "Blog updated successfully" });
 };
 
+const updateComment = async (req, res) => {
+  try {
+    const { blogCommentId, commentStatus } = req.body;
+    let newStatus;
+
+    const currentStatus = String(commentStatus);
+
+    if (currentStatus === "2") {
+      newStatus = "0"; // Not verified → Active (Verified & Visible)
+    } else if (currentStatus === "0") {
+      newStatus = "1"; // Active → Hidden
+    } else if (currentStatus === "1") {
+      newStatus = "0"; // Hidden → Active
+    } else {
+      return res.status(400).json({ success: false, message: "Invalid status" });
+    }
+    const [result] = await db.execute(
+      "UPDATE blogcomments SET commentStatus = ? WHERE blogCommentId = ?",
+      [newStatus, blogCommentId]
+    );
+
+    if (result.affectedRows > 0) {
+      return res.json({ success: true, newStatus });
+    } else {
+      return res.status(400).json({ success: false, message: "Update failed" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+const deleteComment= async (req, res) => {
+  const blogCommentId  = req.params.id;
+  const { commentStatus } = req.body;
+   
+  
+  let query = "";
+  const params = [];
+
+  if (commentStatus !== undefined) {
+    query = "UPDATE blogcomments SET commentStatus = ? WHERE blogCommentId  = ?";
+    params.push(commentStatus, blogCommentId );
+  }
+
+  if (!query) {
+    return res.status(400).send("Invalid input: no fields to update.");
+  }
+  try {
+    const [result] = await db.execute(query, params);
+
+    if (result.affectedRows === 0) {
+      res.status(404).send("Comment not found.");
+    } else {
+      res.status(200).send("Comment updated successfully.");
+    }
+  } catch (err) {
+    console.error("Error updating comment:", err);
+    res.status(500).send("Error updating comment.");
+  }
+};
+
 module.exports = {
   getBlogs,
   updateStatus,
   addBlog,
   getBlog,
   updateBlog,
+  updateComment,
+  deleteComment,
 };

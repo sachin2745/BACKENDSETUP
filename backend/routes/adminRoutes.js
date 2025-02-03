@@ -49,4 +49,8 @@ router.post('/update-blog-category/:id',upload.none(), blogCatController.updateB
 //ROUTES FOR DASHBOARD
 router.get("/getCounts", dashboardController.getCounts);
 
+//ROUTES FOR COMMENTS
+router.post("/update-comment-status",adminController.updateComment);
+router.put('/comment-delete/:id',adminController.deleteComment);
+
 module.exports = router;
