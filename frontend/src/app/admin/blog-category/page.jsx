@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import AdminLayout from "../Layout/adminLayout";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import { format } from "date-fns";
@@ -309,7 +308,7 @@ const blogCategory = () => {
   };
 
   return (
-    <AdminLayout>
+    <>
       <div className="">
         <nav className="flex gap-x-1">
           <button
@@ -806,7 +805,7 @@ const blogCategory = () => {
           </div>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 };
 

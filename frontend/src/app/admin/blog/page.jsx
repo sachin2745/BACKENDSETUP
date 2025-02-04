@@ -5,7 +5,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import AdminLayout from "../Layout/adminLayout";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
@@ -588,7 +587,7 @@ const Blog = () => {
   };
 
   return (
-    <AdminLayout>
+    <>
       <div className="">
         <nav className="flex gap-x-1">
           <button
@@ -1798,7 +1797,7 @@ const Blog = () => {
           </div>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 };
 

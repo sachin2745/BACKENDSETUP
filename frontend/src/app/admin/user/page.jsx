@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import AdminLayout from "../Layout/adminLayout";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
@@ -420,7 +419,7 @@ const User = () => {
   };
 
   return (
-    <AdminLayout>
+    <>
       <div className="">
         <nav className="flex gap-x-1">
           <button
@@ -1247,7 +1246,7 @@ const User = () => {
           </div>
         )}
       </div>
-    </AdminLayout>
+    </>
   );
 };
 
