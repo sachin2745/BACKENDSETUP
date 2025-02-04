@@ -79,7 +79,7 @@ const adminLogin = () => {
                 alt="dashboard"
               />
               <h2 className="mt-2 text-center text-3xl  leading-9 tracking-wide text-quaternary font-Montserrat font-extrabold ">
-                Login To Your Account
+                Login To Your Dashboard
               </h2>
             </div>
 
