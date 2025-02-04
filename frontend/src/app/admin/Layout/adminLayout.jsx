@@ -4,13 +4,8 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "./layout.css";
+import { usePathname } from "next/navigation";
 
-export function generateMetadata() {
-  return {
-    title: "Admin Dashboard",
-    description: "Manage your application settings and user data.",
-  };
-}
 
 export default function AdminLayout({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(null);
@@ -23,6 +18,15 @@ export default function AdminLayout({ children }) {
     setWidth(window.innerWidth);
     // console.log(window.innerWidth);
   }, []);
+
+  //LOGIN PAGE NOT ACCESSED ITS ADMINLAYOUT STRUCTURE
+  const pathname = usePathname();
+  const isLoginPage = pathname === "/admin/login"; // Detect login page
+
+  if (isLoginPage) {
+    return <>{children}</>; // ✅ No layout for login page
+  }
+  //END
 
   if (isCollapsed == null) return null;
 
