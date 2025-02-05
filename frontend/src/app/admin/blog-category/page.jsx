@@ -19,7 +19,7 @@ const blogCategory = () => {
   const fetchBlogs = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8001/admin/blogs/getall"
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/blogs/getall`
       ); // Making GET request to the API endpoint
       //   console.log(response.data);
       const data = response.data; // Extracting the data from the response
@@ -66,7 +66,7 @@ const blogCategory = () => {
     const newStatus = currentStatus == 0 ? 1 : 0; // Toggle between 0 (active) and 1 (inactive)
 
     // Update the status in the backend
-    fetch(`http://localhost:8001/admin/blog-cat-status/${blog_category_id}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/blog-cat-status/${blog_category_id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -152,7 +152,7 @@ const blogCategory = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:8001/admin/add-blog-category",
+          `${process.env.NEXT_PUBLIC_API_URL}/admin/add-blog-category`,
           formData,
           {
             headers: {
@@ -190,7 +190,7 @@ const blogCategory = () => {
   const fetchBlogCatData = async (blog_category_id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8001/admin/get-blog-category/${blog_category_id}`
+       `${process.env.NEXT_PUBLIC_API_URL}/admin/get-blog-category/${blog_category_id}`
       );
       const {
         blog_category_name,
@@ -247,7 +247,7 @@ const blogCategory = () => {
       );
 
       await axios.post(
-        `http://localhost:8001/admin/update-blog-category/${blog_category_id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/update-blog-category/${blog_category_id}`,
         data,
         {
           headers: {
@@ -280,7 +280,7 @@ const blogCategory = () => {
       if (result.isConfirmed) {
         // Send request to update the user's status to 3
         fetch(
-          `http://localhost:8001/admin/blog-cat-status/${blog_category_id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/admin/blog-cat-status/${blog_category_id}`,
           {
             method: "PUT",
             headers: {

@@ -20,7 +20,7 @@ const User = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:8001/users/getall"); // Making GET request to the API endpoint
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/getall`); // Making GET request to the API endpoint
       // console.log(response.data);
       const data = response.data; // Extracting the data from the response
 
@@ -59,7 +59,7 @@ const User = () => {
   const toggleUserPopularStatus = (userId, currentStatus) => {
     const newStatus = currentStatus === 0 ? 1 : 0; // Toggle status between 0 and 1
 
-    fetch(`http://localhost:8001/users/popular/${userId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/popular/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const User = () => {
     const newStatus = currentStatus == 0 ? 1 : 0; // Toggle between 0 (active) and 1 (inactive)
 
     // Update the status in the backend
-    fetch(`http://localhost:8001/users/status/${userId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/status/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -126,7 +126,7 @@ const User = () => {
   //Function to handle Sort By Submit
   const handleSortBySubmit = (userId) => {
     // Update the Sort By value in the backend
-    fetch(`http://localhost:8001/users/status/${userId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/status/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -197,7 +197,7 @@ const User = () => {
 
       try {
         const res = await axios.post(
-          "http://localhost:8001/users/add-user",
+          `${process.env.NEXT_PUBLIC_API_URL}/users/add-user`,
           formData,
           {
             headers: {
@@ -247,7 +247,7 @@ const User = () => {
   const fetchUserData = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8001/users/get-user/${id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/users/get-user/${id}`
       );
       setUser(response.data);
       setFormData({
@@ -262,7 +262,7 @@ const User = () => {
 
       // Set the initial image for preview
       if (response.data.userImage) {
-        setPreviewEditImage(`http://localhost:8001${response.data.userImage}`);
+        setPreviewEditImage(`${process.env.NEXT_PUBLIC_API_URL}${response.data.userImage}`);
       }
 
       setActiveTab(2);
@@ -335,7 +335,7 @@ const User = () => {
       });
 
       await axios.put(
-        `http://localhost:8001/users/update-user/${user?.userId}`,
+       `${process.env.NEXT_PUBLIC_API_URL}/users/update-user/${user?.userId}`,
         updatedData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -366,7 +366,7 @@ const User = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         // Send request to update the user's status to 3
-        fetch(`http://localhost:8001/users/status/${userId}`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/status/${userId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -394,7 +394,7 @@ const User = () => {
   const fetchUser = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8001/users/get-user/${id}`
+       `${process.env.NEXT_PUBLIC_API_URL}/users/get-user/${id}`
       );
       setUser(response.data);
       setFormData({
@@ -508,7 +508,7 @@ const User = () => {
                           <Zoom>
                             {item.userImage ? (
                               <img
-                                src={`http://localhost:8001${item.userImage}`}
+                                src={`${process.env.NEXT_PUBLIC_API_URL}${item.userImage}`}
                                 alt={item.userName} // Fallback to blog title if alt text is not provided
                                 className="h-10 w-10 object-cover" // Added object-cover for better image fitting
                               />
@@ -1158,7 +1158,7 @@ const User = () => {
                 {/* Image */}
                 <div className="flex flex-col items-center">
                   <img
-                    src={`http://localhost:8001${formData.userImage}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${formData.userImage}`}
                     alt={formData.userName}
                     className="h-auto w-20 object-cover rounded-lg "
                   />

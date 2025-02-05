@@ -13,7 +13,7 @@ export default function BlogPage() {
     const fetchBlogs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8001/web/blogs/getall"
+          `${process.env.NEXT_PUBLIC_API_URL}/web/blogs/getall`
         );
         setBlogs(response.data.blogs);
       } catch (err) {

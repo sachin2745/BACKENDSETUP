@@ -37,7 +37,7 @@ const Blog = () => {
   const fetchBlogs = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8001/admin/blogs/getall"
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/blogs/getall`
       ); // Making GET request to the API endpoint
       // console.log(response.data);
       const data = response.data; // Extracting the data from the response
@@ -57,7 +57,7 @@ const Blog = () => {
   const fetchBlogComments = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8001/admin/blogs/getall"
+       `${process.env.NEXT_PUBLIC_API_URL}/admin/blogs/getall`
       );
       const data = response.data;
       setBlogComments(data.blogComments);
@@ -117,7 +117,7 @@ const Blog = () => {
     const newStatus = currentStatus == 0 ? 1 : 0; // Toggle between 0 (active) and 1 (inactive)
 
     // Update the status in the backend
-    fetch(`http://localhost:8001/admin/status/${blogId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/status/${blogId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -155,7 +155,7 @@ const Blog = () => {
   //Function to handle Sort By Submit
   const handleSortBySubmit = (blogId) => {
     // Update the Sort By value in the backend
-    fetch(`http://localhost:8001/admin/status/${blogId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/status/${blogId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -275,7 +275,7 @@ const Blog = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:8001/admin/addblog",
+          `${process.env.NEXT_PUBLIC_API_URL}/admin/addblog`,
           formData,
           {
             headers: {
@@ -337,7 +337,7 @@ const Blog = () => {
   const fetchBlogData = async (blogId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8001/admin/get-blog/${blogId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/get-blog/${blogId}`
       );
       const {
         blogTitle,
@@ -368,9 +368,9 @@ const Blog = () => {
         blogTitle,
         blogDescription,
         blogContent,
-        blogImage: blogImage ? `http://localhost:8001${blogImage}` : null,
+        blogImage: blogImage ? `${process.env.NEXT_PUBLIC_API_URL}${blogImage}` : null,
         blogImageMobile: blogImageMobile
-          ? `http://localhost:8001${blogImageMobile}`
+          ? `${process.env.NEXT_PUBLIC_API_URL}${blogImageMobile}`
           : null,
         blogImgAlt,
         blogCategory: categoryId,
@@ -385,10 +385,10 @@ const Blog = () => {
 
       // Ensure full URL for both images
       setPreviewEditImage(
-        blogImage ? `http://localhost:8001${blogImage}` : null
+        blogImage ?`${process.env.NEXT_PUBLIC_API_URL}${blogImage}` : null
       );
       setPreviewMobileEditImage(
-        blogImageMobile ? `http://localhost:8001${blogImageMobile}` : null
+        blogImageMobile ?`${process.env.NEXT_PUBLIC_API_URL}${blogImageMobile}` : null
       );
       setActiveTab(2);
     } catch (error) {
@@ -450,7 +450,7 @@ const Blog = () => {
       data.append("blogSchema", formData.blogSchema);
 
       await axios.post(
-        `http://localhost:8001/admin/update-blog/${blogId}`,
+       `${process.env.NEXT_PUBLIC_API_URL}/admin/update-blog/${blogId}`,
         data,
         {
           headers: {
@@ -685,7 +685,7 @@ const Blog = () => {
                         <Zoom>
                           {item.blogImage ? (
                             <img
-                              src={`http://localhost:8001${item.blogImage}`}
+                              src={`${process.env.NEXT_PUBLIC_API_URL}${item.blogImage}`}
                               alt={item.blogImgAlt || item.blogTitle} // Fallback to blog title if alt text is not provided
                               className="h-10 w-10 object-cover" // Added object-cover for better image fitting
                             />
