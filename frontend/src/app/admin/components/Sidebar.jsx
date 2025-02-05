@@ -2,7 +2,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FiUsers } from "react-icons/fi";
-import { MdOutlineSpeakerNotes } from "react-icons/md";import { LuLayoutDashboard } from "react-icons/lu";
+import { MdOutlineSpeakerNotes } from "react-icons/md";
+import { LuLayoutDashboard } from "react-icons/lu";
 
 const Sidebar = ({ isCollapsed }) => {
   const pathname = usePathname();
@@ -62,11 +63,13 @@ const Sidebar = ({ isCollapsed }) => {
           {/* Header */}
           <header className="p-4 flex justify-between items-center gap-x-2">
             <div className="flex items-center gap-1 font-bold text-xl text-quaternary ">
-              {!isCollapsed && 
-               <img className="mx-auto h-10 w-auto rounded-full "
-                src="/logo.png"
-                alt="Blog Logo"
-              />}
+              {!isCollapsed && (
+                <img
+                  className="mx-auto h-10 w-auto rounded-full "
+                  src="/logo.png"
+                  alt="Blog Logo"
+                />
+              )}
               {!isCollapsed && <span>Blog Portal</span>}
             </div>
             <div className="lg:hidden -me-2">
@@ -131,19 +134,28 @@ const Sidebar = ({ isCollapsed }) => {
               <ul className="space-y-1">
                 <li>
                   <Link
-                    className={` ${ pathname === "/admin/dashboard" ? "bg-emerald-200 " : ""} flex items-center gap-x-3 py-2 px-2.5  text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                    className={` ${
+                      pathname === "/admin/dashboard" ? "bg-emerald-200 " : ""
+                    } flex items-center gap-x-3 py-2 px-2.5  text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/dashboard"
                   >
                     <LuLayoutDashboard className="size-4 text-bold" />
                     Dashboard
                   </Link>
                 </li>
-               
-                {/* <li className="hs-accordion" id="projects-accordion">
+
+                <li
+                  className={`${
+                    pathname.startsWith("/admin/about/") ? "active" : ""
+                  } hs-accordion`}
+                  id="projects-accordion"
+                >
                   <button
                     type="button"
                     className="hs-accordion-toggle w-full text-start flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100"
-                    aria-expanded="true"
+                    aria-expanded={
+                      pathname.startsWith("/admin/about/") ? "true" : "false"
+                    }
                     aria-controls="projects-accordion-sub-1-collapse-1"
                   >
                     <svg
@@ -162,9 +174,13 @@ const Sidebar = ({ isCollapsed }) => {
                       <path d="M3 7.6v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8" />
                       <path d="M15 2v5h5" />
                     </svg>
-                    Projects
+                    About
                     <svg
-                      className="hs-accordion-active:block ms-auto hidden size-4 text-gray-600 group-hover:text-gray-500"
+                      className={`hs-accordion-active:block ms-auto ${
+                        pathname.startsWith("/admin/about/")
+                          ? "block"
+                          : "hidden"
+                      } size-4 text-gray-600 group-hover:text-gray-500`}
                       xmlns="http://www.w3.org/2000/svg"
                       width={24}
                       height={24}
@@ -178,7 +194,11 @@ const Sidebar = ({ isCollapsed }) => {
                       <path d="m18 15-6-6-6 6" />
                     </svg>
                     <svg
-                      className="hs-accordion-active:hidden ms-auto block size-4 text-gray-600 group-hover:text-gray-500"
+                      className={`hs-accordion-active:hidden ms-auto ${
+                        pathname.startsWith("/admin/about/")
+                          ? "hidden"
+                          : "block"
+                      } size-4 text-gray-600 group-hover:text-gray-500`}
                       xmlns="http://www.w3.org/2000/svg"
                       width={24}
                       height={24}
@@ -194,40 +214,34 @@ const Sidebar = ({ isCollapsed }) => {
                   </button>
                   <div
                     id="projects-accordion-sub-1-collapse-1"
-                    className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden"
+                    className={`hs-accordion-content w-full overflow-hidden transition-[height] duration-300 ${
+                      pathname.startsWith("/admin/about/") ? "block" : "hidden"
+                    }`}
                     role="region"
                     aria-labelledby="projects-accordion"
                   >
                     <ul className="pt-1 ps-7 space-y-1">
                       <li>
-                        <a
-                          className="flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100"
-                          href="#"
+                        <Link
+                          className={` ${
+                            pathname === "/admin/about/mission-vision"
+                              ? "bg-emerald-200"
+                              : ""
+                          } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
+                          href="/admin/about/mission-vision"
                         >
-                          Link 1
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100"
-                          href="#"
-                        >
-                          Link 2
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100"
-                          href="#"
-                        >
-                          Link 3
-                        </a>
+                          Mission & Vision
+                        </Link>
                       </li>
                     </ul>
                   </div>
-                </li> */}
+                </li>
+
                 <li>
-                  <a className={` ${pathname === "/admin/blog" ? "bg-emerald-200" : ""} flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                  <Link
+                    className={` ${
+                      pathname === "/admin/blog" ? "bg-emerald-200" : ""
+                    } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/blog"
                   >
                     <svg
@@ -251,28 +265,33 @@ const Sidebar = ({ isCollapsed }) => {
                         d="M12.5 0C5.602 0 0 5.602 0 12.5S5.602 25 12.5 25 25 19.398 25 12.5 19.398 0 12.5 0zm0 .969A11.519 11.519 0 0124.031 12.5c0 6.378-5.153 11.563-11.531 11.563C6.122 24.063.969 18.878.969 12.5A11.519 11.519 0 0112.5.969zm3.688 4.656a.5.5 0 00-.282.281L14.97 7.75 7 12.063V19h.5l6.469.031 4.219-7.843a.5.5 0 00.156-.063l1.812-1a.5.5 0 00.094-.813l-3.531-3.53a.5.5 0 00-.375-.157.5.5 0 00-.094 0 .5.5 0 00-.063 0zm.312 1.344l2.594 2.593-.907.5L16 7.906l.5-.937zM6 7v1h5.031V7H6zm9.344 1.656l2 2L13.375 18H8.719l2.375-2.344a1.48 1.48 0 001.687-.281 1.512 1.512 0 000-2.125 1.512 1.512 0 00-2.125 0 1.482 1.482 0 00-.281 1.688L8 17.343v-4.688l7.344-4zm-3.625 5.156c.127 0 .275.026.375.126.2.199.2.519 0 .718-.2.2-.52.2-.719 0-.2-.2-.2-.519 0-.719.1-.1.217-.124.344-.124z"
                       />
                     </svg>
-                    
                     Blog
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    className={`${ pathname === "/admin/blog-category"? "bg-emerald-200": ""} flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                  <Link
+                    className={`${
+                      pathname === "/admin/blog-category"
+                        ? "bg-emerald-200"
+                        : ""
+                    } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/blog-category"
-                  >                  
+                  >
                     {/* <BiCategory  /> */}
                     <MdOutlineSpeakerNotes className="size-4" />
                     Blog Category
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    className={`${pathname === "/admin/user" ? "bg-emerald-200" : ""} flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                  <Link
+                    className={`${
+                      pathname === "/admin/user" ? "bg-emerald-200" : ""
+                    } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/user"
-                  >                 
+                  >
                     <FiUsers className="size-4" />
                     User
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

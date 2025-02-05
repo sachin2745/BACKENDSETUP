@@ -36,5 +36,9 @@ export default {
   },
   plugins: [
     require('preline/plugin'),
+    require('daisyui'),
   ],
+  daisyui: {
+    themes: ["light"], // DaisyUI themes
+  },
 };

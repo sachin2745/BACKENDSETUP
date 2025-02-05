@@ -420,16 +420,14 @@ const blogCategory = () => {
                         </label>
                       </td>
                       <td>
-                        <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
-                          <button
-                            id="hs-dropdown-hover-event"
-                            type="button"
-                            className="hs-dropdown-toggle py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
-                            aria-haspopup="menu"
-                            aria-expanded="false"
-                            aria-label="Dropdown"
+                       
+                        <div className="dropdown dropdown-hover font-RedditSans">
+                          <div
+                            tabIndex={0}
+                            role="button"
+                            className=" py-1.5 px-2 inline-flex mb-1 items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
                           >
-                            Actions
+                            Action
                             <svg
                               className="hs-dropdown-open:rotate-180 size-4"
                               xmlns="http://www.w3.org/2000/svg"
@@ -444,35 +442,32 @@ const blogCategory = () => {
                             >
                               <path d="m6 9 6 6 6-6" />
                             </svg>
-                          </button>
-
-                          <div
-                            className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 z-50 hidden min-w-24 bg-white shadow-md rounded-lg mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-                            role="menu"
-                            aria-orientation="vertical"
-                            aria-labelledby="hs-dropdown-hover-event"
+                          </div>
+                          <ul
+                            tabIndex={0}
+                            className="dropdown-content menu bg-base-100 rounded-md  z-[1] min-w-24 p-2 shadow"
                           >
-                            <div className="p-1 space-y-0.5">
-                              <div
-                                onClick={() =>
-                                  fetchBlogCatData(item.blog_category_id)
-                                }
-                                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100"
-                                href="#"
-                              >
+                            <li className=" rounded">
+                              <button
+                              className="hover:bg-emerald-200 "
+                              onClick={() =>
+                                fetchBlogCatData(item.blog_category_id)
+                              }>
                                 Edit
-                              </div>
-                              <div
-                                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  handleCatDelete(item.blog_category_id);
-                                }}
+                              </button>
+                            </li>
+                            <li className=" rounded">
+                              <button
+                              className="hover:bg-red-200"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleCatDelete(item.blog_category_id);
+                              }}
                               >
                                 Delete
-                              </div>
-                            </div>
-                          </div>
+                              </button>
+                            </li>
+                          </ul>
                         </div>
                       </td>
                     </tr>

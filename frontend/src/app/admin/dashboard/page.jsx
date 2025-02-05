@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
@@ -33,7 +34,7 @@ const Dashboard = () => {
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Blog Card */}
-        <a
+        <Link
           href="/admin/blog"
           className="bg-[url('/green.webp')] shadow-md border  rounded-lg p-3 cursor-pointer"
         >
@@ -48,10 +49,10 @@ const Dashboard = () => {
               <img src="/blog.png" alt="Users Icon" className="w-16 h-16" />
             </div>
           </div>
-        </a>
+        </Link>
 
         {/* Blog Categories Card */}
-        <a
+        <Link
           href="/admin/blog-category"
           className="bg-[url('/green.webp')] shadow-md border  rounded-lg p-3 cursor-pointer"
         >
@@ -68,10 +69,10 @@ const Dashboard = () => {
               <img src="/cat.png" alt="Users Icon" className="w-14 h-14" />
             </div>
           </div>
-        </a>
+        </Link>
 
         {/* Users Card */}
-        <a
+        <Link
           href="/admin/user"
           className="bg-[url('/green.webp')] shadow-md border  rounded-lg p-3 cursor-pointer"
         >
@@ -86,7 +87,7 @@ const Dashboard = () => {
               <img src="/users.png" alt="Users Icon" className="w-16 h-16" />
             </div>
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   );

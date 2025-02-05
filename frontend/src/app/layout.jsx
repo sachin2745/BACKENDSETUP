@@ -9,7 +9,7 @@ export default function RootLayout({ children }) {
   const isAdminPage = pathname.startsWith("/admin");
 
   return (
-    <html lang="en">
+    <html lang="en"  data-theme="light">
       <head>
         <link rel="icon" href="/logo.png" />
         <link

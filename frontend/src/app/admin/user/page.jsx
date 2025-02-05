@@ -20,7 +20,9 @@ const User = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/getall`); // Making GET request to the API endpoint
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/getall`
+      ); // Making GET request to the API endpoint
       // console.log(response.data);
       const data = response.data; // Extracting the data from the response
 
@@ -262,7 +264,9 @@ const User = () => {
 
       // Set the initial image for preview
       if (response.data.userImage) {
-        setPreviewEditImage(`${process.env.NEXT_PUBLIC_API_URL}${response.data.userImage}`);
+        setPreviewEditImage(
+          `${process.env.NEXT_PUBLIC_API_URL}${response.data.userImage}`
+        );
       }
 
       setActiveTab(2);
@@ -335,7 +339,7 @@ const User = () => {
       });
 
       await axios.put(
-       `${process.env.NEXT_PUBLIC_API_URL}/users/update-user/${user?.userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/update-user/${user?.userId}`,
         updatedData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -394,7 +398,7 @@ const User = () => {
   const fetchUser = async (id) => {
     try {
       const response = await axios.get(
-       `${process.env.NEXT_PUBLIC_API_URL}/users/get-user/${id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/users/get-user/${id}`
       );
       setUser(response.data);
       setFormData({
@@ -469,220 +473,208 @@ const User = () => {
             <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
               Manage Users
             </h3>
-            <div className="overflow-x-auto">
-              <table
-                id="example1"
-                className="display  nowwrap w-full table-auto"
-              >
-                <thead>
+
+            <table id="example1" className="display  nowwrap w-full table-auto">
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Email</th>
+
+                  <th>Mobile</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>Popular</th>
+                  <th>Sort By</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.length === 0 ? (
                   <tr>
-                    <th>S.No.</th>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Email</th>
-
-                    <th>Mobile</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
-                    <th>Popular</th>
-                    <th>Sort By</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <td colSpan="10" className="text-center p-3 font-semibold">
+                      No available data
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {users.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan="10"
-                        className="text-center p-3 font-semibold"
-                      >
-                        No available data
+                ) : (
+                  users.map((item, index) => (
+                    <tr key={item.userId}>
+                      <td>{users.indexOf(item) + 1}</td>
+                      <td>
+                        <Zoom>
+                          {item.userImage ? (
+                            <img
+                              src={`${process.env.NEXT_PUBLIC_API_URL}${item.userImage}`}
+                              alt={item.userName} // Fallback to blog title if alt text is not provided
+                              className="h-10 w-10 object-cover" // Added object-cover for better image fitting
+                            />
+                          ) : (
+                            <p>No image available</p> // Fallback message if no image is present
+                          )}
+                        </Zoom>
                       </td>
-                    </tr>
-                  ) : (
-                    users.map((item, index) => (
-                      <tr key={item.userId}>
-                        <td>{users.indexOf(item) + 1}</td>
-                        <td>
-                          <Zoom>
-                            {item.userImage ? (
-                              <img
-                                src={`${process.env.NEXT_PUBLIC_API_URL}${item.userImage}`}
-                                alt={item.userName} // Fallback to blog title if alt text is not provided
-                                className="h-10 w-10 object-cover" // Added object-cover for better image fitting
-                              />
-                            ) : (
-                              <p>No image available</p> // Fallback message if no image is present
-                            )}
-                          </Zoom>
-                        </td>
 
-                        <td
-                          className="cursor-pointer hover:text-blue-500"
-                          onClick={() => fetchUser(item.userId)}
+                      <td
+                        className="cursor-pointer hover:text-blue-500"
+                        onClick={() => fetchUser(item.userId)}
+                      >
+                        {item.userName}
+                      </td>
+
+                      <td>{item.userEmail}</td>
+
+                      <td>{item.userMobile}</td>
+                      <td>
+                        {item.userCreatedAt
+                          ? format(
+                              new Date(item.userCreatedAt * 1000),
+                              "dd MMM yyyy hh:mm (EEE)",
+                              { timeZone: "Asia/Kolkata" }
+                            )
+                          : "N/A"}
+                      </td>
+                      <td>
+                        {item.userUpdatedAt
+                          ? format(
+                              new Date(item.userUpdatedAt * 1000),
+                              "dd MMM yyyy hh:mm (EEE)",
+                              { timeZone: "Asia/Kolkata" }
+                            )
+                          : "N/A"}
+                      </td>
+                      <td>
+                        <button
+                          onClick={() =>
+                            toggleUserPopularStatus(
+                              item.userId,
+                              item.userPopular
+                            )
+                          }
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
                         >
-                          {item.userName}
-                        </td>
-
-                        <td>{item.userEmail}</td>
-
-                        <td>{item.userMobile}</td>
-                        <td>
-                          {item.userCreatedAt
-                            ? format(
-                                new Date(item.userCreatedAt * 1000),
-                                "dd MMM yyyy hh:mm (EEE)",
-                                { timeZone: "Asia/Kolkata" }
-                              )
-                            : "N/A"}
-                        </td>
-                        <td>
-                          {item.userUpdatedAt
-                            ? format(
-                                new Date(item.userUpdatedAt * 1000),
-                                "dd MMM yyyy hh:mm (EEE)",
-                                { timeZone: "Asia/Kolkata" }
-                              )
-                            : "N/A"}
-                        </td>
-                        <td>
-                          <button
-                            onClick={() =>
-                              toggleUserPopularStatus(
-                                item.userId,
-                                item.userPopular
-                              )
-                            }
+                          {item.userPopular === 0 ? (
+                            <IoMdCheckmarkCircleOutline
+                              style={{
+                                color: "green",
+                                backgroundColor: "white",
+                              }}
+                            />
+                          ) : (
+                            <FaBan style={{ color: "red" }} />
+                          )}
+                        </button>
+                      </td>
+                      <td>
+                        {editSortBy == item.userId ? (
+                          <div
                             style={{
-                              background: "transparent",
-                              border: "none",
-                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
                             }}
                           >
-                            {item.userPopular === 0 ? (
-                              <IoMdCheckmarkCircleOutline
-                                style={{
-                                  color: "green",
-                                  backgroundColor: "white",
-                                }}
-                              />
-                            ) : (
-                              <FaBan style={{ color: "red" }} />
-                            )}
-                          </button>
-                        </td>
-                        <td>
-                          {editSortBy == item.userId ? (
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <input
-                                type="text"
-                                value={newSortBy}
-                                onChange={(e) => setNewSortBy(e.target.value)}
-                                maxLength="4"
-                                className="border rounded px-2 py-1 w-20"
-                              />
-                              <button
-                                onClick={() => handleSortBySubmit(item.userId)}
-                                className="ml-2 bg-emerald-300 text-black px-3 py-2 rounded"
-                              >
-                                <FaCheck />
-                              </button>
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() =>
-                                handleSortByEdit(item.userId, item.userSortBy)
-                              }
-                              className="text-black font-bold bg-emerald-300 px-3 py-1 rounded"
-                            >
-                              {item.userSortBy}
-                            </button>
-                          )}
-                        </td>
-                        <td>
-                          <label className="inline-flex items-center cursor-pointer">
                             <input
-                              type="checkbox"
-                              className="sr-only peer"
-                              checked={item.userStatus == 0}
-                              onChange={() =>
-                                handleToggle(
-                                  item.userId,
-                                  item.userStatus,
-                                  item.userName
-                                )
-                              }
+                              type="text"
+                              value={newSortBy}
+                              onChange={(e) => setNewSortBy(e.target.value)}
+                              maxLength="4"
+                              className="border rounded px-2 py-1 w-20"
                             />
-                            <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border-gray-600 peer-checked:bg-emerald-300"></div>
-                          </label>
-                        </td>
-                        <td>
-                          <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
                             <button
-                              id="hs-dropdown-hover-event"
-                              type="button"
-                              className="hs-dropdown-toggle py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
-                              aria-haspopup="menu"
-                              aria-expanded="false"
-                              aria-label="Dropdown"
+                              onClick={() => handleSortBySubmit(item.userId)}
+                              className="ml-2 bg-emerald-300 text-black px-3 py-2 rounded"
                             >
-                              Actions
-                              <svg
-                                className="hs-dropdown-open:rotate-180 size-4"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <path d="m6 9 6 6 6-6" />
-                              </svg>
+                              <FaCheck />
                             </button>
-
-                            <div
-                              className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 z-50 hidden min-w-24 bg-white shadow-md rounded-lg mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-                              role="menu"
-                              aria-orientation="vertical"
-                              aria-labelledby="hs-dropdown-hover-event"
-                            >
-                              <div className="p-1 space-y-0.5">
-                                <div
-                                  onClick={() => fetchUserData(item.userId)}
-                                  className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100"
-                                  href="#"
-                                >
-                                  Edit
-                                </div>
-                                <div
-                                  className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    handleDelete(item.userId);
-                                  }}
-                                >
-                                  Delete
-                                </div>
-                              </div>
-                            </div>
                           </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                        ) : (
+                          <button
+                            onClick={() =>
+                              handleSortByEdit(item.userId, item.userSortBy)
+                            }
+                            className="text-black font-bold bg-emerald-300 px-3 py-1 rounded"
+                          >
+                            {item.userSortBy}
+                          </button>
+                        )}
+                      </td>
+                      <td>
+                        <label className="inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="sr-only peer"
+                            checked={item.userStatus == 0}
+                            onChange={() =>
+                              handleToggle(
+                                item.userId,
+                                item.userStatus,
+                                item.userName
+                              )
+                            }
+                          />
+                          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border-gray-600 peer-checked:bg-emerald-300"></div>
+                        </label>
+                      </td>
+                      <td>
+                        <div className="dropdown dropdown-hover font-RedditSans">
+                          <div
+                            tabIndex={0}
+                            role="button"
+                            className=" py-1.5 px-2 inline-flex mb-1 items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                          >
+                            Action
+                            <svg
+                              className="hs-dropdown-open:rotate-180 size-4"
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="m6 9 6 6 6-6" />
+                            </svg>
+                          </div>
+                          <ul
+                            tabIndex={0}
+                            className="dropdown-content menu bg-base-100 rounded-md  z-[1] min-w-24 p-2 shadow"
+                          >
+                            <li className=" rounded">
+                              <button
+                                className="hover:bg-emerald-200 "
+                                onClick={() => fetchUserData(item.userId)}
+                              >
+                                Edit
+                              </button>
+                            </li>
+                            <li className=" rounded">
+                              <button
+                                className="hover:bg-red-200"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleDelete(item.userId);
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
 
