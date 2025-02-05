@@ -24,7 +24,9 @@ const storage = multer.diskStorage({
       file.fieldname === "ourMissionImg1" ||
       file.fieldname === "ourMissionImg2" ||
       file.fieldname === "ourMissionImg3" ||
-      file.fieldname === "ourVisionImg"
+      file.fieldname === "ourVisionImg"    ||
+      file.fieldname === "ourMissionBgImg"    ||
+      file.fieldname === "ourVisionBgImg"    
     ) {
       folderName = "ourMissionVision"; // Folder for mission & vision images
     } else {
@@ -98,6 +100,8 @@ router.post(
     { name: "ourMissionImg2", maxCount: 1 },
     { name: "ourMissionImg3", maxCount: 1 },
     { name: "ourVisionImg", maxCount: 1 },
+    { name: "ourMissionBgImg", maxCount: 1 },
+    { name: "ourVisionBgImg", maxCount: 1 },
   ]),
   aboutController.updateMissionVision
 ),

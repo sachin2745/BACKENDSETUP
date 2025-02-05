@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { FiUsers } from "react-icons/fi";
 import { MdOutlineSpeakerNotes } from "react-icons/md";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { LiaArtstation } from "react-icons/lia";
+import { FaAtlassian } from "react-icons/fa";
 
 const Sidebar = ({ isCollapsed }) => {
   const pathname = usePathname();
@@ -19,6 +21,9 @@ const Sidebar = ({ isCollapsed }) => {
     { name: "Blog", path: "/admin/blog" },
     { name: "User", path: "/admin/user" },
     { name: "Blog Category", path: "/admin/blog-category" },
+    { name: "Mission & Vision", path: "/admin/about/mission-vision" },
+    { name: "Founder", path: "/admin/about/founder" },
+    { name: "General Seeting", path: "/admin/appearance/general" },
     // Add more options as needed
   ];
 
@@ -158,22 +163,7 @@ const Sidebar = ({ isCollapsed }) => {
                     }
                     aria-controls="projects-accordion-sub-1-collapse-1"
                   >
-                    <svg
-                      className="size-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={24}
-                      height={24}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V6.5L15.5 2z" />
-                      <path d="M3 7.6v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8" />
-                      <path d="M15 2v5h5" />
-                    </svg>
+                    <FaAtlassian />
                     About
                     <svg
                       className={`hs-accordion-active:block ms-auto ${
@@ -231,6 +221,112 @@ const Sidebar = ({ isCollapsed }) => {
                           href="/admin/about/mission-vision"
                         >
                           Mission & Vision
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className={` ${
+                            pathname === "/admin/about/founder"
+                              ? "bg-emerald-200"
+                              : ""
+                          } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
+                          href="/admin/about/founder"
+                        >
+                          Founder
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+
+                <li
+                  className={`${
+                    pathname.startsWith("/admin/appearance/") ? "active" : ""
+                  } hs-accordion`}
+                  id="projects-accordion"
+                >
+                  <button
+                    type="button"
+                    className="hs-accordion-toggle w-full text-start flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100"
+                    aria-expanded={
+                      pathname.startsWith("/admin/appearance/") ? "true" : "false"
+                    }
+                    aria-controls="projects-accordion-sub-1-collapse-1"
+                  >
+                    {/* <svg
+                      className="size-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V6.5L15.5 2z" />
+                      <path d="M3 7.6v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8" />
+                      <path d="M15 2v5h5" />
+                    </svg> */}
+                    <LiaArtstation className="text-xl" />
+                    Appearance
+                    <svg
+                      className={`hs-accordion-active:block ms-auto ${
+                        pathname.startsWith("/admin/appearance/")
+                          ? "block"
+                          : "hidden"
+                      } size-4 text-gray-600 group-hover:text-gray-500`}
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m18 15-6-6-6 6" />
+                    </svg>
+                    <svg
+                      className={`hs-accordion-active:hidden ms-auto ${
+                        pathname.startsWith("/admin/appearance/")
+                          ? "hidden"
+                          : "block"
+                      } size-4 text-gray-600 group-hover:text-gray-500`}
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+                  <div
+                    id="projects-accordion-sub-1-collapse-1"
+                    className={`hs-accordion-content w-full overflow-hidden transition-[height] duration-300 ${
+                      pathname.startsWith("/admin/appearance/") ? "block" : "hidden"
+                    }`}
+                    role="region"
+                    aria-labelledby="projects-accordion"
+                  >
+                    <ul className="pt-1 ps-7 space-y-1">
+                      <li>
+                        <Link
+                          className={` ${
+                            pathname === "/admin/appearance/general"
+                              ? "bg-emerald-200"
+                              : ""
+                          } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
+                          href="/admin/appearance/general"
+                        >
+                          General Setting
                         </Link>
                       </li>
                     </ul>

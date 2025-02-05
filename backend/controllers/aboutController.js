@@ -8,6 +8,7 @@ const getMissionVision = async (req, res) => {
       `SELECT 
         setting.settingId, 
         setting.ourMissionHeading,
+        setting.ourMissionBgImg,
         setting.ourMissionContent1, 
         setting.ourMissionImg1, 
         setting.ourMissionImgAlt1, 
@@ -18,6 +19,7 @@ const getMissionVision = async (req, res) => {
         setting.ourMissionImg3, 
         setting.ourMissionImgAlt3, 
         setting.ourVisionHeading, 
+        setting.ourVisionBgImg, 
         setting.ourVisionImg, 
         setting.ourVisionImgAlt, 
         setting.ourVisionContent1, 
@@ -53,7 +55,6 @@ const updateMissionVision = async (req, res) => {
     ourVisionContent2: req.body.ourVisionContent2,
     ourVisionContent3: req.body.ourVisionContent3,
   };
-  console.log(data);
   
 
   // Handle file uploads
@@ -76,6 +77,15 @@ const updateMissionVision = async (req, res) => {
   if (req.files.ourVisionImg) {
     const visionImgPath = `/uploads/ourMissionVision/${req.files.ourVisionImg[0].filename}`;
     data.ourVisionImg = visionImgPath;
+  }
+
+  if (req.files.ourMissionBgImg) {
+    const missionBgImgPath = `/uploads/ourMissionVision/${req.files.ourMissionBgImg[0].filename}`;
+    data.ourMissionBgImg = missionBgImgPath;
+  }
+  if (req.files.ourVisionBgImg) {
+    const visionImgBgPath = `/uploads/ourMissionVision/${req.files.ourVisionBgImg[0].filename}`;
+    data.ourVisionBgImg = visionImgBgPath;
   }
   
 

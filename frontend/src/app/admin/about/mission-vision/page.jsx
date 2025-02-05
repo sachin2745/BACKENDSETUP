@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import useAppContext from "@/context/AppContext";
 
 const missionVision = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -107,6 +106,8 @@ const missionVision = () => {
           ourMissionImg2: `${process.env.NEXT_PUBLIC_API_URL}${data.ourMissionImg2}`,
           ourMissionImg3: `${process.env.NEXT_PUBLIC_API_URL}${data.ourMissionImg3}`,
           ourVisionImg: `${process.env.NEXT_PUBLIC_API_URL}${data.ourVisionImg}`,
+          ourMissionBgImg: `${process.env.NEXT_PUBLIC_API_URL}${data.ourMissionBgImg}`,
+          ourVisionBgImg: `${process.env.NEXT_PUBLIC_API_URL}${data.ourVisionBgImg}`,
         };
 
         setInitialValues(data);
@@ -176,6 +177,31 @@ const missionVision = () => {
                   )}
                 </div>
               </div>
+              <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="ourMissionBgImg"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Mission Background:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="ourMissionBgImg"
+                      name="ourMissionBgImg"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageChange(e, "ourMissionBgImg")}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {previewImages.ourMissionBgImg && (
+                      <img
+                        src={previewImages.ourMissionBgImg}
+                        alt="Preview"
+                        width="100"
+                      />
+                    )}
+                  </div>
+                </div>
 
               <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
                 <legend className="text-xl font-semibold p-2">
@@ -439,6 +465,32 @@ const missionVision = () => {
                       <div className="text-red-500">
                         {formik.errors.ourVisionHeading}
                       </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="ourVisionBgImg"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Vision Background:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="ourVisionBgImg"
+                      name="ourVisionBgImg"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageChange(e, "ourVisionBgImg")}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {previewImages.ourVisionBgImg && (
+                      <img
+                        src={previewImages.ourVisionBgImg}
+                        alt="Preview"
+                        width="100"
+                      />
                     )}
                   </div>
                 </div>
