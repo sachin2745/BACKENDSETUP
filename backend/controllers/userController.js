@@ -131,8 +131,8 @@ const addUser = async (req, res) => {
   } = req.body;
 
   const userImage = req.files?.userImage?.[0]?.path
-  ? `/uploads/userImage/${req.files.userImage[0].filename}`
-  : null;
+    ? `/uploads/userImage/${req.files.userImage[0].filename}`
+    : null;
 
   try {
     // Step 1: Get the maximum userId and calculate userSortBy
@@ -184,20 +184,29 @@ const getUser = async (req, res) => {
     res.send(rows[0]);
   } catch (error) {
     console.error("Database query error:", error);
-    res.status(500).send({ message: "An error occurred while fetching the user" });
+    res
+      .status(500)
+      .send({ message: "An error occurred while fetching the user" });
   }
 };
 
 
 const updateUser = async (req, res) => {
   const userId = req.params.id;
-  const { userName, userEmail, userPassword, userMobile, userPopular, userStatus } = req.body;
+  const {
+    userName,
+    userEmail,
+    userPassword,
+    userMobile,
+    userPopular,
+    userStatus,
+  } = req.body;
   const userImage = req.files?.userImage?.[0]?.path
-  ? `/uploads/userImage/${req.files.userImage[0].filename}`
-  : null;
+    ? `/uploads/userImage/${req.files.userImage[0].filename}`
+    : null;
 
   console.log("req.file", req.file);
-  
+
   let query = `
     UPDATE users
     SET
@@ -210,7 +219,14 @@ const updateUser = async (req, res) => {
       userUpdatedAt = UNIX_TIMESTAMP()
   `;
 
-  const params = [userName, userEmail, userPassword, userMobile, userPopular, userStatus];
+  const params = [
+    userName,
+    userEmail,
+    userPassword,
+    userMobile,
+    userPopular,
+    userStatus,
+  ];
 
   // Update userImage only if a new image is uploaded
   if (userImage) {
@@ -232,8 +248,6 @@ const updateUser = async (req, res) => {
     res.status(500).send({ message: "Error updating user" });
   }
 };
-
-
 
 module.exports = {
   getUsers,

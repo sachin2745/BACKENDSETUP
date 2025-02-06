@@ -37,6 +37,8 @@ const storage = multer.diskStorage({
       file.fieldname === "fav16"
     ) {
       folderName = "Setting"; // Folder for mission & vision images
+    } else if (file.fieldname === "founderImg") {
+      folderName = "Founder";
     } else {
       folderName = "others"; // Default folder for any other images
     }
@@ -113,6 +115,19 @@ router.post(
   ]),
   aboutController.updateMissionVision
 );
+
+router.get("/founder/getall", aboutController.getFounder);
+router.put("/founder-status/:id", aboutController.updateFounderStatus);
+router.delete("/founder-delete/:id", aboutController.deleteFounder);
+router.post(
+  "/add-founder",
+  upload.fields([{ name: "founderImg", maxCount: 1 }]),
+  aboutController.addFounder
+);
+router.get("/get-founder/:id", aboutController.getFounderById);
+router.put("/update-founder/:id", upload.fields([{ name: "founderImg", maxCount: 1 }]),aboutController.updateFounder);
+
+
 
 //ROUTES FOR APPEARANCE
 router.get("/general-setting/getall", settingController.getSetting);

@@ -1,4 +1,3 @@
-import AdminLayout from "./Layout/adminLayout";
 
 export const metadata = {
     title: "Admin Dashboard",
@@ -7,11 +6,11 @@ export const metadata = {
   
 const DashboardPage = () => {
   return (
-    <AdminLayout>
+    <>
       <div className="flex text-center justify-center items-center h-screen">
         <h1 className="text-3xl font-bold">ADMIN DASHBOARD</h1>
       </div>
-    </AdminLayout>
+    </>
   );
 };
 
