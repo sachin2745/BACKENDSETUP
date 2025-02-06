@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import Footer from "./(components)/Footer";
 import Header from "./(components)/Header";
 import "./globals.css";
+import Contact from "./(components)/Contact";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -100,6 +101,7 @@ export default function RootLayout({ children }) {
       <body className="">
         {!isAdminPage && <Header />}
         <main>{children}</main>
+        {!isAdminPage && <Contact/>}
         {!isAdminPage && <Footer />}
       </body>
     </html>
