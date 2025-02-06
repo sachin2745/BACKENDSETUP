@@ -156,7 +156,7 @@ const missionVision = () => {
               <div className="sm:flex w-full items-center">
                 <label
                   htmlFor="ourMissionHeading"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
+                  className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                 >
                   Mission Heading:
                 </label>

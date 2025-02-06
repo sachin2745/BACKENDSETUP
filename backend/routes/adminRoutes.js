@@ -9,6 +9,7 @@ const adminController = require("../controllers/adminController");
 const blogCatController = require("../controllers/blogCatController");
 const dashboardController = require("../controllers/dashboardController");
 const aboutController = require("../controllers/aboutController");
+const settingController = require("../controllers/settingController");
 
 // Dynamic folder storage setup
 const storage = multer.diskStorage({
@@ -24,15 +25,22 @@ const storage = multer.diskStorage({
       file.fieldname === "ourMissionImg1" ||
       file.fieldname === "ourMissionImg2" ||
       file.fieldname === "ourMissionImg3" ||
-      file.fieldname === "ourVisionImg"    ||
-      file.fieldname === "ourMissionBgImg"    ||
-      file.fieldname === "ourVisionBgImg"    
+      file.fieldname === "ourVisionImg" ||
+      file.fieldname === "ourMissionBgImg" ||
+      file.fieldname === "ourVisionBgImg"
     ) {
       folderName = "ourMissionVision"; // Folder for mission & vision images
+    } else if (
+      file.fieldname === "companyLogo" ||
+      file.fieldname === "fav180" ||
+      file.fieldname === "fav32" ||
+      file.fieldname === "fav16"
+    ) {
+      folderName = "Setting"; // Folder for mission & vision images
     } else {
       folderName = "others"; // Default folder for any other images
     }
-    
+
     const uploadPath = path.join(__dirname, "../static/uploads", folderName); // Go up one directory
 
     // Ensure the folder exists, create it if not
@@ -104,5 +112,19 @@ router.post(
     { name: "ourVisionBgImg", maxCount: 1 },
   ]),
   aboutController.updateMissionVision
-),
-  (module.exports = router);
+);
+
+//ROUTES FOR APPEARANCE
+router.get("/general-setting/getall", settingController.getSetting);
+router.post(
+  "/update/general-setting",
+  upload.fields([
+    { name: "companyLogo", maxCount: 1 },
+    { name: "fav180", maxCount: 1 },
+    { name: "fav32", maxCount: 1 },
+    { name: "fav16", maxCount: 1 },
+  ]),
+  settingController.updateSetting
+);
+
+module.exports = router;
