@@ -26,7 +26,7 @@ const Contact = () => {
     <div className="relative">
       <div className="fixed right-4 bottom-4 flex flex-col space-y-3 z-50">
         {/* WhatsApp Button */}
-        {contactInfo?.whatsappNumber && (
+        {!(contactInfo?.whatsappNumber) == 0  && (
           <a
             href={`https://wa.me/${contactInfo.whatsappNumber}`}
             target="_blank"
@@ -38,7 +38,7 @@ const Contact = () => {
         )}
 
         {/* Call Button */}
-        {contactInfo?.callingNumber && (
+        {!(contactInfo?.callingNumber) == 0  && (
           <a
             href={`tel:${contactInfo.callingNumber}`}
             className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110"

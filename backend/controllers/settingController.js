@@ -70,7 +70,7 @@ const updateSetting = async (req, res) => {
     gSeoDetail: req.body.gSeoDetail,
     createdAt: Math.floor(Date.now() / 1000)
   };
-  
+
 
   // Handle file uploads
  
