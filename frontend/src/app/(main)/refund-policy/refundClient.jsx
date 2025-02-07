@@ -48,7 +48,7 @@ const Refund = () => {
   return (
     <section className="font-RedditSans">
       <div className="container mt-5 max-w-[78rem] mx-auto px-4 md:px-6">
-        <div className="bg-white  p-6">
+        <div className="bg-white ">
           <h1 className="text-3xl font-bold capitalize text-gray-800 mb-4">
             {refund.pageTitle}
           </h1>

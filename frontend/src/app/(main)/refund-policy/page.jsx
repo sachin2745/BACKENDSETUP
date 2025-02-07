@@ -10,7 +10,7 @@ export async function generateMetadata() {
 
   const refundData = await res.json();
 
-  // Check if refund data exists
+  // Check if privacy data exists
   if (!refundData.refund || refundData.refund.length === 0) {
     notFound();  // Redirect to the Not Found page
   }
@@ -44,7 +44,7 @@ export default async function RefundWrapper() {
 
   const refundData = await res.json();
 
-  // Check if refund data exists
+  // Check if terms data exists
   if (!refundData.refund || refundData.refund.length === 0) {
     notFound();  // Redirect to the Not Found page if refund are missing
   }
