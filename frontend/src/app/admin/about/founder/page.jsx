@@ -348,6 +348,30 @@ const Founder = () => {
     });
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const fetchFound = async (id) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/get-founder/${id}`
+      );
+      setfound(response.data);
+      setFormData({
+        founderImg: response.data.founderImg,
+        founderName: response.data.founderName,
+        founderImgAlt: response.data.founderImgAlt,
+        founderDsg: response.data.founderDsg,
+        founderMsg: response.data.founderMsg,
+        founderDetail: response.data.founderDetail,
+      });
+      document.getElementById("my_modal_3").showModal(); // Open the modal
+    } catch (error) {
+      toast.error("Error fetching user data:", error);
+    }
+  };
+
+  const closeModal = () => {
+    document.getElementById("my_modal_3").close(); // Close the modal
+  };
   return (
     <>
       <div className="">
@@ -442,7 +466,7 @@ const Founder = () => {
 
                       <td
                         className="cursor-pointer hover:text-blue-500"
-                        onClick={() => fetchFounder(item.founderId)}
+                        onClick={() => fetchFound(item.founderId)}
                       >
                         {item.founderName}
                       </td>
@@ -972,6 +996,88 @@ const Founder = () => {
             )}
           </div>
         </div>
+
+        {/* Modal For View User */}
+        <dialog id="my_modal_3" className="modal">
+          <div className="modal-box rounded-none w-11/12 max-w-5xl h-[60%]">
+            <form method="dialog">
+              {/* Close Button */}
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 focus:outline-none"
+                onClick={closeModal}
+              >
+                ✕
+              </button>
+            </form>
+            <h2 className="text-2xl font-semibold text-quaternary mb-4 border-b pb-2">
+              Founder Details
+            </h2>
+            <form className="grid grid-cols-2 gap-4">
+              
+              <div>
+                <div className="flex flex-row justify-between">
+                   {/* Name */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-semibold text-quaternary mb-1">
+                    Name:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.founderName}
+                    readOnly
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-dashGray text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+                {/* Image */}
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${formData.founderImg}`}
+                    alt={formData.founderImgAlt}
+                    className="h-48 w-48 object-cover rounded-lg "
+                  />
+                </div>                
+
+                {/* Designation */}
+                <div className="flex flex-col mb-2">
+                  <label className="text-sm font-semibold text-quaternary mb-1">
+                    Designation:
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.founderDsg}
+                    readOnly
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-dashGray text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+
+                {/* Message */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-semibold text-quaternary mb-1">
+                    Message:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.founderMsg}
+                    readOnly
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-dashGray text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+              </div>
+              {/* Detail */}
+              <div className="flex flex-col">
+                <label className="text-sm font-semibold text-quaternary mb-1">
+                  Detail:
+                </label>
+                <textarea
+                  rows={12}
+                  value={formData.founderDetail}
+                  readOnly
+                  className="border border-gray-300 scrollbarWidthNone rounded-lg px-3 py-2 bg-dashGray text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
+            </form>
+          </div>
+        </dialog>
       </div>
     </>
   );

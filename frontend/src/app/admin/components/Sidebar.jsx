@@ -23,7 +23,8 @@ const Sidebar = ({ isCollapsed }) => {
     { name: "Blog Category", path: "/admin/blog-category" },
     { name: "Mission & Vision", path: "/admin/about/mission-vision" },
     { name: "Founder", path: "/admin/about/founder" },
-    { name: "General Seeting", path: "/admin/appearance/general" },
+    { name: "General Setting", path: "/admin/appearance/general" },
+    { name: "Page Content", path: "/admin/appearance/page-content" },
     // Add more options as needed
   ];
 
@@ -140,7 +141,7 @@ const Sidebar = ({ isCollapsed }) => {
                 <li>
                   <Link
                     className={` ${
-                      pathname === "/admin/dashboard" ? "bg-emerald-200 " : ""
+                      pathname === "/admin/dashboard" ? "bg-emerald-200 border-b-2 border-emerald-500" : ""
                     } flex items-center gap-x-3 py-2 px-2.5  text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/dashboard"
                   >
@@ -215,7 +216,7 @@ const Sidebar = ({ isCollapsed }) => {
                         <Link
                           className={` ${
                             pathname === "/admin/about/mission-vision"
-                              ? "bg-emerald-200"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500"
                               : ""
                           } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
                           href="/admin/about/mission-vision"
@@ -227,7 +228,7 @@ const Sidebar = ({ isCollapsed }) => {
                         <Link
                           className={` ${
                             pathname === "/admin/about/founder"
-                              ? "bg-emerald-200"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500"
                               : ""
                           } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
                           href="/admin/about/founder"
@@ -252,23 +253,7 @@ const Sidebar = ({ isCollapsed }) => {
                       pathname.startsWith("/admin/appearance/") ? "true" : "false"
                     }
                     aria-controls="projects-accordion-sub-1-collapse-1"
-                  >
-                    {/* <svg
-                      className="size-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={24}
-                      height={24}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V6.5L15.5 2z" />
-                      <path d="M3 7.6v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8" />
-                      <path d="M15 2v5h5" />
-                    </svg> */}
+                  >                    
                     <LiaArtstation className="text-xl" />
                     Appearance
                     <svg
@@ -321,12 +306,24 @@ const Sidebar = ({ isCollapsed }) => {
                         <Link
                           className={` ${
                             pathname === "/admin/appearance/general"
-                              ? "bg-emerald-200"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500"
                               : ""
                           } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
                           href="/admin/appearance/general"
                         >
                           General Setting
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className={` ${
+                            pathname === "/admin/appearance/page-content"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500"
+                              : ""
+                          } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
+                          href="/admin/appearance/page-content"
+                        >
+                          Page Content
                         </Link>
                       </li>
                     </ul>
@@ -336,7 +333,7 @@ const Sidebar = ({ isCollapsed }) => {
                 <li>
                   <Link
                     className={` ${
-                      pathname === "/admin/blog" ? "bg-emerald-200" : ""
+                      pathname === "/admin/blog" ? "bg-emerald-200 border-b-2 border-emerald-500" : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/blog"
                   >
@@ -368,7 +365,7 @@ const Sidebar = ({ isCollapsed }) => {
                   <Link
                     className={`${
                       pathname === "/admin/blog-category"
-                        ? "bg-emerald-200"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500"
                         : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/blog-category"
@@ -381,7 +378,7 @@ const Sidebar = ({ isCollapsed }) => {
                 <li>
                   <Link
                     className={`${
-                      pathname === "/admin/user" ? "bg-emerald-200" : ""
+                      pathname === "/admin/user" ? "bg-emerald-200 border-b-2 border-emerald-500" : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/user"
                   >

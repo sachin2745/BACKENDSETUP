@@ -109,5 +109,12 @@ div.dt-container select.dt-input {
     font-size: 12px !important;
   }
 }
+
+.scrollbarWidthThin{
+  scrollbar-width: thin;  
+}
+.scrollbarWidthNone{
+  scrollbar-width: none;
+}
 /* .jodit-wysiwyg{height:300px !important} */
 

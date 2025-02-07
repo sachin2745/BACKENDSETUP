@@ -410,16 +410,14 @@ const User = () => {
         userPopular: response.data.userPopular,
         userStatus: response.data.userStatus,
       });
-      setIsModalOpen(true); // Open modal
+      document.getElementById("my_modal_3").showModal();
     } catch (error) {
       toast.error("Error fetching user data:", error);
     }
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
-    setActiveTab(0);
-    setUser(null);
+    document.getElementById("my_modal_3").close(); // Close the modal
   };
 
   return (
@@ -1137,106 +1135,111 @@ const User = () => {
         </div>
 
         {/* Modal For View User */}
-        {isModalOpen && (
-          <div className="modal">
-            <div className="modal-content">
-              <button className="close-button" onClick={closeModal}>
-                &times;
+        <dialog id="my_modal_3" className="modal">
+          <div className="modal-box rounded-none scrollbarWidthThin">
+            <form method="dialog">
+              {/* Close Button */}
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 focus:outline-none"
+                onClick={closeModal}
+              >
+                ✕
               </button>
-              <h2 className="text-2xl font-semibold text-quaternary mb-4 border-b pb-2">
-                User Details
-              </h2>
-              <form className="grid grid-cols-1 gap-4">
-                {/* Image */}
-                <div className="flex flex-col items-center">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${formData.userImage}`}
-                    alt={formData.userName}
-                    className="h-auto w-20 object-cover rounded-lg "
-                  />
-                </div>
+            </form>
+            <h2 className="text-2xl font-semibold text-quaternary mb-4 border-b pb-2">
+              User Details
+            </h2>
+            <form className="grid grid-cols-1 gap-4">
+              {/* Image */}
+              <div className="flex flex-col items-center">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${formData.userImage}`}
+                  alt={formData.userName}
+                  className="h-auto w-20 object-cover rounded-lg "
+                />
+              </div>
 
-                {/* Name */}
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium text-gray-600 mb-1">
-                    Name:
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.userName}
-                    readOnly
-                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  />
-                </div>
+              {/* Name */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-600 mb-1">
+                  Name:
+                </label>
+                <input
+                  type="text"
+                  value={formData.userName}
+                  readOnly
+                  className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
 
-                {/* Email */}
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium text-gray-600 mb-1">
-                    Email:
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.userEmail}
-                    readOnly
-                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  />
-                </div>
+              {/* Email */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-600 mb-1">
+                  Email:
+                </label>
+                <input
+                  type="email"
+                  value={formData.userEmail}
+                  readOnly
+                  className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
 
-                {/* Mobile */}
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium text-gray-600 mb-1">
-                    Mobile:
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.userMobile}
-                    readOnly
-                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  />
-                </div>
+              {/* Mobile */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-600 mb-1">
+                  Mobile:
+                </label>
+                <input
+                  type="tel"
+                  value={formData.userMobile}
+                  readOnly
+                  className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
 
-                {/* Password */}
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium text-gray-600 mb-1">
-                    Password:
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.userPassword}
-                    readOnly
-                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  />
-                </div>
+              {/* Password */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-600 mb-1">
+                  Password:
+                </label>
+                <input
+                  type="text"
+                  value={formData.userPassword}
+                  readOnly
+                  className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
 
-                {/* Popular */}
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium text-gray-600 mb-1">
-                    Popular:
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.userPopular == 0 ? "Yes" : "No"}
-                    readOnly
-                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  />
-                </div>
+              {/* Popular */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-600 mb-1">
+                  Popular:
+                </label>
+                <input
+                  type="text"
+                  value={formData.userPopular == 0 ? "Yes" : "No"}
+                  readOnly
+                  className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
 
-                {/* Status */}
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium text-gray-600 mb-1">
-                    Status:
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.userStatus == 0 ? "Active" : "Inactive"}
-                    readOnly
-                    className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  />
-                </div>
-              </form>
-            </div>
+              {/* Status */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-600 mb-1">
+                  Status:
+                </label>
+                <input
+                  type="text"
+                  value={formData.userStatus == 0 ? "Active" : "Inactive"}
+                  readOnly
+                  className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-100 text-gray-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
+            </form>
           </div>
-        )}
+        </dialog>
       </div>
     </>
   );
