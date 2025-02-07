@@ -254,7 +254,7 @@ const Sidebar = ({ isCollapsed }) => {
                     }
                     aria-controls="projects-accordion-sub-1-collapse-1"
                   >                    
-                    <LiaArtstation className="text-xl" />
+                    <LiaArtstation className="text-xl -ml-1" />
                     Appearance
                     <svg
                       className={`hs-accordion-active:block ms-auto ${
