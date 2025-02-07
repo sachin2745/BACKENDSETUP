@@ -142,4 +142,13 @@ router.post(
   settingController.updateSetting
 );
 
+router.get("/page-content/getall", settingController.getPageContent);
+router.put("/page-content-status/:id", settingController.updatePageStatus);
+router.get("/get-page-content/:id", settingController.getPageById);
+router.post(
+  "/update-page-content/:id",
+  upload.none(),
+  settingController.updatePage
+);
+
 module.exports = router;

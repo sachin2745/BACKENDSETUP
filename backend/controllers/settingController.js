@@ -68,33 +68,30 @@ const updateSetting = async (req, res) => {
     colorCouse: req.body.colorCouse,
     colorCouseDetail: req.body.colorCouseDetail,
     gSeoDetail: req.body.gSeoDetail,
-    createdAt: Math.floor(Date.now() / 1000)
+    createdAt: Math.floor(Date.now() / 1000),
   };
 
-
   // Handle file uploads
- 
+
   if (req.files.companyLogo) {
     const companyImg1Path = `/uploads/Setting/${req.files.companyLogo[0].filename}`;
     data.companyLogo = companyImg1Path;
   }
-  
+
   if (req.files.fav180) {
     const favImg2Path = `/uploads/Setting/${req.files.fav180[0].filename}`;
     data.fav180 = favImg2Path;
   }
-  
+
   if (req.files.fav32) {
     const favImg3Path = `/uploads/Setting/${req.files.fav32[0].filename}`;
     data.fav32 = favImg3Path;
   }
-  
+
   if (req.files.fav16) {
     const favImg4Path = `/uploads/Setting/${req.files.fav16[0].filename}`;
     data.fav16 = favImg4Path;
   }
-
-  
 
   try {
     // Update the record with id = 1
@@ -106,7 +103,103 @@ const updateSetting = async (req, res) => {
   }
 };
 
+const getPageContent = async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT * FROM pages WHERE aClientsPagesId = ?`,
+      [1]
+    );
+
+    if (rows.length > 0) {
+      res.json(rows);
+    } else {
+      res.status(404).json({ message: "No data found" });
+    }
+  } catch (error) {
+    console.error("Database query error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const updatePageStatus = async (req, res) => {
+  const pageId = req.params.id;
+  const { pageStatus } = req.body;
+
+  let query = "";
+  const params = [];
+
+  if (pageStatus !== undefined) {
+    query = "UPDATE pages SET pageStatus = ? WHERE pageId  = ?";
+    params.push(pageStatus, pageId);
+  }
+
+  if (!query) {
+    return res.status(400).send("Invalid input: no fields to update.");
+  }
+  try {
+    const [result] = await db.execute(query, params);
+
+    if (result.affectedRows === 0) {
+      res.status(404).send("Page not found.");
+    } else {
+      res.status(200).send("Page updated successfully.");
+    }
+  } catch (err) {
+    console.error("Error updating page:", err);
+    res.status(500).send("Error updating page.");
+  }
+};
+
+const getPageById = async (req, res) => {
+  const pageId = req.params.id;
+
+  const [rows] = await db.query("SELECT * FROM pages WHERE pageId = ?", [
+    pageId,
+  ]);
+  //  console.log("rows", rows)
+  if (rows.length) {
+    res.json(rows[0]);
+  } else {
+    res.status(404).json({ error: "Page Content not found" });
+  }
+};
+
+const updatePage = async (req, res) => {
+  const pageId = req.params.id;
+
+  const {
+    pageTitle,
+    pageDescription,
+    metaTitle,
+    metaDescriptioin,
+    metaKeywords,
+    metaSchema,
+  } = req.body;
+
+  const createdAt = Math.floor(Date.now() / 1000); // Unix timestamp
+
+  await db.query(
+    "UPDATE pages SET pageTitle = ?,pageDescription = ?, metaTitle = ?,metaDescriptioin =?, metaKeywords = ?,metaSchema = ?, createdAt = ? WHERE pageId = ?",
+    [
+      pageTitle,
+      pageDescription,
+      metaTitle,
+      metaDescriptioin,
+      metaKeywords,
+      metaSchema,
+      createdAt,
+      pageId,
+    ]
+  );
+
+  res.json({ success: "Page  Content updated successfully" });
+};
+
 module.exports = {
   getSetting,
   updateSetting,
+  getPageContent,
+  updatePageStatus,
+  getPageById,
+  updatePage,
 };
