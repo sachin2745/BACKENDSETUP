@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const verifyToken = require('./verifyToken');
 const app = express();
-const blogWebController = require('../controllers/blogWebController');
-const settingWebController = require('../controllers/settingWebController');
+const blogWebController = require('../controllers/web/blogWebController');
+const settingWebController = require('../controllers/web/settingWebController');
+const pageWebController = require("../controllers/web/pageWebController");
 
 
 //ROUTES FOR BLOG
@@ -18,5 +19,6 @@ router.get("/get-comments/:blogSlug", blogWebController.getComments);
 
 router.get('/contact', settingWebController.getContacts);
 
+router.get("/legal-documents/getall", pageWebController.getLegalDocuments);
 
 module.exports = router;

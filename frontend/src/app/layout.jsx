@@ -100,7 +100,7 @@ export default function RootLayout({ children }) {
 
       <body className="">
         {!isAdminPage && <Header />}
-        <main>{children}</main>
+        <main className="min-h-screen">{children}</main>
         {!isAdminPage && <Contact/>}
         {!isAdminPage && <Footer />}
       </body>

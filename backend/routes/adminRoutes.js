@@ -151,4 +151,7 @@ router.post(
   settingController.updatePage
 );
 
+
+
+
 module.exports = router;
