@@ -515,7 +515,7 @@ const User = () => {
                       </td>
 
                       <td
-                        className="cursor-pointer hover:text-blue-500"
+                        className="cursor-pointer hover:text-emerald-500 hover:font-bold"
                         onClick={() => fetchUser(item.userId)}
                       >
                         {item.userName}

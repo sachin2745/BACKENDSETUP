@@ -363,14 +363,14 @@ const Founder = () => {
         founderMsg: response.data.founderMsg,
         founderDetail: response.data.founderDetail,
       });
-      document.getElementById("my_modal_3").showModal(); // Open the modal
+      document.getElementById("my_modal").showModal(); // Open the modal
     } catch (error) {
       toast.error("Error fetching user data:", error);
     }
   };
 
   const closeModal = () => {
-    document.getElementById("my_modal_3").close(); // Close the modal
+    document.getElementById("my_modal").close(); // Close the modal
   };
   return (
     <>
@@ -465,7 +465,7 @@ const Founder = () => {
                       </td>
 
                       <td
-                        className="cursor-pointer hover:text-blue-500"
+                        className="cursor-pointer hover:text-emerald-500 hover:font-bold"
                         onClick={() => fetchFound(item.founderId)}
                       >
                         {item.founderName}
@@ -997,8 +997,8 @@ const Founder = () => {
           </div>
         </div>
 
-        {/* Modal For View User */}
-        <dialog id="my_modal_3" className="modal">
+        {/* Modal For View Founder */}
+        <dialog id="my_modal" className="modal">
           <div className="modal-box rounded-none w-11/12 max-w-5xl h-[60%]">
             <form method="dialog">
               {/* Close Button */}
