@@ -68,6 +68,7 @@ const Footer = () => {
                         href={footerData?.googleUrl || ""}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <img
                           className="h-[30px] rounded"
@@ -82,6 +83,7 @@ const Footer = () => {
                         href={footerData?.appleUrl || ""}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <img
                           className="h-[30px] rounded"
@@ -96,6 +98,7 @@ const Footer = () => {
                         href={footerData?.intelUrl || ""}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <img
                           className="h-[30px] rounded"
@@ -110,6 +113,7 @@ const Footer = () => {
                         href={footerData?.windowsUrl || ""}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <img
                           className="h-[31px] rounded"
@@ -133,6 +137,7 @@ const Footer = () => {
                         href={footerData.facebookUrl}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <div
                           className="h-6 w-6 bg-center bg-no-repeat bg-contain"
@@ -148,6 +153,7 @@ const Footer = () => {
                         href={footerData.instagramUrl}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <div
                           className="h-6 w-6 bg-center bg-no-repeat bg-contain"
@@ -163,6 +169,7 @@ const Footer = () => {
                         href={footerData.youtubeUrl}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <div
                           className="h-6 w-6 bg-center bg-no-repeat bg-contain"
@@ -178,6 +185,7 @@ const Footer = () => {
                         href={footerData.linkedinUrl}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <div
                           className="h-6 w-6 bg-center bg-no-repeat bg-contain"
@@ -193,6 +201,7 @@ const Footer = () => {
                         href={footerData.twitterUrl}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <div
                           className="h-6 w-6 bg-center bg-no-repeat bg-contain"
@@ -208,6 +217,7 @@ const Footer = () => {
                         href={footerData.telegramUrl}
                         target="_blank"
                         rel="noreferrer"
+                        className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
                       >
                         <div
                           className="h-6 w-6 bg-center bg-no-repeat bg-contain"
@@ -224,7 +234,7 @@ const Footer = () => {
             <div className="xl:w-[50%]  grid xl:grid-cols-3 gap-5 md:grid-cols-3 md:place-items-start grid-cols-2 md:pt-6 xl:pt-0 xl:mr-[60px]">
               <div>
                 <div className="mb-2 font-[600] text-start text-[#1B2124]  xl:text-[20px] xl:leading-[30px] text-[16px] leading-[24px]">
-                Quick Links
+                  Quick Links
                 </div>
                 {companyData?.map((item, index) => {
                   const pageType = item.pageType;
@@ -236,7 +246,7 @@ const Footer = () => {
                   return (
                     <ul
                       key={index}
-                      className="font-[400] text-start text-[#757575] text-[14px] leading-[20px]"
+                      className="font-[400] text-start text-[#757575] text-[14px] leading-[20px] "
                     >
                       <li className="mb-2">
                         <a

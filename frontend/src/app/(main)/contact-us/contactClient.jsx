@@ -116,7 +116,7 @@ const ContactUs = () => {
               </div>
               <button
                 type="button"
-                className="px-6 py-2.5 flex items-center gap-3 text-primary hover:bg-primary hover:text-white transition ease-in-out delay-200 bg-white border-2 border-primary rounded-lg mb-5"
+                className="px-6 py-2.5 flex items-center gap-3 text-primary hover:bg-primary hover:text-white transition ease-in-out duration-300 delay-200 bg-white border-2 border-primary rounded-lg mb-5"
                 onClick={openGoogleMaps}
               >
                 <FaLocationArrow />
