@@ -30,3 +30,11 @@ body {
               inset -13px -13px 26px #ffffff;
 }
 
+.jodit-content, .jodit-wysiwyg, .jodit-workplace {
+  font-family: 'Reddit Sans', serif !important;
+}
+
+iframe{
+  width: 100% !important;  
+}
+

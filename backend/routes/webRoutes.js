@@ -5,6 +5,7 @@ const app = express();
 const blogWebController = require('../controllers/web/blogWebController');
 const settingWebController = require('../controllers/web/settingWebController');
 const pageWebController = require("../controllers/web/pageWebController");
+const contactWebController = require("../controllers/web/contactWebController");
 
 
 //ROUTES FOR BLOG
@@ -17,9 +18,14 @@ router.get('/search', blogWebController.searchBlog);
 router.post("/add-comment/:id", blogWebController.addComment);
 router.get("/get-comments/:blogSlug", blogWebController.getComments);
 
+//FOOTER
 router.get('/contact', settingWebController.getContacts);
 router.get('/footer-data', settingWebController.getFooterData);
 
+//PRIVACY POLICY , TERMS AND CONDITIONS, REFUND POLICY
 router.get("/legal-documents/getall", pageWebController.getLegalDocuments);
+
+//CONTACT US
+router.get("/contact/getall", contactWebController.getContactDetails);
 
 module.exports = router;
