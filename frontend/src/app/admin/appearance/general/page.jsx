@@ -19,6 +19,7 @@ const general = () => {
     setttingLongDescription: "",
     facebookUrl: "",
     twitterUrl: "",
+    linkedinUrl: "",
     youtubeUrl: "",
     instagramUrl: "",
     telegramUrl: "",
@@ -597,6 +598,26 @@ const general = () => {
 
                 <div className="sm:flex w-full items-center">
                   <label
+                    htmlFor="linkedinUrl"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Linkedin  Url :
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="linkedinUrl"
+                      name="linkedinUrl"
+                      type="url"
+                      placeholder="Enter Linkedin Url"
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                      onChange={formik.handleChange}
+                      value={formik.values.linkedinUrl}
+                    />                    
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
                     htmlFor="instagramUrl"
                     className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
@@ -638,345 +659,7 @@ const general = () => {
               
               </fieldset>
 
-              {/* <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
-                <legend className="text-xl font-semibold p-2">
-                  Mission Content 2 :
-                </legend>
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourMissionImg2"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Icon 2:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourMissionImg2"
-                      name="ourMissionImg2"
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageChange(e, "ourMissionImg2")}
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                    {previewImages.ourMissionImg2 && (
-                      <img
-                        src={previewImages.ourMissionImg2}
-                        alt="Preview"
-                        width="100"
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourMissionImgAlt2"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Icon 2 Alt Text:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourMissionImgAlt2"
-                      name="ourMissionImgAlt2"
-                      type="text"
-                      placeholder="Enter Image Alt text"
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                      onChange={formik.handleChange}
-                      value={formik.values.ourMissionImgAlt2}
-                    />
-                    {formik.errors.ourMissionImgAlt2 && (
-                      <div className="text-red-500">
-                        {formik.errors.ourMissionImgAlt2}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourMissionContent2"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Mission Content 2 :
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourMissionContent2"
-                      name="ourMissionContent2"
-                      type="text"
-                      placeholder="Enter Mission Content 2"
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                      onChange={formik.handleChange}
-                      value={formik.values.ourMissionContent2}
-                    />
-                    {formik.errors.ourMissionContent2 && (
-                      <div className="text-red-500">
-                        {formik.errors.ourMissionContent2}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </fieldset>
-
-              <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
-                <legend className="text-xl font-semibold p-2">
-                  Mission Content 3 :
-                </legend>
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourMissionImg3"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Icon 3:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourMissionImg3"
-                      name="ourMissionImg3"
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageChange(e, "ourMissionImg3")}
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                    {previewImages.ourMissionImg3 && (
-                      <img
-                        src={previewImages.ourMissionImg3}
-                        alt="Preview"
-                        width="100"
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourMissionImgAlt3"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Icon 3 Alt Text:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourMissionImgAlt3"
-                      name="ourMissionImgAlt3"
-                      type="text"
-                      placeholder="Enter Image Alt text"
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                      onChange={formik.handleChange}
-                      value={formik.values.ourMissionImgAlt3}
-                    />
-                    {formik.errors.ourMissionImgAlt3 && (
-                      <div className="text-red-500">
-                        {formik.errors.ourMissionImgAlt3}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourMissionContent3"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Mission Content 3 :
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourMissionContent3"
-                      name="ourMissionContent3"
-                      type="text"
-                      placeholder="Enter Mission Content 3"
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                      onChange={formik.handleChange}
-                      value={formik.values.ourMissionContent3}
-                    />
-                    {formik.errors.ourMissionContent3 && (
-                      <div className="text-red-500">
-                        {formik.errors.ourMissionContent3}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </fieldset>
-
-              <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
-                <legend className="text-xl font-semibold p-2">
-                  Vision Section :
-                </legend>
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourVisionHeading"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Vision Heading:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourVisionHeading"
-                      name="ourVisionHeading"
-                      type="text"
-                      placeholder="Enter Vision Heading"
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                      onChange={formik.handleChange}
-                      value={formik.values.ourVisionHeading}
-                    />
-                    {formik.errors.ourVisionHeading && (
-                      <div className="text-red-500">
-                        {formik.errors.ourVisionHeading}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourVisionBgImg"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Vision Background:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourVisionBgImg"
-                      name="ourVisionBgImg"
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageChange(e, "ourVisionBgImg")}
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                    {previewImages.ourVisionBgImg && (
-                      <img
-                        src={previewImages.ourVisionBgImg}
-                        alt="Preview"
-                        width="100"
-                      />
-                    )}
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourVisionImg"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Our Vision Image:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourVisionImg"
-                      name="ourVisionImg"
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageChange(e, "ourVisionImg")}
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                    />
-                    {previewImages.ourVisionImg && (
-                      <img
-                        src={previewImages.ourVisionImg}
-                        alt="Preview"
-                        width="100"
-                      />
-                    )}
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourVisionImgAlt"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Image Alt text:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      type="text"
-                      id="ourVisionImgAlt"
-                      name="ourVisionImgAlt"
-                      placeholder="Enter Image Alt text"
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                      onChange={formik.handleChange}
-                      value={formik.values.ourVisionImgAlt}
-                    />
-                    {formik.errors.ourVisionImgAlt && (
-                      <div className="text-red-500">
-                        {formik.errors.ourVisionImgAlt}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourVisionContent1"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Vision Content 1:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourVisionContent1"
-                      name="ourVisionContent1"
-                      type="text"
-                      placeholder="Enter Vision Content 1"
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                      onChange={formik.handleChange}
-                      value={formik.values.ourVisionContent1}
-                    />
-                    {formik.errors.ourVisionContent1 && (
-                      <div className="text-red-500">
-                        {formik.errors.ourVisionContent1}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourVisionContent2"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Vision Content 2:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourVisionContent2"
-                      name="ourVisionContent2"
-                      type="text"
-                      placeholder="Enter Vision Content 2"
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                      onChange={formik.handleChange}
-                      value={formik.values.ourVisionContent2}
-                    />
-                    {formik.errors.ourVisionContent2 && (
-                      <div className="text-red-500">
-                        {formik.errors.ourVisionContent2}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="sm:flex w-full items-center">
-                  <label
-                    htmlFor="ourVisionContent3"
-                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
-                  >
-                    Vision Content 3:
-                  </label>
-                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                    <input
-                      id="ourVisionContent3"
-                      name="ourVisionContent3"
-                      type="text"
-                      placeholder="Enter Vision Content 3"
-                      className="w-full border-2 border-gray-300 p-2 rounded"
-                      onChange={formik.handleChange}
-                      value={formik.values.ourVisionContent3}
-                    />
-                    {formik.errors.ourVisionContent3 && (
-                      <div className="text-red-500">
-                        {formik.errors.ourVisionContent3}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </fieldset> */}
+              
               <div className="w-full flex justify-start gap-4">
                 <a
                   href=""

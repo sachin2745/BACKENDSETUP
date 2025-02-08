@@ -17,8 +17,8 @@ const Footer = () => {
         if (response.status === 200) {
           setFooterData(response.data.footerData);
           setCompanyData(response.data.companyData);
-          console.log("Footer Data:", response.data.footerData);
-          console.log("Company Data:", response.data.companyData);
+          // console.log("Footer Data:", response.data.footerData);
+          // console.log("Company Data:", response.data.companyData);
         } else {
           console.error(`Unexpected response status: ${response.status}`);
         }
