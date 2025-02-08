@@ -87,9 +87,9 @@ const Header = () => {
             </Link>
             <Link
               className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
-                pathname === "/about" ? "text-primary" : "text-spaceblack"
+                pathname === "/about-us" ? "text-primary" : "text-spaceblack"
               }`}
-              href="/about"
+              href="/about-us"
             >
               About
             </Link>

@@ -18,6 +18,7 @@ router.post("/add-comment/:id", blogWebController.addComment);
 router.get("/get-comments/:blogSlug", blogWebController.getComments);
 
 router.get('/contact', settingWebController.getContacts);
+router.get('/footer-data', settingWebController.getFooterData);
 
 router.get("/legal-documents/getall", pageWebController.getLegalDocuments);
 
