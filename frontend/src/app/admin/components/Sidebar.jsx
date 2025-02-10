@@ -330,6 +330,85 @@ const Sidebar = ({ isCollapsed }) => {
                   </div>
                 </li>
 
+                <li
+                  className={`${
+                    pathname.startsWith("/admin/faq/") ? "active" : ""
+                  } hs-accordion`}
+                  id="projects-accordion"
+                >
+                  <button
+                    type="button"
+                    className="hs-accordion-toggle w-full text-start flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100"
+                    aria-expanded={
+                      pathname.startsWith("/admin/faq/") ? "true" : "false"
+                    }
+                    aria-controls="projects-accordion-sub-1-collapse-1"
+                  >
+                    <FaAtlassian />
+                    Faq
+                    <svg
+                      className={`hs-accordion-active:block ms-auto ${
+                        pathname.startsWith("/admin/faq/")
+                          ? "block"
+                          : "hidden"
+                      } size-4 text-gray-600 group-hover:text-gray-500`}
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m18 15-6-6-6 6" />
+                    </svg>
+                    <svg
+                      className={`hs-accordion-active:hidden ms-auto ${
+                        pathname.startsWith("/admin/faq/")
+                          ? "hidden"
+                          : "block"
+                      } size-4 text-gray-600 group-hover:text-gray-500`}
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+                  <div
+                    id="projects-accordion-sub-1-collapse-1"
+                    className={`hs-accordion-content w-full overflow-hidden transition-[height] duration-300 ${
+                      pathname.startsWith("/admin/faq/") ? "block" : "hidden"
+                    }`}
+                    role="region"
+                    aria-labelledby="projects-accordion"
+                  >
+                    <ul className="pt-1 ps-7 space-y-1">
+                      <li>
+                        <Link
+                          className={` ${
+                            pathname === "/admin/faq/website-faq"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500"
+                              : ""
+                          } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
+                          href="/admin/faq/website-faq"
+                        >
+                          Website Faq
+                        </Link>
+                      </li>
+                     
+                    </ul>
+                  </div>
+                </li>
+
                 <li>
                   <Link
                     className={` ${

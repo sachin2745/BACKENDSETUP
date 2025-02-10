@@ -10,6 +10,7 @@ const blogCatController = require("../controllers/blogCatController");
 const dashboardController = require("../controllers/dashboardController");
 const aboutController = require("../controllers/aboutController");
 const settingController = require("../controllers/settingController");
+const faqController = require("../controllers/faqController");
 
 // Dynamic folder storage setup
 const storage = multer.diskStorage({
@@ -116,6 +117,7 @@ router.post(
   aboutController.updateMissionVision
 );
 
+//FOUNDER PAGE
 router.get("/founder/getall", aboutController.getFounder);
 router.put("/founder-status/:id", aboutController.updateFounderStatus);
 router.delete("/founder-delete/:id", aboutController.deleteFounder);
@@ -125,9 +127,22 @@ router.post(
   aboutController.addFounder
 );
 router.get("/get-founder/:id", aboutController.getFounderById);
-router.put("/update-founder/:id", upload.fields([{ name: "founderImg", maxCount: 1 }]),aboutController.updateFounder);
+router.put(
+  "/update-founder/:id",
+  upload.fields([{ name: "founderImg", maxCount: 1 }]),
+  aboutController.updateFounder
+);
 
-
+//WEBSITE FAQ'S
+router.get("/website-faq/getall", faqController.getWebsiteFaq);
+router.put("/website-faq-status/:id", faqController.updateWebsiteFaqStatus);
+router.post("/add-website-faq", upload.none(), faqController.addWebsiteFaq);
+router.get("/get-website-faq/:id", faqController.getWebsiteFaqById);
+router.put(
+  "/update-website-faq/:id",
+  upload.none(),
+  faqController.updateWebsiteFaq
+);
 
 //ROUTES FOR APPEARANCE
 router.get("/general-setting/getall", settingController.getSetting);
@@ -142,6 +157,7 @@ router.post(
   settingController.updateSetting
 );
 
+//PAGE CONTENT
 router.get("/page-content/getall", settingController.getPageContent);
 router.put("/page-content-status/:id", settingController.updatePageStatus);
 router.get("/get-page-content/:id", settingController.getPageById);
@@ -150,8 +166,5 @@ router.post(
   upload.none(),
   settingController.updatePage
 );
-
-
-
 
 module.exports = router;

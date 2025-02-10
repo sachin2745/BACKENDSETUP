@@ -399,10 +399,10 @@ const Founder = () => {
             Add Founder
           </button>
           <button
-            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+            className={`py-2 px-1 inline-flex items-center gap-x-2 ml-5 border-b-2  text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
               activeTab === 2
                 ? "font-semibold border-emerald-500 text-emerald-500"
-                : "hidden"
+                : "hidden border-transparent text-gray-500"
             }`}
             onClick={() => setActiveTab(2)}
             aria-selected={activeTab === 2}
