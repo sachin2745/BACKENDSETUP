@@ -4,15 +4,40 @@ import Footer from "./(components)/Footer";
 import Header from "./(components)/Header";
 import "./globals.css";
 import Contact from "./(components)/Contact";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith("/admin");
 
+  const [headerData, setHeaderData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/web/header-data`
+        );
+
+        if (response.status === 200) {
+          setHeaderData(response.data.headerData);
+          console.log("Header data:", response.data.headerData);
+        } else {
+          console.error(`Unexpected response status: ${response.status}`);
+        }
+      } catch (err) {
+        console.error("Error fetching header data:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <html lang="en"  data-theme="light">
       <head>
-        <link rel="icon" href="/logo.png" />
+        <link rel="icon"  href={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.fav180}`} />
         <link
           href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
           rel="stylesheet"

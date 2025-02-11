@@ -84,7 +84,41 @@ const getFooterData = async (req, res) => {
   }
 };
 
+const getHeaderData = async (req, res) => {
+  const headerSql = `
+    SELECT
+      setting.settingId,
+      setting.companyName,
+      setting.companyLogo,
+      setting.settingShortDescription,
+      setting.fav180
+    FROM setting  
+    WHERE settingId = 1
+  `;
+
+  try {
+    const [headerRows] = await db.execute(headerSql);
+
+    // Check if header data exists
+    if (headerRows.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No header data information found." });
+    }
+
+    const responseData = {
+      headerData: headerRows[0], // Assuming settingId = 1 is unique
+    };
+
+    return res.status(200).json(responseData);
+  } catch (err) {
+    console.error("Error fetching header data:", err);
+    return res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   getContacts,
   getFooterData,
+  getHeaderData,
 };

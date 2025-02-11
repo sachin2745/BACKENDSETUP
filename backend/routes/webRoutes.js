@@ -28,4 +28,9 @@ router.get("/legal-documents/getall", pageWebController.getLegalDocuments);
 //CONTACT US
 router.get("/contact/getall", contactWebController.getContactDetails);
 
+
+//HEADER DATA
+router.get('/header-data', settingWebController.getHeaderData);
+
+
 module.exports = router;

@@ -68,7 +68,7 @@ const Sidebar = ({ isCollapsed }) => {
         <div className="relative flex flex-col h-full max-h-full font-RedditSans">
           {/* Header */}
           <header className="p-4 flex justify-between items-center gap-x-2">
-            <div className="flex items-center gap-1 font-bold text-xl text-quaternary ">
+            <div className="flex items-center gap-1 font-bold text-2xl text-quaternary ">
               {!isCollapsed && (
                 <img
                   className="mx-auto h-10 w-auto rounded-full "
@@ -76,7 +76,7 @@ const Sidebar = ({ isCollapsed }) => {
                   alt="Blog Logo"
                 />
               )}
-              {!isCollapsed && <span>Blog Portal</span>}
+              {!isCollapsed && <span>Admin Panel</span>}
             </div>
             <div className="lg:hidden -me-2">
               {/* Close Button */}

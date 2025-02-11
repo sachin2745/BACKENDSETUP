@@ -1,11 +1,99 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import axios from "axios";
 
 const Header = () => {
   const pathname = usePathname();
+
+  const [headerData, setHeaderData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/web/header-data`
+        );
+
+        if (response.status === 200) {
+          setHeaderData(response.data.headerData);
+          console.log("Header data:", response.data.headerData);
+        } else {
+          console.error(`Unexpected response status: ${response.status}`);
+        }
+      } catch (err) {
+        console.error("Error fetching header data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white shadow-md text-sm py-1 font-RedditSans">
+        <nav className="max-w-[90rem] w-full mx-auto px-4 flex flex-wrap basis-full items-center justify-between">
+          {/* Logo and Mobile Toggle Skeleton */}
+          <div className="flex items-center">
+            <button
+              type="button"
+              className="sm:hidden size-7 flex justify-center items-center rounded-lg border bg-gray-200 text-gray-800 shadow-sm"
+              aria-expanded="false"
+              disabled
+            >
+              <span className="sr-only">Toggle</span>
+            </button>
+            <div className="h-12 w-12 md:h-14 md:w-14 md:mr-3 bg-gray-200 rounded-full animate-pulse"></div>
+          </div>
+
+          {/* Navigation Links Skeleton */}
+          <div className="hidden sm:flex items-center gap-10 text-[16px]">
+            {[...Array(4)].map((_, index) => (
+              <div
+                key={index}
+                className="h-6 w-20 bg-gray-200 rounded animate-pulse"
+              ></div>
+            ))}
+          </div>
+
+          {/* Login Button Skeleton */}
+          <div className="flex items-center gap-x-2">
+            <div className="h-10 w-20 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        </nav>
+
+        {/* Mobile Menu Skeleton */}
+        <div
+          id="hs-offcanvas-body-scrolling-with-backdrop"
+          className="hs-overlay hidden fixed top-0 start-0 h-full max-w-xs w-full bg-white border-e"
+        >
+          <div className="flex justify-between items-center py-3 px-4 border-b">
+            <div className="h-10 w-10 bg-gray-200 rounded-full animate-pulse"></div>
+            <button
+              type="button"
+              className="size-8 bg-gray-100 text-gray-800 hover:bg-gray-200"
+              disabled
+            >
+              <span className="sr-only">Close</span>
+            </button>
+          </div>
+          <div className="text-md font-medium">
+            {[...Array(4)].map((_, index) => (
+              <div
+                key={index}
+                className="h-12 bg-gray-200 border-b-2 animate-pulse"
+              ></div>
+            ))}
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white shadow-md text-sm py-1 font-RedditSans">
@@ -56,12 +144,12 @@ const Header = () => {
             className="sm:order-1 flex text-xl font-semibold focus:outline-none focus:opacity-80"
             href="/"
           >
-            <Image
-              src="/logo.png"
+            <img
+              src={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.companyLogo}`}
               width={56}
               height={56}
-              className="h-14  md:h-14  md:mr-3 rounded-full shadow-md"
-              alt="Logo"
+              className="h-12 w-12 md:h-14 md:w-14 md:mr-3 "
+              alt="Company Logo"
             />
           </Link>
         </div>
@@ -126,11 +214,11 @@ const Header = () => {
             className="sm:order-1 flex text-xl font-semibold focus:outline-none focus:opacity-80"
             href="/"
           >
-            <Image
-              src="/logo.png"
+            <img
+              src={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.companyLogo}`}
               width={56}
               height={56}
-              className="h-12  md:h-14  md:mr-3 rounded-full shadow-md"
+              className="h-10 w-10  md:h-14  md:mr-3 rounded-full shadow-md"
               alt="Logo"
             />
           </a>
