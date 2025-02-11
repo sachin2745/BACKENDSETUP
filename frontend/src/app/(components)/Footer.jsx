@@ -414,7 +414,7 @@ const Footer = () => {
             </Link>
           </div>
           <div className="text-center xl:text-[#3D3D3D] xl:text-[14px] xl:leading-[18px] xl:font-[500] text-[12px] text-[#1B2124]">
-            © {new Date().getFullYear()} Blog Portal developed by Sachin. All
+            © {new Date().getFullYear()} Website developed by Sachin. All
             Rights Reserved{" "}
           </div>
         </div>
