@@ -3,7 +3,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaLocationArrow, FaQuora } from "react-icons/fa";
-import { BsDot } from "react-icons/bs";
+
+
 const ContactUs = () => {
   const [contacts, setContacts] = useState({});
   const [settings, setSettings] = useState({});

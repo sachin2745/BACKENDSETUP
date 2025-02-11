@@ -17,21 +17,18 @@ export async function generateMetadata() {
 
   const terms = termsData.terms[0];
 
-  let openGraph = {};
+  let schema = '';
   if (terms.metaSchema) {
-    try {
-      openGraph = typeof terms.metaSchema === 'string' ? JSON.parse(terms.metaSchema) : terms.metaSchema;
-    } catch (error) {
-      console.error("Error parsing metaSchema:", error);
-      openGraph = {}; // Fallback to an empty object if parsing fails
-    }
+    schema = typeof terms.metaSchema === 'string' ? terms.metaSchema : JSON.stringify(terms.metaSchema);
   }
 
   return {
     title: terms.metaTitle || "Default Title",
     description: terms.metaDescriptioin || "Default Description",
     keywords: terms.metaKeywords || "default, keywords",
-    openGraph: openGraph,
+    other: {
+      script: schema ? [{ type: "application/ld+json", innerHTML: schema }] : [],
+    },
   };
 }
 

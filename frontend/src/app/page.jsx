@@ -1,45 +1,63 @@
-import Link from "next/link";
+import { notFound } from "next/navigation";
+import HomePage from "./homeClient";
 
-export function generateMetadata() {
+export async function generateMetadata() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/home/getall`);
+
+  if (!res.ok) {
+    return { title: "Privacy Not Found" };
+  }
+
+  const homeData = await res.json();
+
+  if (!homeData.home || homeData.home.length === 0) {
+    notFound();
+  }
+
+  const home = homeData.home[0];
+
   return {
-    title: "Home Page",
-    description:
-      "We are passionate about creating modern and user-friendly web applications.",
-    keywords: "web development, user-friendly, modern applications",
-    openGraph: {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "Blog Portal",
-      url: "https://www.blogportal.com",
-      logo: "https://www.blogportal.com/logo.png",
-      sameAs: [
-        "https://www.facebook.com/blogportal",
-        "https://www.twitter.com/blogportal",
-        "https://www.linkedin.com/in/blogportal",
-      ],
-    },
+    title: home.metaTitle || "Default Title",
+    description: home.metaDescriptioin || "Default Description",
+    keywords: home.metaKeywords || "default, keywords",
   };
 }
 
+export default async function homeWrapper() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/home/getall`);
 
-export default function HomePage() {
+  if (!res.ok) {
+    notFound();
+  }
+
+  const homeData = await res.json();
+
+  if (!homeData.home || homeData.home.length === 0) {
+    notFound();
+  }
+
+  const home = homeData.home[0];
+  let schemaData = "";
+
+  if (home.metaSchema) {
+    try {
+      schemaData = typeof home.metaSchema === "string" 
+        ? home.metaSchema 
+        : JSON.stringify(home.metaSchema, null, 2);  // Pretty-print JSON
+    } catch (error) {
+      console.error("Error parsing metaSchema:", error);
+    }
+  }
+
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="mx-auto p-24 text-center border-2 border-sky-500 bg-sky-500 text-white rounded-lg">
-          <h1 className="text-3xl font-bold">Welcome to TailAdmin Dashboard</h1>
-          <p className="mt-2">
-            Click below to explore:
-            <br />{""}
-            <Link
-              href="http://localhost:3000/admin/dashboard"
-              className="text-white font-bold "
-            >
-              Admin Dashboard
-            </Link>
-          </p>
-        </div>
-      </div>
+      <HomePage />
+      {schemaData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: schemaData }}
+        />
+      )}
     </>
   );
 }

@@ -4,13 +4,11 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import axios from "axios";
-import useAppContext from "@/context/AppContext";
 import dynamic from "next/dynamic";
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 import { RiEdit2Line } from "react-icons/ri";
 
 const pageContent = () => {
-  const { currentUser, setCurrentUser } = useAppContext();
 
   const [page, setPages] = useState([]);
 
@@ -19,7 +17,7 @@ const pageContent = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/page-content/getall`
       ); // Making GET request to the API endpoint
-      console.log(response.data);
+      // console.log(response.data);
       const data = response.data; // Extracting the data from the response
 
       setPages(data);

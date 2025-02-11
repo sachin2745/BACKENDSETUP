@@ -117,8 +117,64 @@ const getHeaderData = async (req, res) => {
   }
 };
 
+const getBlogDetails = async (req, res) => {
+  const blogSql = `
+    SELECT * FROM pages  
+    WHERE pageId = 4 AND pageStatus = 0
+  `;
+
+  try {
+    const [blogRows] = await db.execute(blogSql);
+
+    // Check if header data exists
+    if (blogRows.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No blog data information found." });
+    }
+
+    const responseData = {
+      blogData: blogRows[0], 
+    };
+
+    return res.status(200).json(responseData);
+  } catch (err) {
+    console.error("Error fetching blog data:", err);
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+const getAboutDetails = async (req, res) => {
+  const aboutSql = `
+    SELECT * FROM pages  
+    WHERE pageId = 3 AND pageStatus = 0
+  `;
+
+  try {
+    const [aboutRows] = await db.execute(aboutSql);
+
+    // Check if header data exists
+    if (aboutRows.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No about data information found." });
+    }
+
+    const responseData = {
+      aboutData: aboutRows[0], 
+    };
+
+    return res.status(200).json(responseData);
+  } catch (err) {
+    console.error("Error fetching about data:", err);
+    return res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   getContacts,
   getFooterData,
   getHeaderData,
+  getBlogDetails,
+  getAboutDetails,
 };

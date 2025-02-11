@@ -1,27 +1,67 @@
+import { notFound } from "next/navigation";
 import About from "./aboutClient";
 
 export async function generateMetadata() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/about/getall`);
+
+  if (!res.ok) {
+    return { title: "about Not Found" };
+  }
+
+  const aboutData = await res.json();
+
+  // Check if about data exists
+  if (!aboutData.aboutData) {
+    notFound(); // Redirect if no about data
+  }
+
+  const about = aboutData.aboutData;
+
   return {
-    title: "About Page",
-    description: "We are passionate about creating modern and user-friendly web applications.",
-    keywords: "web development, user-friendly, modern applications",
-    openGraph: {
-      title: "About Page",
-      description: "We are passionate about creating modern and user-friendly web applications.",
-      type: "website",
-      url: "https://www.blogportal.com",
-      images: [
-        {
-          url: "https://www.blogportal.com/logo.png",
-          width: 800,
-          height: 600,
-          alt: "Logo",
-        },
-      ],
-    },
+    title: about.metaTitle || "Default Title",
+    description: about.metaDescriptioin || "Default Description",
+    keywords: about.metaKeywords || "default, keywords",
   };
 }
 
-export default function AboutWrapper() {
-  return <About />;
+export default async function aboutWrapper() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/about/getall`);
+
+  if (!res.ok) {
+    notFound(); // Redirect to the Not Found page if the fetch fails
+  }
+
+  const aboutData = await res.json();
+
+  // Check if about data exists
+  if (!aboutData.aboutData) {
+    notFound(); // Redirect if no about data
+  }
+
+  const about = aboutData.aboutData;
+
+  let schemaData = "";
+
+  if (about.metaSchema) {
+    try {
+      schemaData =
+        typeof about.metaSchema === "string"
+          ? about.metaSchema
+          : JSON.stringify(about.metaSchema, null, 2); // Pretty-print JSON
+    } catch (error) {
+      console.error("Error parsing metaSchema:", error);
+    }
+  }
+
+  return (
+    <>
+      <About />
+      {schemaData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: schemaData }}
+        />
+      )}
+    </>
+  );
 }

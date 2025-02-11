@@ -20,7 +20,7 @@ const Header = () => {
 
         if (response.status === 200) {
           setHeaderData(response.data.headerData);
-          console.log("Header data:", response.data.headerData);
+          // console.log("Header data:", response.data.headerData);
         } else {
           console.error(`Unexpected response status: ${response.status}`);
         }

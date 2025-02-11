@@ -5,7 +5,7 @@ export async function generateMetadata() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/contact/getall`);
 
   if (!res.ok) {
-    return { title: "Privacy Not Found" };
+    return { title: "Contact Not Found" };
   }
 
   const contactData = await res.json();
@@ -17,21 +17,10 @@ export async function generateMetadata() {
 
   const contacts = contactData.contacts[0];
 
-  let openGraph = {};
-  if (contacts.metaSchema) {
-    try {
-      openGraph = typeof contacts.metaSchema === 'string' ? JSON.parse(contacts.metaSchema) : contacts.metaSchema;
-    } catch (error) {
-      console.error("Error parsing metaSchema:", error);
-      openGraph = {}; // Fallback to an empty object if parsing fails
-    }
-  }
-
   return {
     title: contacts.metaTitle || "Default Title",
     description: contacts.metaDescriptioin || "Default Description",
     keywords: contacts.metaKeywords || "default, keywords",
-    openGraph: openGraph,
   };
 }
 
@@ -44,10 +33,33 @@ export default async function ContactsWrapper() {
 
   const contactData = await res.json();
 
-  // Check if terms data exists
+  // Check if contacts data exists
   if (!contactData.contacts || contactData.contacts.length === 0) {
     notFound();  // Redirect to the Not Found page if contacts are missing
   }
 
-  return <ContactUs />;
+  const contacts = contactData.contacts[0];
+  let schemaData = "";
+
+  if (contacts.metaSchema) {
+    try {
+      schemaData = typeof contacts.metaSchema === "string"
+        ? contacts.metaSchema
+        : JSON.stringify(contacts.metaSchema, null, 2);  // Pretty-print JSON
+    } catch (error) {
+      console.error("Error parsing metaSchema:", error);
+    }
+  }
+
+  return (
+    <>
+      <ContactUs />
+      {schemaData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: schemaData }}
+        />
+      )}
+    </>
+  );
 }

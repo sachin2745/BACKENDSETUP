@@ -17,21 +17,10 @@ export async function generateMetadata() {
 
   const privacy = privacyData.privacy[0];
 
-  let openGraph = {};
-  if (privacy.metaSchema) {
-    try {
-      openGraph = typeof privacy.metaSchema === 'string' ? JSON.parse(privacy.metaSchema) : privacy.metaSchema;
-    } catch (error) {
-      console.error("Error parsing metaSchema:", error);
-      openGraph = {}; // Fallback to an empty object if parsing fails
-    }
-  }
-
   return {
     title: privacy.metaTitle || "Default Title",
     description: privacy.metaDescriptioin || "Default Description",
     keywords: privacy.metaKeywords || "default, keywords",
-    openGraph: openGraph,
   };
 }
 
@@ -44,10 +33,33 @@ export default async function PrivacyWrapper() {
 
   const privacyData = await res.json();
 
-  // Check if terms data exists
+  // Check if privacy data exists
   if (!privacyData.privacy || privacyData.privacy.length === 0) {
-    notFound();  // Redirect to the Not Found page if privacy are missing
+    notFound();  // Redirect to the Not Found page if privacy is missing
   }
 
-  return <Privacy />;
+  const privacy = privacyData.privacy[0];
+  let schemaData = "";
+
+  if (privacy.metaSchema) {
+    try {
+      schemaData = typeof privacy.metaSchema === "string"
+        ? privacy.metaSchema
+        : JSON.stringify(privacy.metaSchema, null, 2);  // Pretty-print JSON
+    } catch (error) {
+      console.error("Error parsing metaSchema:", error);
+    }
+  }
+
+  return (
+    <>
+      <Privacy />
+      {schemaData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: schemaData }}
+        />
+      )}
+    </>
+  );
 }
