@@ -102,7 +102,7 @@ const ContactUs = () => {
             )}
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between my-6 pt-6 pb-12  border-b-2 border-gray-200">
+          <div className="flex flex-col md:flex-row justify-between my-6 pt-6 pb-12  ">
             <div className="w-full md:w-[48%]">
               <div className="mb-3">
                 <h2 className="text-4xl uppercase">{settings.companyName}</h2>
@@ -137,7 +137,7 @@ const ContactUs = () => {
           </div>
 
           {faqs.length > 0 && (
-            <div>
+            <div className="border-t-2 border-gray-200">
               <h3 className="my-6  text-3xl font-bold capitalize text-quaternary">
                 Frequently Asked Questions
               </h3>
