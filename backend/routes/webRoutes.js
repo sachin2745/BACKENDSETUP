@@ -7,6 +7,7 @@ const settingWebController = require('../controllers/web/settingWebController');
 const pageWebController = require("../controllers/web/pageWebController");
 const contactWebController = require("../controllers/web/contactWebController");
 const homeWebController = require("../controllers/web/homeWebController");
+const aboutWebController = require("../controllers/web/aboutWebController");
 
 
 //ROUTES FOR BLOG
@@ -40,6 +41,7 @@ router.get('/home/getall', homeWebController.getHomeDetails);
 router.get("/blog/getall", settingWebController.getBlogDetails);
 
 //ABOUT US
-router.get("/about/getall", settingWebController.getAboutDetails);
+router.get("/about/getall", aboutWebController.getAboutDetails);
+router.get("/about-data/getall", aboutWebController.getAboutData);
 
 module.exports = router;

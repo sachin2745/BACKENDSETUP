@@ -35,9 +35,16 @@ export default function RootLayout({ children }) {
   }, []);
 
   return (
-    <html lang="en"  data-theme="light">
+    <html lang="en" data-theme="light">
       <head>
-        <link rel="icon"  href={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.fav180}`} />
+        <link
+          rel="icon"
+          href={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.fav180}`}
+        />
+        {headerData && (
+          <script dangerouslySetInnerHTML={{ __html: headerData.gSeoDetail }} />
+        )}
+
         <link
           href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
           rel="stylesheet"
@@ -74,7 +81,6 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Clicker+Script&display=swap"
           rel="stylesheet"
         />
-
         <link
           href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
           rel="stylesheet"
@@ -95,7 +101,6 @@ export default function RootLayout({ children }) {
           href="https://cdn.datatables.net/v/dt/dt-2.2.0/datatables.min.css"
           rel="stylesheet"
         />
-
         <script src="https://cdn.datatables.net/v/dt/dt-2.2.0/datatables.min.js"></script>
         {/* <!-- DataTables CSS --> */}
         <link
@@ -107,7 +112,6 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
           href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"
         />
-
         {/* <!-- jQuery --> */}
         {/* <!-- DataTables JS --> */}
         <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
@@ -115,7 +119,6 @@ export default function RootLayout({ children }) {
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
         {/* <!-- JSZip (for Excel export) --> */}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
         {/* <!-- pdfMake (for PDF export) --> */}
@@ -126,7 +129,7 @@ export default function RootLayout({ children }) {
       <body className="">
         {!isAdminPage && <Header />}
         <main className="min-h-screen">{children}</main>
-        {!isAdminPage && <Contact/>}
+        {!isAdminPage && <Contact />}
         {!isAdminPage && <Footer />}
       </body>
     </html>
