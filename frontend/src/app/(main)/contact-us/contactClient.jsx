@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaLocationArrow, FaQuora } from "react-icons/fa";
 
-
 const ContactUs = () => {
   const [contacts, setContacts] = useState({});
   const [settings, setSettings] = useState({});
@@ -131,6 +130,8 @@ const ContactUs = () => {
             <div className="w-full md:w-[75%] mt-5 md:mt-0">
               {typeof window !== "undefined" && (
                 <div
+                  loading="lazy"
+                  decoding="async"
                   dangerouslySetInnerHTML={{ __html: settings.embedMapUrl }}
                 />
               )}

@@ -66,6 +66,8 @@ export default function BlogPage() {
                     className="block sm:hidden h-48 lg:h-48 md:h-36 w-full object-fit opacity-80 hover:opacity-100 transition-opacity duration-300"
                     src={`${process.env.NEXT_PUBLIC_API_URL}${post.blogImageMobile}`}
                     alt={post.blogTitle}
+                    loading="lazy"
+                    decoding="async"
                   />
                   <img
                     className="hidden sm:block h-48 lg:h-48 md:h-36 w-full object-fit opacity-80 hover:opacity-100 transition-opacity duration-300"

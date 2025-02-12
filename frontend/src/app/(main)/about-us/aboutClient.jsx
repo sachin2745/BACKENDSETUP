@@ -36,7 +36,53 @@ const About = () => {
   }, []);
 
   if (loading) {
-    return <div className="min-h-screen">Loading</div>;
+    return (
+      <section className="font-RedditSans">
+        <div className="mx-auto md:pt-[20px] md:pb-[40px] pt-[18px] xl:bg-bottom 2xl:bg-cover bg-cover xl:bg-contain bg-no-repeat animate-pulse">
+          <div className="max-w-[78rem] md:pt-[32px] pt-[20px] px-[16px] mx-auto">
+            <div className="h-8 md:h-12 bg-gray-300 rounded w-3/4"></div>
+          </div>
+
+          <div className="max-w-6xl md:flex md:flex-col lg:flex lg:flex-row justify-around items-center md:pb-[32px] px-6 sm:px-0 py-[18px] mx-auto">
+            {/* Card 1 */}
+            <div className="md:w-[356px] sm:w-full h-[120px] my-[20px] rounded-lg relative">
+              <div className="w-[76px] h-[86px] rounded-lg bg-gray-300 absolute top-[-3px] left-[-3px]" />
+              <div className="w-[76px] h-[86px] rounded-lg bg-gray-300 absolute bottom-[-3px] right-0" />
+              <div className="w-[97%] h-auto rounded-lg bg-gray-200 absolute bottom-1 right-1 top-1 left-1">
+                <div className="pt-[30px] pb-[30px] px-[24px] flex items-center gap-x-4">
+                  <div className="h-[32px] sm:h-[56px] w-[32px] sm:w-[56px] bg-gray-300 rounded" />
+                  <div className="h-4 md:h-5 bg-gray-300 rounded w-2/3"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="md:w-[356px] sm:w-full h-[120px] my-[20px] rounded-lg relative">
+              <div className="w-[76px] h-[86px] rounded-lg bg-gray-300 absolute top-[-3px] left-[-3px]" />
+              <div className="w-[76px] h-[86px] rounded-lg bg-gray-300 absolute bottom-[-3px] right-0" />
+              <div className="w-[97%] h-auto rounded-lg bg-gray-200 absolute bottom-1 right-1 top-1 left-1">
+                <div className="pt-[30px] pb-[30px] px-[24px] flex items-center gap-x-4">
+                  <div className="h-[32px] sm:h-[56px] w-[32px] sm:w-[56px] bg-gray-300 rounded" />
+                  <div className="h-4 md:h-5 bg-gray-300 rounded w-2/3"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="md:w-[356px] sm:w-full h-[120px] my-[20px] rounded-lg relative">
+              <div className="w-[76px] h-[86px] rounded-lg bg-gray-300 absolute top-[-3px] left-[-3px]" />
+              <div className="w-[76px] h-[86px] rounded-lg bg-gray-300 absolute bottom-[-3px] right-0" />
+              <div className="w-[97%] h-auto rounded-lg bg-gray-200 absolute bottom-1 right-1 top-1 left-1">
+                <div className="pt-[30px] pb-[30px] px-[24px] flex items-center gap-x-4">
+                  <div className="h-[32px] sm:h-[56px] w-[32px] sm:w-[56px] bg-gray-300 rounded" />
+                  <div className="h-4 md:h-5 bg-gray-300 rounded w-2/3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
