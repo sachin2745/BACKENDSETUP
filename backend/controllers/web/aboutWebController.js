@@ -30,14 +30,21 @@ const getAboutData = async (req, res) => {
   `;
 
   const founderSql = `
-    SELECT * FROM founder 
+    SELECT * FROM founder
+    WHERE founderStatus = 0 
     LIMIT 2 
+  `;
+
+  const pageSql = `
+    SELECT * FROM pages  
+    WHERE pageId = 3 AND pageStatus = 0
   `;
 
   try {
     // Execute both queries in parallel
     const [aboutRows] = await db.execute(aboutSql);
     const [founderRows] = await db.execute(founderSql);
+    const [pageRows] = await db.execute(pageSql);
 
     // Check if footer data exists
     if (aboutRows.length === 0) {
@@ -50,6 +57,7 @@ const getAboutData = async (req, res) => {
     const responseData = {
       aboutData: aboutRows[0], // Assuming settingId = 1 is unique
       founderData: founderRows.length > 0 ? founderRows : null, // Handle case if no founder data found
+      pageData: pageRows[0], // Handle case if no founder data found
     };
 
     return res.status(200).json(responseData);

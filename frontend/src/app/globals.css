@@ -38,3 +38,10 @@ iframe{
   width: 100% !important;  
 }
 
+.scrollbarWidthThin{
+  scrollbar-width: thin;  
+}
+.scrollbarWidthNone{
+  scrollbar-width: none;
+}
+

@@ -394,7 +394,7 @@ const Footer = () => {
 
       <div className="bg-dashGray text-xs sm:text-sm text-black font-medium font-RedditSans border-t text-center p-4  max-w-[78rem] px-4 md:px-6 mx-auto ">
         <div className="flex md:flex-row flex-col justify-between items-center gap-y-2 ">
-          <div className="flex justify-center md:justify-start gap-2 sm:gap-3 items-center">
+          <div className="flex justify-center md:justify-start gap-1.5 sm:gap-3 items-center">
             <Link href="/privacy-policy">
               <div className="xl:text-[#3D3D3D] xl:text-[14px] xl:leading-[18px] xl:font-[500] text-xs hover:underline ">
                 Privacy Policy
