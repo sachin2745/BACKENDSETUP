@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -18,8 +18,6 @@ const About = () => {
           setAboutData(response.data.aboutData);
           setFounderData(response.data.founderData);
           console.log("About Data:", response.data);
-          
-          
         } else {
           console.error(`Unexpected response status: ${response.status}`);
         }
@@ -38,52 +36,145 @@ const About = () => {
   }
 
   return (
-    <section className="min-h-screen">
-      <div className="p-5 xl:p-10">
-        <div className="max-w-8xl mx-auto xl:flex flex-row items-start space-x-4">
-          {/* Main Content Skeleton */}
-          <div className="xl:w-[77%] bg-white overflow-visible">
-            <div className="bg-gray-300 w-3/4 h-8 mb-4 rounded animate-pulse"></div>
-            <div className="flex items-center font-semibold font-RedditSans space-x-4 mb-4 pb-4 border-b-2">
-              <span className="bg-gray-300 w-24 h-6 rounded animate-pulse"></span>
-              <span className="bg-gray-300 w-24 h-6 rounded animate-pulse"></span>
+    <>
+      <section className="font-RedditSans">
+        {aboutData && (
+          <div
+            className="mx-auto md:pt-[20px] md:pb-[40px] pt-[18px] xl:bg-bottom 2xl:bg-cover bg-cover xl:bg-contain bg-no-repeat "
+            style={{
+              backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${aboutData.ourMissionBgImg})`,
+            }}
+          >
+            <div className="max-w-6xl md:pt-[32px] pt-[20px] px-[16px] mx-auto">
+              <h2 className="font-[700] md:text-[32px] md:leading-[48px] text-[20px] leading-[30px] text-white">
+                {aboutData?.ourMissionHeading || ""}
+              </h2>
             </div>
-
-            <div className="flex flex-row items-start space-x-4">
-              {/* Social Media Icons Skeleton */}
-              <div className="sticky top-10 flex flex-col space-y-4 mb-4">
-                <div className="bg-gray-300 w-10 h-10 rounded animate-pulse"></div>
-                <div className="bg-gray-300 w-10 h-10 rounded animate-pulse"></div>
-                <div className="bg-gray-300 w-10 h-10 rounded animate-pulse"></div>
-                <div className="bg-gray-300 w-10 h-10 rounded animate-pulse"></div>
-                <div className="bg-gray-300 w-10 h-10 rounded animate-pulse"></div>
+            <div className="max-w-6xl md:flex md:flex-col lg:flex lg:flex-row justify-around items-center md:pb-[32px] px-6 sm:px-0 py-[18px] mx-auto">
+              <div className="md:columns-4 columns-12 md:w-[356px] sm:w-full h-[120px] my-[20px] rounded-lg relative">
+                <div className="w-[76px] h-[86px] rounded-lg bg-[#1B7938] absolute top-[-3px] left-[-3px]" />
+                <div className="w-[76px] h-[86px] rounded-lg bg-[#1B7938] absolute bottom-[-3px] right-0" />
+                <div className="w-[97%] h-auto rounded-lg bg-[#FFF1F3] absolute bottom-1 right-1 top-1 left-1">
+                  <div className="pt-[30px] pb-[30px] px-[24px] flex items-center gap-x-4">
+                    <div>
+                      <div
+                        className=" h-[32px] sm:h-[56px] w-[32px] sm:w-[56px] bg-center bg-no-repeat bg-contain"
+                        style={{
+                          backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${aboutData.ourMissionImg1})`,
+                        }}
+                      />
+                    </div>
+                    <div className="text-sm md:text-[18px] px-4 md:px-0 md:text-center items-center xl:text-start text-[#1B2124] font-[600] leading-7">
+                      {aboutData?.ourMissionContent1 || ""}
+                    </div>
+                  </div>
+                </div>
               </div>
-
-              {/* Blog Image Skeleton */}
-              <div className="w-full sm:block h-[503px] bg-gray-300 rounded-lg animate-pulse mb-4"></div>
-              <div className="w-full sm:hidden h-[158px] bg-gray-300 rounded-lg animate-pulse mb-4"></div>
+              <div className="md:columns-4 columns-12 md:w-[356px] sm:w-full h-[120px] my-[20px] rounded-lg relative">
+                <div className="w-[76px] h-[86px] rounded-lg bg-[#F1EFFF] absolute top-[-3px] left-[-3px]" />
+                <div className="w-[76px] h-[86px] rounded-lg bg-[#F1EFFF] absolute bottom-[-3px] right-0" />
+                <div className="w-[97%] h-auto rounded-lg bg-[#FFFBEF] absolute bottom-1 right-1 top-1 left-1">
+                  <div className="pt-[30px] pb-[30px] px-[24px] flex items-center gap-x-4">
+                    <div>
+                      <div
+                        className="h-[32px] sm:h-[56px] w-[32px] sm:w-[56px] bg-center bg-no-repeat bg-contain"
+                        style={{
+                          backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${aboutData.ourMissionImg2})`,
+                        }}
+                      />
+                    </div>
+                    <div className="text-sm md:text-[18px] px-4 md:px-0 md:text-center items-center xl:text-start text-[#1B2124] font-[600] leading-7">
+                      {aboutData?.ourMissionContent2 || ""}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="md:columns-4 columns-12 md:w-[356px] sm:w-full h-[120px] my-[20px] rounded-lg relative">
+                <div className="w-[76px] h-[86px] rounded-lg bg-[#E31B4D] absolute top-[-3px] left-[-3px]" />
+                <div className="w-[76px] h-[86px] rounded-lg bg-[#E31B4D] absolute bottom-[-3px] right-0" />
+                <div className="w-[97%] h-auto rounded-lg bg-[#E7F6FA] absolute bottom-1 right-1 top-1 left-1">
+                  <div className="pt-[30px] pb-[30px] px-[24px] flex items-center gap-x-4">
+                    <div>
+                      <div
+                        className="h-[32px] sm:h-[56px] w-[32px] sm:w-[56px] bg-center bg-no-repeat bg-contain"
+                        style={{
+                          backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${aboutData.ourMissionImg3})`,
+                        }}
+                      />
+                    </div>
+                    <div className="text-sm md:text-[18px] px-4 md:px-0 md:text-center items-center xl:text-start text-[#1B2124] font-[600] leading-7">
+                      {aboutData?.ourMissionContent3 || ""}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        )}
+      </section>
 
-          {/* Sidebar Skeleton */}
-          <div className="sm:sticky top-10 xl:w-[27%] bg-white sm:px-6 py-7 xl:py-2 min-h-[400px] font-RedditSans">
-            <div className="bg-gray-300 w-full h-10 mb-4 rounded animate-pulse"></div>
-            <div className="bg-gray-300 w-full h-10 mb-4 rounded animate-pulse"></div>
-            <div className="bg-gray-300 w-full h-10 mb-4 rounded animate-pulse"></div>
-
-            <hr className="my-4" />
-            <div className="border shadow-md rounded px-5 py-4 font-RedditSans">
-              <div className="bg-gray-300 w-3/4 h-6 mb-4 rounded animate-pulse"></div>
-              <div className="space-y-4">
-                <div className="bg-gray-300 w-full h-6 mb-2 rounded animate-pulse"></div>
-                <div className="bg-gray-300 w-full h-6 mb-2 rounded animate-pulse"></div>
-                <div className="bg-gray-300 w-full h-6 mb-2 rounded animate-pulse"></div>
+      <section>
+        <div
+          className="mx-auto bg-no-repeat bg-cover bg-bottom py-3 "
+          style={{
+            backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${aboutData.ourVisionBgImg})`,
+          }}
+        >
+          <div className="max-w-6xl flex py-[24px] px-[16px] md:py-[30px] justify-between flex-col xl:flex-row m-auto">
+            <div className="xl:text-left xl:w-[50%] w-full py-[20px]">
+              <h2 className="font-[700] md:text-[32px] md:leading-[48px] text-[20px] leading-[30px] text-[#1B2124]">
+               {aboutData?.ourVisionHeading || ""}
+              </h2>
+              <div className="flex pt-[16px] gap-2.5 text-sm md:text-[18px] leading-[28px] md:px-0 items-center xl:text-start text-[#3D3D3D] mb-3.5 font-[500]">
+                <span>
+                  <div
+                    className="h-[32px] w-[32px] bg-center bg-no-repeat bg-contain"
+                    style={{
+                      backgroundImage:
+                        "url(star.webp)",
+                    }}
+                  />
+                </span>
+                <span> {aboutData?.ourVisionContent1 || ""}</span>
               </div>
+              <div className="flex text-sm gap-2.5 md:text-[18px] leading-[28px] md:px-0 items-center xl:text-start text-[#3D3D3D] mb-3.5 font-[500]">
+                <span>
+                  <div
+                    className="h-[32px] w-[32px] bg-center bg-no-repeat bg-contain"
+                    style={{
+                      backgroundImage:
+                      "url(star.webp)",
+                    }}
+                  />
+                </span>
+                <span> {aboutData?.ourVisionContent2 || ""}</span>
+              </div>
+              <div className="flex text-sm gap-2.5 md:text-[18px] leading-[28px] md:px-0 items-center xl:text-start text-[#3D3D3D] mb-3.5 font-[500]">
+                <span>
+                  <div
+                    className="h-[32px] w-[32px] bg-center bg-no-repeat bg-contain"
+                    style={{
+                      backgroundImage:
+                      "url(star.webp)",
+                    }}
+                  />
+                </span>
+                <span> {aboutData?.ourVisionContent3 || ""}</span>
+              </div>
+            </div>
+            <div className="mx-auto">
+              <div
+                className="h-[183px] sm:h-[336px] w-[328px] sm:w-[580px] bg-center bg-no-repeat bg-contain"
+                style={{
+                  backgroundImage:
+                    `url(${process.env.NEXT_PUBLIC_API_URL}${aboutData.ourVisionImg})`,
+                }}
+              />
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 
