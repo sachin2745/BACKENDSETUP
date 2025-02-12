@@ -6,6 +6,7 @@ const About = () => {
   const [aboutData, setAboutData] = useState(null);
   const [founderData, setFounderData] = useState(null);
   const [pageData, setPageData] = useState(null);
+  const [bannerData, setBannerData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,6 +20,7 @@ const About = () => {
           setAboutData(response.data.aboutData);
           setFounderData(response.data.founderData);
           setPageData(response.data.pageData);
+          setBannerData(response.data.bannerData);
           // console.log("About Data:", response.data);
         } else {
           console.error(`Unexpected response status: ${response.status}`);
@@ -275,6 +277,132 @@ const About = () => {
       <section className="font-RedditSans max-w-[78rem] mx-auto px-6 py-12">
         {pageData.pageDescription && (
           <div dangerouslySetInnerHTML={{ __html: pageData.pageDescription }} />
+        )}
+      </section>
+
+      <section className="font-RedditSans">
+        {bannerData && (
+          <div
+            className="my-10 min-h-[350px] overflow-hidden sm:mx-4 xl:mx-auto relative max-w-[75rem] m-auto shadow-md justify-between xl:p-10 p-4 md:flex rounded-md"
+            style={{ backgroundColor: bannerData?.bannerBgColor || "" }}
+          >
+            <div className="my-auto">
+              <div>
+                <div className="font-bold text-[#1B2124] xl:leading-[48px] leading-[30px] md:text-2xl xl:text-left text-center  text-[20px] xl:text-[32px] mb-4 md:mb-3">
+                  {bannerData?.bannerHeading || ""}
+                </div>
+              </div>
+              <div className="xl:mb-10 mb-8 text-[#1B2124]">
+                <div>
+                  <div className="flex items-center gap-2.5 my-[10px]">
+                    <img
+                      alt="blueTickImage"
+                      loading="lazy"
+                      width={16}
+                      height={16}
+                      decoding="async"
+                      data-nimg={1}
+                      className="w-4 h-4 bg-center bg-no-repeat bg-cover"
+                      style={{ color: "transparent" }}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}${bannerData.bannerTickIcon}`}
+                    />
+                    <div className="sm:text-base text-sm">
+                      {bannerData?.bannerContent1 || ""}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2.5 my-[10px]">
+                    <img
+                      alt="blueTickImage"
+                      loading="lazy"
+                      width={16}
+                      height={16}
+                      decoding="async"
+                      data-nimg={1}
+                      className="w-4 h-4 bg-center bg-no-repeat bg-cover"
+                      style={{ color: "transparent" }}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}${bannerData.bannerTickIcon}`}
+                    />
+                    <div className="sm:text-base text-sm">
+                      {bannerData?.bannerContent2 || ""}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2.5 my-[10px]">
+                    <img
+                      alt="blueTickImage"
+                      loading="lazy"
+                      width={16}
+                      height={16}
+                      decoding="async"
+                      data-nimg={1}
+                      className="w-4 h-4 bg-center bg-no-repeat bg-cover"
+                      style={{ color: "transparent" }}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}${bannerData.bannerTickIcon}`}
+                    />
+                    <div className="sm:text-base text-sm">
+                      {bannerData?.bannerContent3 || ""}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="flex md:gap-3.5 gap-2 md:justify-start justify-center sm:mb-0 mb-10">
+                  <a
+                    href={bannerData?.bannerGoogle || ""}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="store-icons"
+                  >
+                    <img
+                      alt="image"
+                      loading="lazy"
+                      width={0}
+                      height={0}
+                      decoding="async"
+                      data-nimg={1}
+                      className="cursor-pointer w-[135px] h-[40px] bg-center bg-no-repeat bg-cover"
+                      style={{ color: "transparent" }}
+                      src="google-play-badge.webp"
+                    />
+                  </a>
+                  <a
+                    href={bannerData?.bannerApple || ""}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="store-icons"
+                  >
+                    <img
+                      alt="image"
+                      loading="lazy"
+                      width={0}
+                      height={0}
+                      decoding="async"
+                      data-nimg={1}
+                      className="cursor-pointer w-[135px] h-[40px] bg-center bg-no-repeat bg-cover"
+                      style={{ color: "transparent" }}
+                      src="apple-store-badge.webp"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div>
+              <img
+                alt="download-right"
+                loading="lazy"
+                width={0}
+                height={0}
+                decoding="async"
+                data-nimg={1}
+                className=" xl:w-[301px] xl:h-[376px] w-[200px] sm:h-[450px] h-[248px] mb-[-30px] sm:mb-[-130px] xl:mb-[-65px] m-auto  bg-center bg-contain  bg-no-repeat "
+                style={{ color: "transparent" }}
+                src={`${process.env.NEXT_PUBLIC_API_URL}${bannerData.bannerImg}`}
+              />
+            </div>
+          </div>
         )}
       </section>
     </>

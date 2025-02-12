@@ -38,6 +38,11 @@ const storage = multer.diskStorage({
       file.fieldname === "fav16"
     ) {
       folderName = "Setting"; // Folder for mission & vision images
+    } else if (
+      file.fieldname === "bannerImg" ||
+      file.fieldname === "bannerTickIcon"
+    ) {
+      folderName = "AboutBanner"; // Folder for mission & vision images
     } else if (file.fieldname === "founderImg") {
       folderName = "Founder";
     } else {
@@ -115,6 +120,17 @@ router.post(
     { name: "ourVisionBgImg", maxCount: 1 },
   ]),
   aboutController.updateMissionVision
+);
+
+//ABOUT PAGE BANNER
+router.get("/about-banner", aboutController.getBanner);
+router.post(
+  "/update/about-banner",
+  upload.fields([
+    { name: "bannerImg", maxCount: 1 },
+    { name: "bannerTickIcon", maxCount: 1 },
+  ]),
+  aboutController.updateBanner
 );
 
 //FOUNDER PAGE

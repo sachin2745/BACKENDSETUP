@@ -25,6 +25,7 @@ const Sidebar = ({ isCollapsed }) => {
     { name: "Founder", path: "/admin/about/founder" },
     { name: "General Setting", path: "/admin/appearance/general" },
     { name: "Page Content", path: "/admin/appearance/page-content" },
+    { name: "Banner", path: "/admin/about/banner" },
     // Add more options as needed
   ];
 
@@ -234,6 +235,18 @@ const Sidebar = ({ isCollapsed }) => {
                           href="/admin/about/founder"
                         >
                           Founder
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className={` ${
+                            pathname === "/admin/about/banner"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500"
+                              : ""
+                          } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
+                          href="/admin/about/banner"
+                        >
+                          Banner
                         </Link>
                       </li>
                     </ul>

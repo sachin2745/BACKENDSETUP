@@ -287,6 +287,56 @@ const updateFounder = async (req, res) => {
   }
 };
 
+const getBanner = async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT * FROM aboutbanner WHERE bannerId = 1`
+    );
+
+    if (rows.length > 0) {
+      res.json(rows[0]); // Return the first row
+    } else {
+      res.status(404).json({ message: "No data found" });
+    }
+  } catch (error) {
+    console.error("Database query error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const updateBanner = async (req, res) => {
+  const data = {
+    bannerHeading: req.body.bannerHeading,
+    bannerContent1: req.body.bannerContent1,
+    bannerContent2: req.body.bannerContent2,
+    bannerContent3: req.body.bannerContent3,
+    bannerGoogle: req.body.bannerGoogle,
+    bannerApple: req.body.bannerApple,
+    bannerBgColor: req.body.bannerBgColor,
+  };
+
+  // Handle file uploads
+
+  if (req.files.bannerImg) {
+    const Img1Path = `/uploads/AboutBanner/${req.files.bannerImg[0].filename}`;
+    data.bannerImg = Img1Path;
+  }
+
+  if (req.files.bannerTickIcon) {
+    const Img2Path = `/uploads/AboutBanner/${req.files.bannerTickIcon[0].filename}`;
+    data.bannerTickIcon = Img2Path;
+  }
+
+  try {
+    // Update the record with id = 1
+    await db.query("UPDATE aboutbanner SET ? WHERE bannerId  = 1", [data]);
+    res.status(200).send("Details updated successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An unexpected error occurred");
+  }
+};
+
 module.exports = {
   getMissionVision,
   updateMissionVision,
@@ -296,4 +346,6 @@ module.exports = {
   addFounder,
   getFounderById,
   updateFounder,
+  getBanner,
+  updateBanner,
 };
