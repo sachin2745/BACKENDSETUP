@@ -7,6 +7,7 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import { LiaArtstation } from "react-icons/lia";
 import { FaAtlassian } from "react-icons/fa";
 import { FaQuestion } from "react-icons/fa6";
+import { PiChatsFill } from "react-icons/pi";
 
 const Sidebar = ({ isCollapsed }) => {
   const pathname = usePathname();
@@ -27,6 +28,7 @@ const Sidebar = ({ isCollapsed }) => {
     { name: "General Setting", path: "/admin/appearance/general" },
     { name: "Page Content", path: "/admin/appearance/page-content" },
     { name: "Banner", path: "/admin/about/banner" },
+    { name: "Enquiry", path: "/admin/enquiry" },
     // Add more options as needed
   ];
 
@@ -143,7 +145,9 @@ const Sidebar = ({ isCollapsed }) => {
                 <li>
                   <Link
                     className={` ${
-                      pathname === "/admin/dashboard" ? "bg-emerald-200 border-b-2 border-emerald-500" : ""
+                      pathname === "/admin/dashboard"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        : ""
                     } flex items-center gap-x-3 py-2 px-2.5  text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/dashboard"
                   >
@@ -264,10 +268,12 @@ const Sidebar = ({ isCollapsed }) => {
                     type="button"
                     className="hs-accordion-toggle w-full text-start flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100"
                     aria-expanded={
-                      pathname.startsWith("/admin/appearance/") ? "true" : "false"
+                      pathname.startsWith("/admin/appearance/")
+                        ? "true"
+                        : "false"
                     }
                     aria-controls="projects-accordion-sub-1-collapse-1"
-                  >                    
+                  >
                     <LiaArtstation className="text-xl -ml-1" />
                     Appearance
                     <svg
@@ -310,7 +316,9 @@ const Sidebar = ({ isCollapsed }) => {
                   <div
                     id="projects-accordion-sub-1-collapse-1"
                     className={`hs-accordion-content w-full overflow-hidden transition-[height] duration-300 ${
-                      pathname.startsWith("/admin/appearance/") ? "block" : "hidden"
+                      pathname.startsWith("/admin/appearance/")
+                        ? "block"
+                        : "hidden"
                     }`}
                     role="region"
                     aria-labelledby="projects-accordion"
@@ -358,13 +366,11 @@ const Sidebar = ({ isCollapsed }) => {
                     }
                     aria-controls="projects-accordion-sub-1-collapse-1"
                   >
-                   <FaQuestion />
+                    <FaQuestion />
                     Faq 's
                     <svg
                       className={`hs-accordion-active:block ms-auto ${
-                        pathname.startsWith("/admin/faq/")
-                          ? "block"
-                          : "hidden"
+                        pathname.startsWith("/admin/faq/") ? "block" : "hidden"
                       } size-4 text-gray-600 group-hover:text-gray-500`}
                       xmlns="http://www.w3.org/2000/svg"
                       width={24}
@@ -380,9 +386,7 @@ const Sidebar = ({ isCollapsed }) => {
                     </svg>
                     <svg
                       className={`hs-accordion-active:hidden ms-auto ${
-                        pathname.startsWith("/admin/faq/")
-                          ? "hidden"
-                          : "block"
+                        pathname.startsWith("/admin/faq/") ? "hidden" : "block"
                       } size-4 text-gray-600 group-hover:text-gray-500`}
                       xmlns="http://www.w3.org/2000/svg"
                       width={24}
@@ -418,7 +422,6 @@ const Sidebar = ({ isCollapsed }) => {
                           Website Faq
                         </Link>
                       </li>
-                     
                     </ul>
                   </div>
                 </li>
@@ -426,7 +429,9 @@ const Sidebar = ({ isCollapsed }) => {
                 <li>
                   <Link
                     className={` ${
-                      pathname === "/admin/blog" ? "bg-emerald-200 border-b-2 border-emerald-500" : ""
+                      pathname === "/admin/blog"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/blog"
                   >
@@ -471,12 +476,27 @@ const Sidebar = ({ isCollapsed }) => {
                 <li>
                   <Link
                     className={`${
-                      pathname === "/admin/user" ? "bg-emerald-200 border-b-2 border-emerald-500" : ""
+                      pathname === "/admin/user"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/user"
                   >
                     <FiUsers className="size-4" />
                     User
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className={`${
+                      pathname === "/admin/enquiry"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        : ""
+                    } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                    href="/admin/enquiry"
+                  >
+                    <PiChatsFill  className="size-4" />
+                    Enquiry
                   </Link>
                 </li>
               </ul>
