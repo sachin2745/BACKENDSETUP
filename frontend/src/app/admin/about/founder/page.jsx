@@ -151,7 +151,7 @@ const Founder = () => {
         .required("Name is required"),
       founderImgAlt: Yup.string().required("Alt text is required"),
       founderDsg: Yup.string().required("Designation is required"),
-      founderMsg: Yup.string().required("Message is required"),
+      founderMsg: Yup.string().required("Message is required").max(41, "Must be 41 characters or less"),
       founderImg: Yup.mixed().required("Image is required"),
       founderDetail: Yup.string().required("Detail is required"),
     }),

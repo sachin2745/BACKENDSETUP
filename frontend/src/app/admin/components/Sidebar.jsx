@@ -6,6 +6,7 @@ import { MdOutlineSpeakerNotes } from "react-icons/md";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LiaArtstation } from "react-icons/lia";
 import { FaAtlassian } from "react-icons/fa";
+import { FaQuestion } from "react-icons/fa6";
 
 const Sidebar = ({ isCollapsed }) => {
   const pathname = usePathname();
@@ -357,8 +358,8 @@ const Sidebar = ({ isCollapsed }) => {
                     }
                     aria-controls="projects-accordion-sub-1-collapse-1"
                   >
-                    <FaAtlassian />
-                    Faq
+                   <FaQuestion />
+                    Faq 's
                     <svg
                       className={`hs-accordion-active:block ms-auto ${
                         pathname.startsWith("/admin/faq/")
