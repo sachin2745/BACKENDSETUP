@@ -183,4 +183,10 @@ router.post(
   settingController.updatePage
 );
 
+router.get("/enquiry/getall", settingController.getEnquiryData);
+router.post(
+  "/enquiry/addRemark",
+  settingController.updateRemark
+);
+
 module.exports = router;

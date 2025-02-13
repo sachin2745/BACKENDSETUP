@@ -197,6 +197,74 @@ const updatePage = async (req, res) => {
   res.json({ success: "Page  Content updated successfully" });
 };
 
+const getEnquiryData = async (req, res) => {
+  try {
+   
+
+    const [rows] = await db.query(`
+      SELECT 
+          enquiry.*, 
+          enquiryremark.enquiryRemarkText AS newEnquiry,
+          enquiryremark.enquiryRemarkDate 
+      FROM enquiry 
+      LEFT JOIN enquiryremark  
+          ON enquiry.enquiryId = enquiryremark.enquiryRemarkRemarkId
+          AND enquiryremark.enquiryRemarkDate = (
+              SELECT MAX(er.enquiryRemarkDate) 
+              FROM enquiryremark er
+              WHERE er.enquiryRemarkRemarkId = enquiry.enquiryId
+          )
+      GROUP BY enquiry.enquiryId
+      ORDER BY enquiry.enquiryId DESC;
+  `);
+  
+
+    if (rows.length > 0) {
+      res.json(rows);
+    } else {
+      res.status(404).json({ message: "No data found" });
+    }
+  } catch (error) {
+    console.error("Database query error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const updateRemark = async (req, res) => {
+  const { enquiryId, remark, enquiryRemarkAddedBy, enquiryRemarkDate } =
+    req.body;
+
+  if (
+    !enquiryId ||
+    !remark.trim() ||
+    !enquiryRemarkAddedBy ||
+    !enquiryRemarkDate
+  ) {
+    return res.status(400).json({ error: "Invalid data provided" });
+  }
+
+  try {
+    const query = `
+      INSERT INTO enquiryremark (enquiryRemarkRemarkId, enquiryRemarkText, enquiryRemarkAddedBy, enquiryRemarkDate) 
+      VALUES (?, ?, ?, ?)
+    `;
+
+    await db.execute(query, [
+      enquiryId,
+      remark,
+      enquiryRemarkAddedBy,
+      enquiryRemarkDate,
+    ]);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Remark added successfully!" });
+  } catch (error) {
+    console.error("Database Error:", error);
+    return res.status(500).json({ error: "Failed to save remark" });
+  }
+};
+
 module.exports = {
   getSetting,
   updateSetting,
@@ -204,4 +272,6 @@ module.exports = {
   updatePageStatus,
   getPageById,
   updatePage,
+  getEnquiryData,
+  updateRemark,
 };
