@@ -44,4 +44,7 @@ router.get("/blog/getall", settingWebController.getBlogDetails);
 router.get("/about/getall", aboutWebController.getAboutDetails);
 router.get("/about-data/getall", aboutWebController.getAboutData);
 
+
+router.post("/enquiry-form/submit", homeWebController.SubmitEnquiryForm);
+
 module.exports = router;

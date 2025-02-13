@@ -21,6 +21,26 @@ const getHomeDetails = async (req, res) => {
   }
 };
 
+const SubmitEnquiryForm = async (req, res) => {
+  try {
+    const { name, number, message } = req.body;
+    if (!name || !number || !message) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    const postedAt = Math.floor(Date.now() / 1000); // Unix timestamp
+
+    await db.execute(
+      "INSERT INTO enquiry (enquiryName, enquiryNumber, enquiryMsg, postedAt) VALUES (?, ?, ?, ?)",
+      [name, number, message, postedAt] // Added missing postedAt parameter
+    );
+
+    res.status(200).json({ message: "Enquiry submitted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Database error", details: error.message });
+  }
+};
+
 module.exports = {
   getHomeDetails,
+  SubmitEnquiryForm,
 };
