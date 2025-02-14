@@ -776,7 +776,6 @@ const Blog = () => {
                         </label>
                       </td>
                       <td>
-                       
                         <div className="dropdown dropdown-hover font-RedditSans">
                           <div
                             tabIndex={0}
@@ -805,14 +804,15 @@ const Blog = () => {
                           >
                             <li className=" rounded">
                               <button
-                              className="hover:bg-emerald-200 "
-                              onClick={() => fetchBlogData(item.blogId)}>
+                                className="hover:bg-emerald-200 "
+                                onClick={() => fetchBlogData(item.blogId)}
+                              >
                                 Edit
                               </button>
                             </li>
                             <li className=" rounded">
                               <button
-                              className="hover:bg-red-200"
+                                className="hover:bg-red-200"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   handleDelete(item.blogId);
@@ -1242,13 +1242,23 @@ const Blog = () => {
                 </div>
 
                 {/* Blog Schema */}
+
                 <div className="sm:flex w-full  items-center">
                   <label
                     htmlFor="blogSchema"
                     className="sm:w-[15%] text-gray-700 flex items-center font-medium"
                   >
                     Schema:
+                    <a
+                      href="https://validator.schema.org/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-2 text-blue-600 hover:underline"
+                    >
+                      Validate it!
+                    </a>
                   </label>
+
                   <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <textarea
                       id="blogSchema"
@@ -1259,6 +1269,13 @@ const Blog = () => {
                       value={formik.values.blogSchema}
                       className="w-full border-2 border-gray-300 p-2 rounded"
                     />
+                    <small className="font-medium text-quaternary leading-relaxed">
+                      Important Note: Do not include the{" "}
+                      <code>&lt;script&gt;</code> tag when uploading the schema.
+                      The <code>&lt;script&gt;</code> tag is already provided.
+                      Please upload only the main schema body within{" "}
+                      <code>{"{}"}</code>.
+                    </small>
                     {formik.touched.blogSchema && formik.errors.blogSchema && (
                       <p className="text-red-500 text-sm">
                         {formik.errors.blogSchema}

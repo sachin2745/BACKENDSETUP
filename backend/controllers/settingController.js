@@ -234,15 +234,11 @@ const getRemarkEnquiryData = async (req, res) => {
     enquiryremark.*,
     users.userName AS enquiryRemarkAddedBy,
     enquiry.enquiryName AS enquiryName
-FROM enquiryremark
-LEFT JOIN enquiry ON enquiryremark.enquiryRemarkRemarkId = enquiry.enquiryId
-LEFT JOIN users ON enquiryremark.enquiryRemarkAddedBy = users.userId
-ORDER BY enquiryremark.enquiryRemarkId DESC;
-
+    FROM enquiryremark
+    LEFT JOIN enquiry ON enquiryremark.enquiryRemarkRemarkId = enquiry.enquiryId
+    LEFT JOIN users ON enquiryremark.enquiryRemarkAddedBy = users.userId
+    ORDER BY enquiryremark.enquiryRemarkId DESC;
   `);
-
-console.log("rows", rows);
-
 
     if (rows.length > 0) {
       res.json(rows);
