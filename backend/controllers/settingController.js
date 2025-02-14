@@ -199,8 +199,6 @@ const updatePage = async (req, res) => {
 
 const getEnquiryData = async (req, res) => {
   try {
-   
-
     const [rows] = await db.query(`
       SELECT 
           enquiry.*, 
@@ -217,7 +215,34 @@ const getEnquiryData = async (req, res) => {
       GROUP BY enquiry.enquiryId
       ORDER BY enquiry.enquiryId DESC;
   `);
-  
+
+    if (rows.length > 0) {
+      res.json(rows);
+    } else {
+      res.status(404).json({ message: "No data found" });
+    }
+  } catch (error) {
+    console.error("Database query error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getRemarkEnquiryData = async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+   SELECT 
+    enquiryremark.*,
+    users.userName AS enquiryRemarkAddedBy,
+    enquiry.enquiryName AS enquiryName
+FROM enquiryremark
+LEFT JOIN enquiry ON enquiryremark.enquiryRemarkRemarkId = enquiry.enquiryId
+LEFT JOIN users ON enquiryremark.enquiryRemarkAddedBy = users.userId
+ORDER BY enquiryremark.enquiryRemarkId DESC;
+
+  `);
+
+console.log("rows", rows);
+
 
     if (rows.length > 0) {
       res.json(rows);
@@ -274,4 +299,5 @@ module.exports = {
   updatePage,
   getEnquiryData,
   updateRemark,
+  getRemarkEnquiryData,
 };

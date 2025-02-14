@@ -5,7 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import useAppContext from "@/context/AppContext";
 import { BiSolidCommentDetail } from "react-icons/bi";
-
+import { FaChevronDown } from "react-icons/fa";
 
 const Enquiry = () => {
   const { currentUser } = useAppContext();
@@ -51,7 +51,7 @@ const Enquiry = () => {
     }
   }, [enquiry]);
 
-  const handleOpenModal = (id,name) => {
+  const handleOpenModal = (id, name) => {
     setSelectedEnquiryId(id);
     setSelectedEnquiryName(name);
     setRemark("");
@@ -78,9 +78,9 @@ const Enquiry = () => {
 
       toast.success("Remark added successfully!");
       document.getElementById("my_modal_3").close();
-    //   setTimeout(() => {
-    //     window.location.reload();
-    //   }, 2000);
+      //   setTimeout(() => {
+      //     window.location.reload();
+      //   }, 2000);
       fetchData();
     } catch (error) {
       toast.error("Failed to add remark.");
@@ -88,6 +88,61 @@ const Enquiry = () => {
     }
   };
 
+  const [remarkEnq, setRemarkEnq] = useState([]);
+  const [expandedRows, setExpandedRows] = useState({});
+
+  const fetchSecondData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/remark-enquiry/getall`
+      );
+      setRemarkEnq(response.data);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchSecondData();
+  }, []);
+
+  useEffect(() => {
+    fetchSecondData();
+  }, []);
+
+  useEffect(() => {
+    if ($.fn.DataTable.isDataTable("#example2")) {
+      $("#example2").DataTable().destroy(); // Destroy existing DataTable
+    }
+  
+    if (remarkEnq.length > 0) {
+      $("#example2").DataTable({
+        responsive: true,
+        destroy: true,
+        dom: "Bfrtip",
+        buttons: ["copy", "csv", "excel", "pdf", "print"],
+        pageLength: 10,
+        language: {
+          searchPlaceholder: "...",
+          paginate: {
+            previous: "<",
+            next: ">",
+          },
+        },
+        pagingType: "simple_numbers",
+      });
+    }
+  }, [remarkEnq]); // Re-run when remarkEnq updates
+  
+
+  const toggleExpand = (name) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [name]: !prev[name],
+    }));
+  };
+
+  
   return (
     <>
       <div>
@@ -158,14 +213,16 @@ const Enquiry = () => {
                           : "N/A"}
                       </td>
                       <td>
-                       <div className="flex justify-center w-full">
-                       <button
-                          className=" py-1.5 px-1.5 bg-emerald-500 text-white rounded transition duration-300 hover:scale-110" 
-                          onClick={() => handleOpenModal(item.enquiryId,item.enquiryName)}
-                        >
-                          <BiSolidCommentDetail className="text-lg"/>
-                        </button>
-                       </div>
+                        <div className="flex justify-center w-full">
+                          <button
+                            className=" py-1.5 px-1.5 bg-emerald-500 text-white rounded transition duration-300 hover:scale-110"
+                            onClick={() =>
+                              handleOpenModal(item.enquiryId, item.enquiryName)
+                            }
+                          >
+                            <BiSolidCommentDetail className="text-lg" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -185,7 +242,8 @@ const Enquiry = () => {
           >
             ✕
           </button>
-          <h2 className="font-bold text-xl border-b-2 pb-4">Add Remark for {" "}
+          <h2 className="font-bold text-xl border-b-2 pb-4">
+            Add Remark for{" "}
             <span className=" text-emerald-500">{selectedEnquiryName}</span>
           </h2>
           <form onSubmit={handleSubmitRemark}>
@@ -211,6 +269,108 @@ const Enquiry = () => {
           </form>
         </div>
       </dialog>
+
+      <div className="mt-3">
+        <div className={`${activeTab === 1 ? "" : "hidden"}`}>
+          <div className="bg-white border shadow-md rounded p-4">
+            <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">
+              Manage Remark's
+            </h3>
+
+            <table
+              id="example2"
+              className="display nowwrap w-100 table-auto border"
+            >
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Name</th>
+                  <th>Remark</th>
+                  <th>Added By</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {remarkEnq.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="text-center p-3 font-semibold">
+                      No available data
+                    </td>
+                  </tr>
+                ) : (
+                  remarkEnq
+                    .filter(
+                      (item, index, self) =>
+                        self.findIndex(
+                          (i) => i.enquiryName === item.enquiryName
+                        ) === index
+                    ) // Show unique names initially
+                    .map((item, index) => (
+                      <React.Fragment key={item.enquiryRemarkId}>
+                        <tr>
+                          <td>{index + 1}</td>
+                          <td>{item.enquiryName}</td>
+                          <td>{item.enquiryRemarkText}</td>
+                          <td>{item.enquiryRemarkAddedBy}</td>
+                          <td>
+                            {item.enquiryRemarkDate
+                              ? format(
+                                  new Date(item.enquiryRemarkDate * 1000),
+                                  "dd MMM yyyy hh:mm (EEE)"
+                                )
+                              : "N/A"}
+                          </td>
+                          <td>
+                            <div className="flex justify-center ">
+                              <button
+                                className="py-1 px-1 bg-emerald-300 text-spaceblack rounded transition duration-300 hover:scale-110"
+                                onClick={() => toggleExpand(item.enquiryName)}
+                              >
+                                <FaChevronDown className="text-lg" />
+                              </button>
+                              
+                            </div>
+                          </td>
+                        </tr>
+
+                        {expandedRows[item.enquiryName] &&
+                          remarkEnq
+                            .filter(
+                              (row) =>
+                                row.enquiryName === item.enquiryName &&
+                                row.enquiryRemarkId !== item.enquiryRemarkId
+                            )
+                            .map((subItem) => (
+                              <tr
+                                key={subItem.enquiryRemarkId}
+                                className="bg-gray-100"
+                              >
+                                <td></td>
+                                <td></td>
+                                <td>{subItem.enquiryRemarkText}</td>
+                                <td>{subItem.enquiryRemarkAddedBy}</td>
+                                <td>
+                                  {subItem.enquiryRemarkDate
+                                    ? format(
+                                        new Date(
+                                          subItem.enquiryRemarkDate * 1000
+                                        ),
+                                        "dd MMM yyyy hh:mm (EEE)"
+                                      )
+                                    : "N/A"}
+                                </td>
+                                <td></td>
+                              </tr>
+                            ))}
+                      </React.Fragment>
+                    ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
