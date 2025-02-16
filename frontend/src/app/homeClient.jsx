@@ -28,7 +28,7 @@ export default function HomePage() {
       <EnquiryForm />
 
       <div className="flex items-center justify-center min-h-screen">
-        <div className="mx-auto p-24 text-center border-2 border-sky-500 bg-sky-500 text-white rounded-lg">
+        <div className="mx-auto p-24 text-center border-2  bgEmerald text-white rounded-lg">
           <h1 className="text-3xl font-bold">Welcome to TailAdmin Dashboard</h1>
           <p className="mt-2">
             Click below to explore:

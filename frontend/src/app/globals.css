@@ -44,7 +44,7 @@ iframe{
 .scrollbarWidthNone{
   scrollbar-width: none;
 }
-.bgBludeGradient{  
+.bgBlueGradient{  
   --angle: 45deg; 
     background: linear-gradient(var(--angle), oklab(23.1% 0.001 -0.071), oklab(35.9% 0.006 -0.119))
 }

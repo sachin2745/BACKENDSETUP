@@ -31,7 +31,7 @@ const Contact = () => {
             href={`https://wa.me/${contactInfo.whatsappNumber}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110"
+            className="bgEmerald  text-white p-3 rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110"
           >
             <ImWhatsapp className="text-2xl" />
           </a>
@@ -41,7 +41,7 @@ const Contact = () => {
         {!(contactInfo?.callingNumber) == 0  && (
           <a
             href={`tel:${contactInfo.callingNumber}`}
-            className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110"
+            className="bgBlueGradient  text-white p-3 rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110"
           >
             <FiPhoneCall className="text-2xl" />
           </a>
