@@ -268,7 +268,7 @@ const Signup = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bgEmerald px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  focus:outline-none"
+                className="flex w-full justify-center rounded-md bgEmerald px-3 py-1.5 text-sm font-bold leading-6 text-white shadow-sm hover:shadow-md  focus:outline-none"
               >
                 Create Account
               </button>

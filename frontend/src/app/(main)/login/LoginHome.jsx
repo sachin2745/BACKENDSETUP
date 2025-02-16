@@ -158,7 +158,7 @@ const LoginHome = () => {
                   >
                     Password
                   </label>
-                  <div className="text-xs">
+                  <div className="text-xs transition hover:scale-110 ease-in-out duration-300">
                     <Link
                       href="/reset-password"
                       className="font-medium  text-spaceblack hover:text-quaternary"
@@ -235,23 +235,28 @@ const LoginHome = () => {
                 </div>
               </div>
 
-              <div>
+              <div className="">
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bgEmerald px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-quaternary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-quaternary"
+                  className="flex w-full justify-center rounded-md bgEmerald px-3 py-1.5 text-sm font-bold leading-6 text-white shadow-sm hover:shadow-md focus:outline-none"
                 >
                   Sign in
                 </button>
               </div>
             </form>
 
-            <p className="mt-10 mb-5 text-center text-sm text-gray-500">
+            <p className="mt-10 mb-2 text-center text-sm text-gray-500 ">
               Not a member?{" "}
               <Link
                 href="/signup"
-                className="font-semibold leading-6 text-spaceblack hover:text-quaternary"
+                className="font-semibold leading-6 text-spaceblack hover:text-quaternary "
               >
                 Register for an account
+              </Link>
+            </p>
+            <p className="mt-1 mb-5 text-center text-sm  transition hover:scale-110 ease-in-out duration-300">
+              <Link href="/" className="font-semibold text-spaceblack hover:text-quaternary ">
+              Go to Home
               </Link>
             </p>
           </div>
