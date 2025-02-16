@@ -42,7 +42,7 @@ const LoginHome = () => {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: "light",
+              theme: "colored",
               transition: Bounce,
             });
             response.json().then((data) => {
@@ -66,7 +66,7 @@ const LoginHome = () => {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: "light",
+              theme: "colored",
               transition: Bounce,
             });
           }
@@ -106,7 +106,7 @@ const LoginHome = () => {
         <div className="group">
           <div className="">
             <img
-              className="mx-auto h-20 w-auto rounded-full"
+              className="mx-auto h-20 w-auto "
               src={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.companyLogo}`}
               alt={headerData?.companyName || "Company Logo"}
             />

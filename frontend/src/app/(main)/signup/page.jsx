@@ -55,60 +55,59 @@ const Signup = () => {
     },
 
     onSubmit: (values) => {
-        // console.log(values);
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/add-consumer`, {
-          method: "POST",
-          body: JSON.stringify(values),
-          headers: {
-            "Content-Type": "application/json",
-          },
+      // console.log(values);
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/add-consumer`, {
+        method: "POST",
+        body: JSON.stringify(values),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(async (response) => {
+          const data = await response.json(); // Parse JSON response
+
+          if (response.status === 200) {
+            toast.success("User Registered successfully", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+              transition: Bounce,
+            });
+            formik.resetForm();
+            router.push("/login");
+          } else {
+            // Show appropriate error message
+            toast.error(data.error || "Invalid Credentials", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+              transition: Bounce,
+            });
+          }
         })
-          .then(async (response) => {
-            const data = await response.json(); // Parse JSON response
-      
-            if (response.status === 200) {
-              toast.success("User Registered successfully", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-              });
-              formik.resetForm();
-              router.push("/login");
-            } else {
-              // Show appropriate error message
-              toast.error(data.error || "Invalid Credentials", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-              });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            toast.error("Something went wrong. Please try again.");
-          });
-      },
-      
+        .catch((err) => {
+          console.log(err);
+          toast.error("Something went wrong. Please try again.");
+        });
+    },
 
     validationSchema: signupvalidationSchema,
   });
 
   return (
-    <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white ">
-      <div className="shadow-xl sm:mx-auto sm:w-full sm:max-w-xl rounded-lg bg-white">
-        <div className=" mt-5 sm:mx-auto sm:w-full sm:max-w-xl">
+    <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white font-RedditSans">
+      <div className="shadow-xl p-4 sm:mx-auto sm:w-full sm:max-w-xl rounded-lg bg-white">
+        <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-xl">
           <img
             className="mx-auto h-20 w-auto"
             src={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.companyLogo}`}
@@ -120,12 +119,12 @@ const Signup = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg">
-          <form onSubmit={formik.handleSubmit} className="space-y-6">
-            <div>
+          <form onSubmit={formik.handleSubmit}>
+            <div className="mb-2 sm:mb-4">
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-semibold leading-6 text-quaternary"
+                  className="block text-sm font-medium  text-quaternary"
                 >
                   Name
                 </label>
@@ -149,8 +148,8 @@ const Signup = () => {
                 </div>
               </div>
             </div>
-            <div className="flex gap-2">
-              <div className="flex-1">
+            <div className="sm:flex gap-2 mb-2 sm:mb-4">
+              <div className="flex-1 mb-2">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium leading-6 text-quaternary"
@@ -177,10 +176,10 @@ const Signup = () => {
                 </div>
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 mb-2">
                 <label
                   htmlFor="company"
-                  className="block text-sm font-semibold leading-6 text-quaternary"
+                  className="block text-sm font-medium leading-6 text-quaternary"
                 >
                   Phone Number
                 </label>
@@ -206,8 +205,8 @@ const Signup = () => {
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <div className="flex-1">
+            <div className="sm:flex gap-2 mb-8">
+              <div className="flex-1 mb-2">
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="password"
@@ -236,7 +235,7 @@ const Signup = () => {
                 </div>
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 mb-2">
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="password"
