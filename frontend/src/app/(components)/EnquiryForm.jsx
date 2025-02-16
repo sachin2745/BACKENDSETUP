@@ -10,14 +10,20 @@ const EnquiryForm = () => {
   const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
-    const formSubmitted = localStorage.getItem("enquirySubmitted");
+    const formClosed = sessionStorage.getItem("enquiryClosed");
+    const formSubmitted = sessionStorage.getItem("enquirySubmitted");
 
-    if (!formSubmitted) {
+    if (!formClosed && !formSubmitted) {
       setTimeout(() => {
         setShowForm(true);
       }, 10000); // Show after 10 seconds
     }
   }, []);
+
+  const closeModal = () => {
+    setShowForm(false);
+    sessionStorage.setItem("enquiryClosed", "true"); // Prevent reopening on reload
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -39,8 +45,8 @@ const EnquiryForm = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/web/enquiry-form/submit`,
           values
         );
-        localStorage.setItem("enquirySubmitted", "true");
-        setShowForm(false); // Close modal immediately
+        sessionStorage.setItem("enquirySubmitted", "true");
+        closeModal();
         toast.success("Enquiry submitted successfully");
       } catch (error) {
         console.error("Error submitting enquiry", error);
@@ -58,11 +64,11 @@ const EnquiryForm = () => {
           <div className="modal-box relative w-full max-w-xl p-6 bg-white rounded-lg shadow-lg">
             <button
               className="absolute top-5 right-5 text-3xl"
-              onClick={() => setShowForm(false)}
+              onClick={closeModal}
             >
               &times;
             </button>
-            <h2 className="text-2xl font-bold mb-0 text-start text-primary">
+            <h2 className="text-2xl font-bold mb-0 text-start textEmerald">
               Have Questions? Let Us Help!
             </h2>
             <h3 className="text-lg font-normal mb-3 text-start text-spaceblack">
@@ -126,7 +132,7 @@ const EnquiryForm = () => {
               </p>
               <button
                 type="submit"
-                className="bg-primary text-white rounded font-bold py-2 w-full flex justify-center items-center"
+                className="bgEmerald text-white rounded font-bold py-2 w-full flex justify-center items-center"
                 disabled={loading} // Disable while loading
               >
                 {loading ? (
