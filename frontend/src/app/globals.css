@@ -44,4 +44,11 @@ iframe{
 .scrollbarWidthNone{
   scrollbar-width: none;
 }
-
+.bgBludeGradient{  
+  --angle: 45deg; 
+    background: linear-gradient(var(--angle), oklab(23.1% 0.001 -0.071), oklab(35.9% 0.006 -0.119))
+}
+.bgEmeraldGradient{
+  --angle: 45deg; 
+  background: linear-gradient(var(--angle), oklab(49.2% -0.083 -0.015), oklab(88.6% -0.18 0.047))
+}

@@ -8,6 +8,7 @@ const pageWebController = require("../controllers/web/pageWebController");
 const contactWebController = require("../controllers/web/contactWebController");
 const homeWebController = require("../controllers/web/homeWebController");
 const aboutWebController = require("../controllers/web/aboutWebController");
+const consumerWebController = require("../controllers/web/consumerWebController");
 
 
 //ROUTES FOR BLOG
@@ -46,5 +47,9 @@ router.get("/about-data/getall", aboutWebController.getAboutData);
 
 
 router.post("/enquiry-form/submit", homeWebController.SubmitEnquiryForm);
+
+//COSUMER
+router.post("/consumer/authenticate", consumerWebController.authenticateConsumer);
+router.get("/authorise", verifyToken, consumerWebController.authorise);
 
 module.exports = router;

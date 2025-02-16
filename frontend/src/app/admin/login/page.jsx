@@ -28,7 +28,7 @@ const adminLogin = () => {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/authenticate`, {
         method: "POST",
         body: JSON.stringify(values),

@@ -10,6 +10,7 @@ import axios from "axios";
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith("/admin");
+  const isLoginPage = pathname === "/login"; // Detect login page
 
   const [headerData, setHeaderData] = useState(null);
 
@@ -34,6 +35,26 @@ export default function RootLayout({ children }) {
     fetchData();
   }, []);
 
+  if (isLoginPage) {
+    return (
+      <html lang="en" data-theme="light">
+        <head>
+        <link
+          rel="icon"
+          href={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.fav180}`}
+        />
+         <link
+          href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
+          rel="stylesheet"
+        />
+        </head>
+        <body>
+          <main className="min-h-screen">{children}</main>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en" data-theme="light">
       <head>
@@ -44,7 +65,7 @@ export default function RootLayout({ children }) {
         {headerData && (
           <script dangerouslySetInnerHTML={{ __html: headerData.gSeoDetail }} />
         )}
-
+        
         <link
           href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
           rel="stylesheet"
@@ -84,7 +105,8 @@ export default function RootLayout({ children }) {
         <link
           href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
           rel="stylesheet"
-        ></link>
+        />
+
         <script
           dangerouslySetInnerHTML={{
             __html: `
