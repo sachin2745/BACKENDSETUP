@@ -11,6 +11,8 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith("/admin");
   const isLoginPage = pathname === "/login"; // Detect login page
+  const isSignupPage = pathname === "/signup"; // Detect login page
+  const isResestPasswordPage = pathname === "/reset-password"; // Detect login page
 
   const [headerData, setHeaderData] = useState(null);
 
@@ -35,7 +37,7 @@ export default function RootLayout({ children }) {
     fetchData();
   }, []);
 
-  if (isLoginPage) {
+  if (isLoginPage || isSignupPage || isResestPasswordPage) {
     return (
       <html lang="en" data-theme="light">
         <head>

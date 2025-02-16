@@ -9,7 +9,6 @@ import axios from "axios";
 import useConsumerContext from "@/context/ConsumerContext";
 const ISSERVER = typeof window === "undefined";
 
-
 const LoginHome = () => {
   // const {setLoggedIn} = useAppContext();
 
@@ -160,12 +159,12 @@ const LoginHome = () => {
                     Password
                   </label>
                   <div className="text-xs">
-                    <a
-                      href="/resetPassword"
+                    <Link
+                      href="/reset-password"
                       className="font-medium  text-spaceblack hover:text-quaternary"
                     >
                       Forgot password?
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <div className="relative">
@@ -239,7 +238,7 @@ const LoginHome = () => {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bgEmeraldGradient px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-quaternary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-quaternary"
+                  className="flex w-full justify-center rounded-md bgEmerald px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-quaternary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-quaternary"
                 >
                   Sign in
                 </button>

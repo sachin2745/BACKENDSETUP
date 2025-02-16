@@ -49,7 +49,8 @@ router.get("/about-data/getall", aboutWebController.getAboutData);
 router.post("/enquiry-form/submit", homeWebController.SubmitEnquiryForm);
 
 //COSUMER
-router.post("/consumer/authenticate", consumerWebController.authenticateConsumer);
+router.post("/consumer/authenticate",consumerWebController.authenticateConsumer);
 router.get("/authorise", verifyToken, consumerWebController.authorise);
+router.post("/add-consumer", consumerWebController.addConsumer);
 
 module.exports = router;

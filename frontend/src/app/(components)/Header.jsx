@@ -156,9 +156,9 @@ const Header = () => {
         <div className="sm:order-3 flex items-center gap-x-2">
           <Link
             href="/login"
-            className="py-2 px-5 inline-flex items-center gap-x-2 text-[16px] font-medium rounded  bg-black text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:bg-gray-800 disabled:opacity-50 disabled:pointer-events-none"
+            className="py-2 px-6 inline-flex items-center gap-x-2 text-[16px] font-bold rounded  bg-black text-white shadow-sm hover:bg-gray-800 focus:outline-none  disabled:opacity-50 disabled:pointer-events-none"
           >
-            Login
+            Login/Register
           </Link>
         </div>
 
