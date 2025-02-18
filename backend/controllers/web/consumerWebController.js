@@ -104,8 +104,59 @@ const addConsumer = async (req, res) => {
   }
 };
 
+const getConsumerByEmail = async (req, res) => {
+  const email = req.params.email.trim(); // Trim unnecessary spaces
+  // console.log("Checking email:", email);
+
+  let connection;
+
+  try {
+    connection = await db.getConnection(); // Get DB connection
+
+    const [rows] = await connection.execute(
+      "SELECT * FROM consumers WHERE consumerEmail = ?",
+      [email]
+    );
+
+    if (rows.length > 0) {
+      res.json(rows[0]);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  } finally {
+    if (connection) connection.release(); // Ensure connection is released
+  }
+};
+
+
+const updateConsumer = async (req, res) => {
+  try {
+    const connection = await db.getConnection();
+    const { password } = req.body;
+    const [result] = await connection.execute(
+      "UPDATE consumers SET consumerPassword = ? WHERE consumerId  = ?",
+      [password, req.params.id]
+    );
+    connection.release();
+
+    if (result.affectedRows > 0) {
+      res.json({ message: "Record updated successfully" });
+    } else {
+      res.status(404).json({ message: "Record not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   authenticateConsumer,
   authorise,
   addConsumer,
+  getConsumerByEmail,
+  updateConsumer,
 };

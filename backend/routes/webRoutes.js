@@ -53,4 +53,6 @@ router.post("/consumer/authenticate",consumerWebController.authenticateConsumer)
 router.get("/authorise", verifyToken, consumerWebController.authorise);
 router.post("/add-consumer", consumerWebController.addConsumer);
 
+router.get('/consumer/getbyemail/:email',consumerWebController.getConsumerByEmail);
+router.put("/consumer/update/:id", consumerWebController.updateConsumer);
 module.exports = router;

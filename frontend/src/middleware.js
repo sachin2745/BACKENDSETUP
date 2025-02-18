@@ -37,8 +37,12 @@ export async function middleware(req) {
 
   // Restrict access to /blog pages for consumers
   if (url.pathname.startsWith("/blog")) {
-    if (!consumer_token?.value) {
-      return NextResponse.redirect(new URL("/login", req.url));
+    // if (!consumer_token?.value) {
+    //   return NextResponse.redirect(new URL("/login", req.url));
+    // }
+
+    if (consumer_token?.value && (url.pathname === "/login" || url.pathname === "/registration")) {
+      return NextResponse.redirect(new URL("/", req.url));
     }
 
     try {
