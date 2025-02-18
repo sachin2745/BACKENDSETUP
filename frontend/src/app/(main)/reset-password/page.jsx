@@ -109,7 +109,7 @@ const ResetPassword = () => {
   });
 
   return (
-    <div className="bg-gray-200 min-h-screen flex justify-center items-center">
+    <div className="bg-gray-200 min-h-screen flex justify-center items-center font-RedditSans">
       <div className="max-w-lg w-full p-6 bg-white rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-center mb-6">
           Reset Your Password
