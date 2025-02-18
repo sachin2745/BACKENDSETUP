@@ -38,7 +38,7 @@ export default function AdminLayout({ children }) {
 
         <div
           className={`flex-1 transition-all duration-300 ${
-            isCollapsed ? "sm:ml-0" : "sm:ml-64"
+            isCollapsed ? "lg:ml-0" : "lg:ml-64"
           }`}
         >
           {/* Header */}

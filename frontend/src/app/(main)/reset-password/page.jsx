@@ -52,7 +52,7 @@ const ResetPassword = () => {
       headers: { "Content-Type": "application/json" },
     });
     res.status === 201
-      ? toast.success("OTP sent successfully", {
+      ? toast.success("OTP sent successfully /n Check your email", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
