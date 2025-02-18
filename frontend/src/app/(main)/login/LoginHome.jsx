@@ -102,7 +102,7 @@ const LoginHome = () => {
 
   return (
     <div className="flex h-screen flex-1 flex-col justify-center px-6 py-24 lg:px-8 bg-white font-RedditSans">
-      <div className="p-5 sm:mx-auto sm:w-full sm:max-w-md rounded-lg bg-white shadow-2xl">
+      <div className="p-5 sm:mx-auto sm:w-full sm:max-w-md rounded-lg bg-white border-2 border-b-4 border-e-4 border-gray-200">
         <div className="group">
           <div className="">
             <img

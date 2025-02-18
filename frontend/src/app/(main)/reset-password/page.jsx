@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
+import { Bounce } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -51,7 +52,17 @@ const ResetPassword = () => {
       headers: { "Content-Type": "application/json" },
     });
     res.status === 201
-      ? toast.success("OTP sent successfully")
+      ? toast.success("OTP sent successfully", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      })
       : toast.error("Something went wrong");
     setLoading(false);
   };
@@ -59,7 +70,7 @@ const ResetPassword = () => {
   const verifyOTP = async () => {
     const otp = otpRefs.map((ref) => ref.current.value).join("");
     if (otp.length !== 6) {
-      toast.error("Enter a 6-digit OTP");
+      toast.warning("Enter a 6-digit OTP");
       return;
     }
 
@@ -77,7 +88,7 @@ const ResetPassword = () => {
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .required("Required"),
   });
-  
+
   const updatePassword = async (values, { setSubmitting }) => {
     try {
       const res = await fetch(
@@ -88,7 +99,7 @@ const ResetPassword = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-  
+
       if (res.ok) {
         toast.success("Password updated successfully");
         router.push("/login");
@@ -101,7 +112,7 @@ const ResetPassword = () => {
       setSubmitting(false);
     }
   };
-  
+
   const resetForm = useFormik({
     initialValues: { password: "", confirmPassword: "" },
     onSubmit: updatePassword,
@@ -109,111 +120,128 @@ const ResetPassword = () => {
   });
 
   return (
-    <div className="bg-gray-200 min-h-screen flex justify-center items-center font-RedditSans">
-      <div className="max-w-lg w-full p-6 bg-white rounded-lg shadow-lg">
+    <div className="bg-white min-h-screen flex justify-center items-center font-RedditSans">
+      <div className="max-w-lg w-full p-6 bg-white rounded-lg border-2 border-b-4 border-e-4 border-gray-200">
         <h1 className="text-3xl font-bold text-center mb-6">
           Reset Your Password
         </h1>
 
         {!showForm ? (
           <>
-            <input
-              ref={emailRef}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 mb-3 focus:outline-none"
-              type="email"
-              placeholder="Enter Registered Email"
-            />
-            <button
-              onClick={sendOTP}
-              className="w-full bg-blue-500 text-white rounded-md py-2 mb-3 hover:bg-blue-600"
-            >
-              {loading ? "Sending OTP..." : "Send OTP"}
-            </button>
-
-            <div className="flex justify-between mb-3">
-              {otpRefs.map((ref, index) => (
-                <input
-                  key={index}
-                  ref={ref}
-                  className="w-12 h-12 border border-gray-300 text-center text-lg rounded-md focus:outline-none"
-                  type="text"
-                  maxLength="1"
-                  onInput={(e) => {
-                    if (e.target.value.length === 1 && index < 5)
-                      otpRefs[index + 1].current.focus();
-                  }}
-                />
-              ))}
+            <div>
+              <label htmlFor="Email" className="font-semibold">
+                Email Address
+              </label>
+              <input
+                ref={emailRef}
+                className="w-full border border-gray-300 rounded-md py-1.5 px-2 mb-3 focus:outline-none"
+                type="email"
+                placeholder="Enter Registered Email"
+              />
+              <button
+                onClick={sendOTP}
+                disabled={loading}
+                className="w-full bgEmerald text-white rounded-md font-bold text-sm py-1.5 mb-3 hover:shodow-xl "
+              >
+                {loading ? "Sending OTP..." : "Send OTP"}
+              </button>
+            </div>
+            <div className="my-4">
+              <label htmlFor="OTP" className="font-semibold">
+                OTP
+              </label>
+              <div className="flex justify-between mb-3">
+                {otpRefs.map((ref, index) => (
+                  <input
+                    key={index}
+                    ref={ref}
+                    className="w-12 h-12 border border-gray-300 text-center text-lg rounded-md focus:outline-emerald-400 "
+                    type="tel"
+                    maxLength="1"
+                    onInput={(e) => {
+                      if (e.target.value.length === 1 && index < 5)
+                        otpRefs[index + 1].current.focus();
+                    }}
+                  />
+                ))}
+              </div>
             </div>
 
             <button
               onClick={verifyOTP}
-              className="w-full bg-blue-500 text-white rounded-md py-2 mb-6 hover:bg-blue-600"
+              className="w-full bgEmerald text-white rounded-md py-1.5 font-bold text-sm mb-6 hover:shodow-xl"
             >
               Verify OTP
             </button>
           </>
         ) : (
           <form onSubmit={resetForm.handleSubmit}>
-          <h2 className="text-2xl font-bold text-center mb-6">Enter New Password</h2>
-        
-          {/* Password Input */}
-          <div className="relative mb-3">
-            <input
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none pr-10"
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              name="password"
-              id="password"
-              value={resetForm.values.password}
-              onChange={resetForm.handleChange}
-              onBlur={resetForm.handleBlur}
-            />
+            <h2 className="text-2xl font-bold text-center mb-6">
+              Enter New Password
+            </h2>
+
+            {/* Password Input */}
+            <div className="relative mb-3">
+              <input
+                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none pr-10"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                name="password"
+                id="password"
+                value={resetForm.values.password}
+                onChange={resetForm.handleChange}
+                onBlur={resetForm.handleBlur}
+              />
+              <button
+                type="button"
+                className="absolute top-3 right-3 text-gray-500"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+              {resetForm.touched.password && resetForm.errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {resetForm.errors.password}
+                </p>
+              )}
+            </div>
+
+            {/* Confirm Password Input */}
+            <div className="relative mb-6">
+              <input
+                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none pr-10"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                id="confirmPassword"
+                value={resetForm.values.confirmPassword}
+                onChange={resetForm.handleChange}
+                onBlur={resetForm.handleBlur}
+              />
+              <button
+                type="button"
+                className="absolute top-3 right-3 text-gray-500"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+              {resetForm.touched.confirmPassword &&
+                resetForm.errors.confirmPassword && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {resetForm.errors.confirmPassword}
+                  </p>
+                )}
+            </div>
+
+            {/* Submit Button */}
             <button
-              type="button"
-              className="absolute top-3 right-3 text-gray-500"
-              onClick={() => setShowPassword(!showPassword)}
+              type="submit"
+              className="w-full bgEmerald text-white font-bold text-sm rounded-md py-1.5 "
+              disabled={resetForm.isSubmitting}
             >
-              {showPassword ? <FiEyeOff /> : <FiEye />}
+              {resetForm.isSubmitting ? "Processing..." : "Reset Password"}
             </button>
-            {resetForm.touched.password && resetForm.errors.password && (
-              <p className="text-red-500 text-sm mt-1">{resetForm.errors.password}</p>
-            )}
-          </div>
-        
-          {/* Confirm Password Input */}
-          <div className="relative mb-6">
-            <input
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none pr-10"
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm Password"
-              name="confirmPassword"
-              id="confirmPassword"
-              value={resetForm.values.confirmPassword}
-              onChange={resetForm.handleChange}
-              onBlur={resetForm.handleBlur}
-            />
-            <button
-              type="button"
-              className="absolute top-3 right-3 text-gray-500"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            >
-              {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
-            </button>
-            {resetForm.touched.confirmPassword && resetForm.errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">{resetForm.errors.confirmPassword}</p>
-            )}
-          </div>
-        
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white rounded-md py-2 hover:bg-blue-600"
-            disabled={resetForm.isSubmitting}
-          >
-            {resetForm.isSubmitting ? "Processing..." : "Reset Password"}
-          </button>
-        </form>
+          </form>
         )}
       </div>
     </div>

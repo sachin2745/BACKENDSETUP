@@ -106,7 +106,7 @@ const Signup = () => {
 
   return (
     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white font-RedditSans">
-      <div className="shadow-xl p-4 sm:mx-auto sm:w-full sm:max-w-xl rounded-lg bg-white">
+      <div className="border-2 border-b-4 border-e-4 border-gray-200 p-4 sm:mx-auto sm:w-full sm:max-w-xl rounded-lg bg-white">
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-xl">
           <img
             className="mx-auto h-20 w-auto"
