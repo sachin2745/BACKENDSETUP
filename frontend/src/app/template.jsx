@@ -1,5 +1,4 @@
 "use client";
-
 import { AppProvider } from "@/context/AppContext";
 import { ConsumerProvider } from "@/context/ConsumerContext";
 import PrelineScript from "@/Prelinescript";

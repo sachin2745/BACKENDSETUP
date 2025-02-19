@@ -10,10 +10,10 @@ import useConsumerContext from "@/context/ConsumerContext";
 const ISSERVER = typeof window === "undefined";
 
 const LoginHome = () => {
-  // const {setLoggedIn} = useAppContext();
+  // const {setConsumerLoggedIn} = useAppContext();
 
   const router = useRouter();
-  const { setLoggedIn, setCurrentConsumer } = useConsumerContext();
+  const { setConsumerLoggedIn, setCurrentConsumer } = useConsumerContext();
 
   const formik = useFormik({
     initialValues: {
@@ -22,7 +22,7 @@ const LoginHome = () => {
     },
 
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
       // fetch('http://localhost:5000/signup/authenticate', {
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/consumer/authenticate`, {
         method: "POST",
@@ -32,7 +32,7 @@ const LoginHome = () => {
         },
       })
         .then((response) => {
-          console.log(response.status);
+          // console.log(response.status);
           if (response.status === 200) {
             toast.success("User login successfully", {
               position: "top-right",
@@ -50,7 +50,7 @@ const LoginHome = () => {
                 localStorage.setItem("consumer", JSON.stringify(data));
               }
               setCurrentConsumer(data);
-              setLoggedIn(true);
+              setConsumerLoggedIn(true);
               document.cookie = `CToken=${data.token}`;
               formik.resetForm();
               setTimeout(() => {

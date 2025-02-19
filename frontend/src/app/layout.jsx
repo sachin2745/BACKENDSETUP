@@ -6,6 +6,7 @@ import "./globals.css";
 import Contact from "./(components)/Contact";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { ConsumerProvider } from "@/context/ConsumerContext";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -151,10 +152,12 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className="">
+        <ConsumerProvider>
         {!isAdminPage && <Header />}
         <main className="min-h-screen">{children}</main>
         {!isAdminPage && <Contact />}
         {!isAdminPage && <Footer />}
+        </ConsumerProvider>
       </body>
     </html>
   );

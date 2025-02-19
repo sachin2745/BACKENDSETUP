@@ -4,9 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import axios from "axios";
+import useConsumerContext from "@/context/ConsumerContext";
 
 const Header = () => {
   const pathname = usePathname();
+
+  const { consumerLogout, consumerLoggedIn, currentConsumer } =
+    useConsumerContext();
 
   const [headerData, setHeaderData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -95,6 +99,77 @@ const Header = () => {
     );
   }
 
+  const displayLoginOptions = () => {
+    if (consumerLoggedIn) {
+      return (
+        <div className="dropdown dropdown-hover relative">
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn m-1 bg-white border-2 px-1 rounded-full hover:bg-dashGray inline-flex items-center gap-x-2"
+          >
+            {currentConsumer?.consumerImage ? (
+              <img
+                className="w-10 h-10 rounded-full"
+                src={`${process.env.NEXT_PUBLIC_API_URL}${currentConsumer.consumerImage}`}
+                alt={currentConsumer.consumerName}
+              />
+            ) : (
+              <div className="w-10 h-10 flex items-center justify-center rounded-full bgEmerald text-white text-md font-semibold">
+                {`${currentConsumer?.consumerName?.split(" ")[0][0] || ""}${
+                  currentConsumer?.consumerName?.split(" ")[1]?.[0] || ""
+                }`.toUpperCase()}
+              </div>
+            )}
+
+            <span className="hidden sm:block text-quaternary font-semibold truncate max-w-[7.5rem]">
+              {currentConsumer.consumerName}
+            </span>
+            <span className="block sm:hidden text-quaternary font-semibold truncate max-w-[7.5rem]">
+              {currentConsumer.consumerName.split(" ")[0]}
+            </span>
+            <svg
+              className="hs-dropdown-open:rotate-180 size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </div>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu bg-base-100 rounded-md z-50 w-60 sm:w-60 p-1 shadow-lg text-wrap absolute right-0 mt-1"
+          >
+            <li className="text-sm">
+              <button
+                className="btn  btn-sm flex justify-start rounded-md text-red-500 bg-white border-none shadow-none hover:bg-red-100 font-medium"
+                onClick={consumerLogout}
+              >
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      );
+    } else {
+      return (
+        <Link
+          href="/login"
+          className="py-2 px-6 inline-flex items-center gap-x-2 text-[16px] font-bold rounded  bg-black text-white shadow-sm hover:bg-gray-800 focus:outline-none  disabled:opacity-50 disabled:pointer-events-none"
+        >
+          Login/Register
+        </Link>
+      );
+    }
+  };
+
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white shadow-md text-sm py-1 font-RedditSans">
       <nav className="max-w-[90rem] w-full mx-auto px-4 flex flex-wrap basis-full items-center justify-between">
@@ -154,12 +229,7 @@ const Header = () => {
           </Link>
         </div>
         <div className="sm:order-3 flex items-center gap-x-2">
-          <Link
-            href="/login"
-            className="py-2 px-6 inline-flex items-center gap-x-2 text-[16px] font-bold rounded  bg-black text-white shadow-sm hover:bg-gray-800 focus:outline-none  disabled:opacity-50 disabled:pointer-events-none"
-          >
-            Login/Register
-          </Link>
+          {displayLoginOptions()}
         </div>
 
         <div className=" hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
