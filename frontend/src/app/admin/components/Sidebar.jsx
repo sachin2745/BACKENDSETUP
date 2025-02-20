@@ -7,8 +7,8 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import { LiaArtstation } from "react-icons/lia";
 import { FaAtlassian } from "react-icons/fa";
 import { FaQuestion } from "react-icons/fa6";
-import { PiChatsFill } from "react-icons/pi";
-
+import { IoStorefrontOutline } from "react-icons/io5";
+import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
 const Sidebar = ({ isCollapsed }) => {
   const pathname = usePathname();
 
@@ -29,6 +29,7 @@ const Sidebar = ({ isCollapsed }) => {
     { name: "Page Content", path: "/admin/appearance/page-content" },
     { name: "Banner", path: "/admin/about/banner" },
     { name: "Enquiry", path: "/admin/enquiry" },
+    { name: "Store Product", path: "/admin/store" },
     // Add more options as needed
   ];
 
@@ -495,8 +496,21 @@ const Sidebar = ({ isCollapsed }) => {
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/enquiry"
                   >
-                    <PiChatsFill  className="size-4" />
+                    <HiOutlineChatBubbleLeftRight   className="size-4" />
                     Enquiry
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className={`${
+                      pathname === "/admin/store"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        : ""
+                    } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                    href="/admin/store"
+                  >
+                    <IoStorefrontOutline   className="size-4" />
+                    Store Product
                   </Link>
                 </li>
               </ul>

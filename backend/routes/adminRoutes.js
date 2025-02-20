@@ -11,6 +11,7 @@ const dashboardController = require("../controllers/dashboardController");
 const aboutController = require("../controllers/aboutController");
 const settingController = require("../controllers/settingController");
 const faqController = require("../controllers/faqController");
+const storeController = require("../controllers/storeController");
 
 // Dynamic folder storage setup
 const storage = multer.diskStorage({
@@ -45,6 +46,14 @@ const storage = multer.diskStorage({
       folderName = "AboutBanner"; // Folder for mission & vision images
     } else if (file.fieldname === "founderImg") {
       folderName = "Founder";
+    } else if (
+      file.fieldname === "productThumbnail" ||
+      file.fieldname === "productImg2" ||
+      file.fieldname === "productImg3" ||
+      file.fieldname === "productImg4" ||
+      file.fieldname === "productImg5"
+    ) {
+      folderName = "Products"; // Folder for mission & vision images
     } else {
       folderName = "others"; // Default folder for any other images
     }
@@ -185,11 +194,43 @@ router.post(
 
 //ENQUIRY SECTION
 router.get("/enquiry/getall", settingController.getEnquiryData);
-router.post(
-  "/enquiry/addRemark",
-  settingController.updateRemark
-);
+router.post("/enquiry/addRemark", settingController.updateRemark);
 router.get("/remark-enquiry/getall", settingController.getRemarkEnquiryData);
 
+//ROUTES FOR STORE SECTION
+router.get("/store-details", storeController.getStoreDetails);
+router.post(
+  "/update/store-details",
+  upload.none(),
+  storeController.updateStoreDetails
+);
+router.get("/product/getall", storeController.getProductData);
+router.put("/prod-status/:id", storeController.updateStatus);
+router.put("/popular/:id", storeController.updatePopular);
+router.post(
+  "/addProduct",
+  upload.fields([
+    { name: "productThumbnail", maxCount: 1 },
+    { name: "productImg2", maxCount: 1 },
+    { name: "productImg3", maxCount: 1 },
+    { name: "productImg4", maxCount: 1 },
+    { name: "productImg5", maxCount: 1 },
+  ]),
+  verifyToken,
+  storeController.addProduct
+);
+
+router.get("/get-product/:id", storeController.getProduct);
+router.post(
+  "/update-product/:id",
+  upload.fields([
+    { name: "productThumbnail", maxCount: 1 },
+    { name: "productImg2", maxCount: 1 },
+    { name: "productImg3", maxCount: 1 },
+    { name: "productImg4", maxCount: 1 },
+    { name: "productImg5", maxCount: 1 },
+  ]),
+  storeController.updateProduct
+);
 
 module.exports = router;

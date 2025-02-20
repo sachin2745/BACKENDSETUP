@@ -79,6 +79,7 @@ const LoginHome = () => {
   });
 
   const [headerData, setHeaderData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,11 +95,17 @@ const LoginHome = () => {
         }
       } catch (err) {
         console.error("Error fetching header data:", err);
+      }finally{
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
+  if(loading){
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="flex h-screen flex-1 flex-col justify-center px-6 py-24 lg:px-8 bg-white font-RedditSans">
