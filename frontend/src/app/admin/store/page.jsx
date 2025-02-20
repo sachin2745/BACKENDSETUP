@@ -351,7 +351,6 @@ const Store = () => {
     validationSchema: Yup.object({
       productName: Yup.string().required("Name is required"),
       productTagLine: Yup.string()
-        .min(20, "Description must be at least 20 characters")
         .required("Description is required"),
       productDescription: Yup.string().required("This field is required"),
       prodStructure: Yup.string().required("This field is required"),
