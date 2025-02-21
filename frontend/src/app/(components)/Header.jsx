@@ -267,6 +267,14 @@ const Header = () => {
             >
               Contact Us
             </Link>
+            <Link
+              className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
+                pathname === "/store" ? "text-primary" : "text-spaceblack"
+              }`}
+              href="/store"
+            >
+              Store
+            </Link>
           </div>
         </div>
       </nav>
@@ -340,6 +348,12 @@ const Header = () => {
             className="block border-b-2 border-gray-200 p-4 hover:bg-emerald-100 transition ease-in-out delay-150"
           >
             Contact Us
+          </a>
+          <a
+            href="/store"
+            className="block border-b-2 border-gray-200 p-4 hover:bg-emerald-100 transition ease-in-out delay-150"
+          >
+           Store
           </a>
         </div>
       </div>
