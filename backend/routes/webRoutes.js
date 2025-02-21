@@ -9,6 +9,7 @@ const contactWebController = require("../controllers/web/contactWebController");
 const homeWebController = require("../controllers/web/homeWebController");
 const aboutWebController = require("../controllers/web/aboutWebController");
 const consumerWebController = require("../controllers/web/consumerWebController");
+const storeWebController = require("../controllers/web/storeWebController");
 
 
 //ROUTES FOR BLOG
@@ -55,4 +56,9 @@ router.post("/add-consumer", consumerWebController.addConsumer);
 
 router.get('/consumer/getbyemail/:email',consumerWebController.getConsumerByEmail);
 router.put("/consumer/update/:id", consumerWebController.updateConsumer);
+
+//ROUTES FOR STORE
+router.get('/store/getall', storeWebController.getStore);
+router.get('/products/getall', storeWebController.getProducts);
+router.get('/post/getbyslug/:slug', storeWebController.getProductBySlug);
 module.exports = router;
