@@ -11,6 +11,7 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaBan, FaCheck } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import useAppContext from "@/context/AppContext";
+import Swal from "sweetalert2";
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const Store = () => {
@@ -350,8 +351,7 @@ const Store = () => {
     },
     validationSchema: Yup.object({
       productName: Yup.string().required("Name is required"),
-      productTagLine: Yup.string()
-        .required("Description is required"),
+      productTagLine: Yup.string().required("Description is required"),
       productDescription: Yup.string().required("This field is required"),
       prodStructure: Yup.string().required("This field is required"),
       prodHelp: Yup.string().required("This field is required"),
@@ -470,6 +470,294 @@ const Store = () => {
     }),
     []
   );
+  //END
+
+  // Edit Product
+  const [formData, setFormData] = useState({
+    productName: "",
+    productTagLine: "",
+    productDescription: "",
+    productThumbnail: null,
+    productImg2: null,
+    productImg3: null,
+    productImg4: null,
+    productImg5: null,
+    productThumbnailAlt: "",
+    productAlt2: "",
+    productAlt3: "",
+    productAlt4: "",
+    productAlt5: "",
+    prodStructure: "",
+    prodHelp: "",
+    ProductDetail: "",
+    productOriginalPrice: "",
+    productDiscountPrice: "",
+    productSet: "",
+    ProductEdition: "",
+    productSlug: "",
+    productRating: "",
+    productStar: "",
+    productMetaTitle: "",
+    productMetaDescription: "",
+    productKeywords: "",
+    productSchema: "",
+  });
+
+  const [previewEditThumbnail, setPreviewEditThumbnail] = useState(null);
+  const [previewEditImg2, setPreviewEditImg2] = useState(null);
+  const [previewEditImg3, setPreviewEditImg3] = useState(null);
+  const [previewEditImg4, setPreviewEditImg4] = useState(null);
+  const [previewEditImg5, setPreviewEditImg5] = useState(null);
+
+  const fetchProductData = async (productId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/get-product/${productId}`
+      );
+      const {
+        productName,
+        productTagLine,
+        productDescription,
+        productThumbnail,
+        productImg2,
+        productImg3,
+        productImg4,
+        productImg5,
+        productThumbnailAlt,
+        productAlt2,
+        productAlt3,
+        productAlt4,
+        productAlt5,
+        prodStructure,
+        prodHelp,
+        ProductDetail,
+        productOriginalPrice,
+        productDiscountPrice,
+        productSet,
+        ProductEdition,
+        productSlug,
+        productRating,
+        productStar,
+        productMetaTitle,
+        productMetaDescription,
+        productKeywords,
+        productSchema,
+      } = response.data;
+
+      // console.log("response", response.data);
+      // Find the corresponding category ID
+      const productSetLabels = {
+        0: "New Arrivals",
+        1: "Trending",
+        2: "Best Selling",
+        3: "Pre Order",
+      };
+
+      setFormData({
+        ...response.data,
+        productSet:
+          productSetLabels[response.data.productSet] ||
+          response.data.productSet,
+      });
+
+      setFormData({
+        productId,
+        productName,
+        productTagLine,
+        productDescription,
+        productThumbnail,
+        productImg2,
+        productImg3,
+        productImg4,
+        productImg5,
+        productThumbnailAlt,
+        productAlt2,
+        productAlt3,
+        productAlt4,
+        productAlt5,
+        prodStructure,
+        prodHelp,
+        ProductDetail,
+        productOriginalPrice,
+        productDiscountPrice,
+        productSet,
+        ProductEdition,
+        productSlug,
+        productRating,
+        productStar,
+        productMetaTitle,
+        productMetaDescription,
+        productKeywords,
+        productSchema,
+      });
+
+      // Ensure full URL for both images
+      setPreviewEditThumbnail(
+        productThumbnail
+          ? `${process.env.NEXT_PUBLIC_API_URL}${productThumbnail}`
+          : null
+      );
+      setPreviewEditImg2(
+        productImg2 ? `${process.env.NEXT_PUBLIC_API_URL}${productImg2}` : null
+      );
+      setPreviewEditImg3(
+        productImg3 ? `${process.env.NEXT_PUBLIC_API_URL}${productImg3}` : null
+      );
+      setPreviewEditImg4(
+        productImg4 ? `${process.env.NEXT_PUBLIC_API_URL}${productImg4}` : null
+      );
+      setPreviewEditImg5(
+        productImg5 ? `${process.env.NEXT_PUBLIC_API_URL}${productImg5}` : null
+      );
+      setActiveTab(3);
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+    }
+  };
+
+  const handleEditImageChange = (e, type) => {
+    const file = e.target.files[0];
+
+    if (type === "productThumbnail") {
+      setFormData({ ...formData, productThumbnail: file });
+      setPreviewEditThumbnail(URL.createObjectURL(file));
+    } else if (type === "productImg2") {
+      setFormData({ ...formData, productImg2: file });
+      setPreviewEditImg2(URL.createObjectURL(file));
+    } else if (type === "productImg3") {
+      setFormData({ ...formData, productImg3: file });
+      setPreviewEditImg3(URL.createObjectURL(file));
+    } else if (type === "productImg4") {
+      setFormData({ ...formData, productImg4: file });
+      setPreviewEditImg4(URL.createObjectURL(file));
+    } else if (type === "productImg5") {
+      setFormData({ ...formData, productImg5: file });
+      setPreviewEditImg5(URL.createObjectURL(file));
+    }
+  };
+
+  const handleEditFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = new FormData();
+      console.log("formData", formData);
+      // debugger
+      const productId = formData.productId;
+
+      const sanitizeSlug = (sku) => {
+        return sku
+          .toLowerCase()
+          .replace(/ /g, "-") // Replace spaces with dashes
+          .replace(/[\/|?%$,;:'"]/g, "") // Remove specific characters
+          .replace(/ \\<.*?\\>/g, ""); // Remove any tags
+      };
+
+      const sanitizedSKU = sanitizeSlug(formData.productSlug);
+
+      data.append("productName", formData.productName);
+      data.append("productTagLine", formData.productTagLine);
+      if (formData.productThumbnail) {
+        data.append("productThumbnail", formData.productThumbnail);
+      } else {
+        data.append("productThumbnailURL", previewEditThumbnail); // Send existing URL
+      }
+
+      if (formData.productImg2) {
+        data.append("productImg2", formData.productImg2);
+      } else {
+        data.append("productImg2URL", previewImg2); // Send existing URL
+      }
+      if (formData.productImg3) {
+        data.append("productImg3", formData.productImg3);
+      } else {
+        data.append("productImg3URL", previewImg3); // Send existing URL
+      }
+      if (formData.productImg4) {
+        data.append("productImg4", formData.productImg4);
+      } else {
+        data.append("productImg4URL", previewImg4); // Send existing URL
+      }
+      if (formData.productImg5) {
+        data.append("productImg5", formData.productImg5);
+      } else {
+        data.append("productImg5URL", previewImg5); // Send existing URL
+      }
+      data.append("productThumbnailAlt", formData.productThumbnailAlt);
+      data.append("productAlt2", formData.productAlt2);
+      data.append("productAlt3", formData.productAlt3);
+      data.append("productAlt4", formData.productAlt4);
+      data.append("productAlt5", formData.productAlt5);
+      data.append("productDescription", formData.productDescription);
+      data.append("prodStructure", formData.prodStructure);
+      data.append("prodHelp", formData.prodHelp);
+      data.append("ProductDetail", formData.ProductDetail);
+      data.append("productOriginalPrice", formData.productOriginalPrice);
+      data.append("productDiscountPrice", formData.productDiscountPrice);
+      data.append("productSet", formData.productSet);
+      data.append("productSlug", sanitizedSKU);
+      data.append("ProductEdition", formData.ProductEdition);
+      data.append("productRating", formData.productRating);
+      data.append("productStar", formData.productStar);
+      data.append("productMetaTitle", formData.productMetaTitle);
+      data.append("productMetaDescription", formData.productMetaDescription);
+      data.append("productKeywords", formData.productKeywords);
+      data.append("productSchema", formData.productSchema);
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/update-product/${productId}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Product updated successfully!");
+
+      // Reload the page after a short delay
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      toast.error("Error updating product:", error);
+    }
+  };
+
+  const handleDelete = (productId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this product?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send request to update the user's status to 3
+        fetch(`http://localhost:8001/admin/prod-status/${productId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ productStatus: 3 }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              toast.success("The product has been deleted Successfully!.");
+              // Instead of reloading the page, just refresh data
+              fetchProduct();
+            } else {
+              toast.error("Failed to delete the product.");
+            }
+          })
+          .catch(() => {
+            toast.error("An error occurred while deleting the product.");
+          });
+      }
+    });
+  };
 
   return (
     <>
@@ -496,6 +784,17 @@ const Store = () => {
             aria-selected={activeTab === 2}
           >
             Product Add
+          </button>
+          <button
+            className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2  text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
+              activeTab === 3
+                ? "font-semibold border-emerald-500 text-emerald-500"
+                : "hidden border-transparent text-gray-500"
+            }`}
+            onClick={() => setActiveTab(3)}
+            aria-selected={activeTab === 3}
+          >
+            Product Edit
           </button>
           <button
             className={`py-2 px-1 inline-flex items-center gap-x-2 border-b-2  text-sm whitespace-nowrap  hover:text-emerald-500 focus:outline-none focus:text-emerald-500 ${
@@ -708,7 +1007,7 @@ const Store = () => {
                             <li className=" rounded">
                               <button
                                 className="hover:bg-emerald-200 "
-                                onClick={() => fetchBlogCatData(item.productId)}
+                                onClick={() => fetchProductData(item.productId)}
                               >
                                 Edit
                               </button>
@@ -718,7 +1017,7 @@ const Store = () => {
                                 className="hover:bg-red-200"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  handleCatDelete(item.productId);
+                                  handleDelete(item.productId);
                                 }}
                               >
                                 Delete
@@ -771,11 +1070,12 @@ const Store = () => {
                     value={formikAdd.values.productName}
                     className="w-full border-2 border-gray-300 p-2 rounded "
                   />
-                  {formikAdd.touched.productName && formikAdd.errors.productName && (
-                    <p className="text-red-500 text-sm">
-                      {formikAdd.errors.productName}
-                    </p>
-                  )}
+                  {formikAdd.touched.productName &&
+                    formikAdd.errors.productName && (
+                      <p className="text-red-500 text-sm">
+                        {formikAdd.errors.productName}
+                      </p>
+                    )}
                 </div>
               </div>
 
@@ -1014,11 +1314,12 @@ const Store = () => {
                     <option value="2">Best Selling</option>
                     <option value="3">Pre Order</option>
                   </select>
-                  {formikAdd.touched.productSet && formikAdd.errors.productSet && (
-                    <p className="text-red-500 text-sm">
-                      {formikAdd.errors.productSet}
-                    </p>
-                  )}
+                  {formikAdd.touched.productSet &&
+                    formikAdd.errors.productSet && (
+                      <p className="text-red-500 text-sm">
+                        {formikAdd.errors.productSet}
+                      </p>
+                    )}
                 </div>
               </div>
 
@@ -1105,11 +1406,12 @@ const Store = () => {
                     value={formikAdd.values.productStar}
                     className="w-full border-2 border-gray-300 p-2 rounded"
                   />
-                  {formikAdd.touched.productStar && formikAdd.errors.productStar && (
-                    <p className="text-red-500 text-sm">
-                      {formikAdd.errors.productStar}
-                    </p>
-                  )}
+                  {formikAdd.touched.productStar &&
+                    formikAdd.errors.productStar && (
+                      <p className="text-red-500 text-sm">
+                        {formikAdd.errors.productStar}
+                      </p>
+                    )}
                 </div>
               </div>
 
@@ -1132,11 +1434,12 @@ const Store = () => {
                     value={formikAdd.values.productSlug}
                     className="w-full border-2 border-gray-300 p-2 rounded"
                   />
-                  {formikAdd.touched.productSlug && formikAdd.errors.productSlug && (
-                    <p className="text-red-500 text-sm">
-                      {formikAdd.errors.productSlug}
-                    </p>
-                  )}
+                  {formikAdd.touched.productSlug &&
+                    formikAdd.errors.productSlug && (
+                      <p className="text-red-500 text-sm">
+                        {formikAdd.errors.productSlug}
+                      </p>
+                    )}
                 </div>
               </div>
 
@@ -1618,6 +1921,723 @@ const Store = () => {
           </div>
         </div>
 
+        {/* EDIT FORM */}
+        <div
+          id="tabs-with-underline-3"
+          className={`${activeTab === 3 ? "" : "hidden"}`}
+          role="tabpanel"
+          aria-labelledby="tabs-with-underline-item-3"
+        >
+          {" "}
+          <div className="mx-auto p-4 bg-white shadow-md border rounded-md">
+            <h1 className="text-lg font-bold mb-6 border-b pb-2">
+              Edit Product
+            </h1>
+            {activeTab && (
+              <form
+                onSubmit={handleEditFormSubmit}
+                className="flex flex-wrap gap-4 sm:gap-6 text-sm"
+              >
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="productName"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Name:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="productName"
+                      name="productName"
+                      type="text"
+                      placeholder="Enter Product Name"
+                      value={formData.productName}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productName: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="productTagLine"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Tag Line:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      type="text"
+                      id="productTagLine"
+                      name="productTagLine"
+                      placeholder="Enter Product Tag Line"
+                      value={formData.productTagLine}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productTagLine: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="productDescription"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Description:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <JoditEditor
+                      value={formData.productDescription}
+                      onChange={(content) =>
+                        setFormData({
+                          ...formData,
+                          productDescription: content,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="prodStructure"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Structure:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <JoditEditor
+                      value={formData.prodStructure}
+                      onChange={(content) =>
+                        setFormData({ ...formData, prodStructure: content })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="prodHelp"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Help:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <JoditEditor
+                      value={formData.prodHelp}
+                      onChange={(content) =>
+                        setFormData({ ...formData, prodHelp: content })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="ProductDetail"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Detail:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <JoditEditor
+                      value={formData.ProductDetail}
+                      onChange={(content) =>
+                        setFormData({ ...formData, ProductDetail: content })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="productOriginalPrice"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Original Price:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      type="text"
+                      id="productOriginalPrice"
+                      name="productOriginalPrice"
+                      placeholder="Enter Product Tag Line"
+                      value={formData.productOriginalPrice}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productOriginalPrice: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="productDiscountPrice"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Discount Price:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      type="text"
+                      id="productDiscountPrice"
+                      name="productDiscountPrice"
+                      placeholder="Enter Product Tag Line"
+                      value={formData.productDiscountPrice}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productDiscountPrice: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="productSet"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Set:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <select
+                      id="productSet"
+                      name="productSet"
+                      value={String(formData.productSet) || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productSet: Number(e.target.value),
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    >
+                      <option value="" disabled>
+                        Select a Product Set
+                      </option>
+                      <option value="0">New Arrivals</option>
+                      <option value="1">Trending</option>
+                      <option value="2">Best Selling</option>
+                      <option value="3">Pre Order</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="ProductEdition"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Edition:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <select
+                      id="ProductEdition"
+                      name="ProductEdition"
+                      value={formData.ProductEdition || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          ProductEdition: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    >
+                      <option value="" disabled>
+                        Select Product Edition
+                      </option>
+                      {Array.from(
+                        { length: new Date().getFullYear() - 1998 },
+                        (_, i) => (
+                          <option key={i} value={1999 + i}>
+                            {1999 + i}
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="productRating"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Rating:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="productRating"
+                      name="productRating"
+                      type="text"
+                      value={formData.productRating}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productRating: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="productStar"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Star:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="productStar"
+                      name="productStar"
+                      type="text"
+                      value={formData.productStar}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productStar: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:flex w-full items-center">
+                  <label
+                    htmlFor="productSlug"
+                    className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Product Slug:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      id="productSlug"
+                      name="productSlug"
+                      type="text"
+                      value={formData.productSlug}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          productSlug: e.target.value,
+                        })
+                      }
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                  </div>
+                </div>
+
+                <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
+                  <legend className="text-xl font-semibold">Images :</legend>
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productThumbnail"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Thumbnail:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productThumbnail"
+                        name="productThumbnail"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleEditImageChange(e, "productThumbnail")
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                      {previewEditThumbnail && (
+                        <img
+                          src={previewEditThumbnail}
+                          alt="Preview"
+                          width="100"
+                          className="mt-3 rounded shadow"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productThumbnailAlt"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Thumnail Alt:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productThumbnailAlt"
+                        name="productThumbnailAlt"
+                        type="text"
+                        value={formData.productThumbnailAlt}
+                        required
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            productThumbnailAlt: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productImg2"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Image 2:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productImg2"
+                        name="productImg2"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleEditImageChange(e, "productImg2")
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                      {previewEditImg2 && (
+                        <img
+                          src={previewEditImg2}
+                          alt="Mobile Preview"
+                          width="100"
+                          className="mt-3 rounded shadow"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productAlt2"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Image Alt 2:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productAlt2"
+                        name="productAlt2"
+                        type="text"
+                        value={formData.productAlt2}
+                        required
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            productAlt2: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productImg3"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Image 3:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productImg3"
+                        name="productImg3"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleEditImageChange(e, "productImg3")
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                      {previewEditImg3 && (
+                        <img
+                          src={previewEditImg3}
+                          alt="Mobile Preview"
+                          width="100"
+                          className="mt-3 rounded shadow"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productAlt3"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Image Alt 3:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productAlt3"
+                        name="productAlt3"
+                        type="text"
+                        value={formData.productAlt3}
+                        required
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            productAlt3: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productImg4"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Image 4:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productImg4"
+                        name="productImg4"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleEditImageChange(e, "productImg4")
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                      {previewEditImg4 && (
+                        <img
+                          src={previewEditImg4}
+                          alt="Mobile Preview"
+                          width="100"
+                          className="mt-3 rounded shadow"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productAlt4"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Image Alt 4:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productAlt4"
+                        name="productAlt4"
+                        type="text"
+                        value={formData.productAlt4}
+                        required
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            productAlt4: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productImg5"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Image 5:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productImg5"
+                        name="productImg5"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleEditImageChange(e, "productImg5")
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                      {previewEditImg5 && (
+                        <img
+                          src={previewEditImg5}
+                          alt="Mobile Preview"
+                          width="100"
+                          className="mt-3 rounded shadow"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productAlt5"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Product Image Alt 5:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productAlt5"
+                        name="productAlt5"
+                        type="text"
+                        value={formData.productAlt5}
+                        required
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            productAlt5: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset className="w-full border-2 border-gray-200 rounded bg-dashGray flex flex-wrap gap-4 p-2">
+                  <legend className="text-xl font-semibold">
+                    Meta Details :
+                  </legend>
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productMetaTitle"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Title:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productMetaTitle"
+                        name="productMetaTitle"
+                        type="text"
+                        value={formData.productMetaTitle}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            productMetaTitle: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productMetaDescription"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Description:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <textarea
+                        id="productMetaDescription"
+                        name="productMetaDescription"
+                        value={formData.productMetaDescription}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            productMetaDescription: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productKeywords"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Keywords:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        id="productKeywords"
+                        name="productKeywords"
+                        type="text"
+                        value={formData.productKeywords}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            productKeywords: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:flex w-full items-center">
+                    <label
+                      htmlFor="productSchema"
+                      className="sm:w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Schema:
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <textarea
+                        id="productSchema"
+                        name="productSchema"
+                        value={formData.productSchema}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            productSchema: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                    </div>
+                  </div>
+                </fieldset>
+                <div className="w-full flex justify-start gap-4">
+                  <a
+                    href=""
+                    className="bg-black text-white py-2 px-4 rounded hover:bg-black"
+                  >
+                    Cancel
+                  </a>
+                  <button
+                    type="submit"
+                    className="bg-emerald-500 text-white py-2 px-4 rounded hover:bg-emerald-600"
+                  >
+                    Update
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+
+        {/* UPDATE STORE DETAILS */}
         <div className={`${activeTab === 1 ? "" : "hidden"}`}>
           <div className=" mx-auto p-5 bg-white shadow-md border rounded-md">
             <h1 className="text-lg font-bold mb-6 border-b pb-2">

@@ -254,63 +254,110 @@ const getProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  const productId  = req.params.id;
+  const productId = req.params.id;
   const {
-    blogTitle,
-    blogContent,
-    blogDescription,
-    blogImgAlt,
-    blogCategory,
-    blogKeywords,
-    blogMetaTitle,
-    blogMetaDescription,
-    blogMetaKeywords,
-    blogForceKeywords,
-    blogSKU,
-    blogSchema,
+    productThumbnailAlt,
+    productAlt2,
+    productAlt3,
+    productAlt4,
+    productAlt5,
+    productName,
+    productTagLine,
+    productDescription,
+    prodStructure,
+    prodHelp,
+    ProductDetail,
+    productOriginalPrice,
+    productDiscountPrice,
+    productSet,
+    ProductEdition,
+    productSlug,
+    productRating,
+    productStar,
+    productMetaTitle,
+    productMetaDescription,
+    productKeywords,
+    productSchema,
   } = req.body;
 
-  const blogImage = req.files?.blogImage?.[0]?.path
-    ? `/uploads/blogImage/${req.files.blogImage[0].filename}`
-    : null;
-  const blogImageMobile = req.files?.blogImageMobile?.[0]?.path
-    ? `/uploads/blogImageMobile/${req.files.blogImageMobile[0].filename}`
-    : null;
+  console.log(req.body);
+  
 
-  const blogUpdatedTime = Math.floor(Date.now() / 1000); // Unix timestamp
+  const productThumbnail = req.files?.productThumbnail?.[0]?.path
+    ? `/uploads/Products/${req.files.productThumbnail[0].filename}`
+    : null;
+  const productImg2 = req.files?.productImg2?.[0]?.path
+    ? `/uploads/Products/${req.files.productImg2[0].filename}`
+    : null;
+  const productImg3 = req.files?.productImg3?.[0]?.path
+    ? `/uploads/Products/${req.files.productImg3[0].filename}`
+    : null;
+  const productImg4 = req.files?.productImg4?.[0]?.path
+    ? `/uploads/Products/${req.files.productImg4[0].filename}`
+    : null;
+  const productImg5 = req.files?.productImg5?.[0]?.path
+    ? `/uploads/Products/${req.files.productImg5[0].filename}`
+    : null;
 
   let query =
-    "UPDATE blogs SET blogTitle = ?, blogContent = ?, blogDescription = ?, blogImgAlt = ?, blogCategory = ?, blogKeywords = ?, blogMetaTitle = ?, blogMetaDescription = ?, blogMetaKeywords = ?, blogForceKeywords = ?, blogSKU = ?, blogSchema = ?, blogUpdatedTime = ?";
+    "UPDATE storeproducts SET productThumbnailAlt = ?, productAlt2 = ?, productAlt3 = ?, productAlt4 = ?, productAlt5 = ?, productName = ?, productTagLine = ?, productDescription = ?, prodStructure = ?, prodHelp = ?, ProductDetail = ?, productOriginalPrice = ?, productDiscountPrice = ?,productSet =?, ProductEdition =?, productSlug =?, productRating= ?, productStar = ?, productMetaTitle =?, productMetaDescription = ?, productKeywords = ?, productSchema = ?";
   const params = [
-    blogTitle,
-    blogContent,
-    blogDescription,
-    blogImgAlt,
-    blogCategory,
-    blogKeywords,
-    blogMetaTitle,
-    blogMetaDescription,
-    blogMetaKeywords,
-    blogForceKeywords,
-    blogSKU,
-    blogSchema,
-    blogUpdatedTime,
+    productThumbnailAlt,
+    productAlt2,
+    productAlt3,
+    productAlt4,
+    productAlt5,
+    productName,
+    productTagLine,
+    productDescription,
+    prodStructure,
+    prodHelp,
+    ProductDetail,
+    productOriginalPrice,
+    productDiscountPrice,
+    productSet,
+    ProductEdition,
+    productSlug,
+    productRating,
+    productStar,
+    productMetaTitle,
+    productMetaDescription,
+    productKeywords,
+    productSchema,
   ];
 
-  // Update blogImage only if a new image is uploaded
-  if (blogImage) {
-    query += ", blogImage = ?";
-    params.push(blogImage);
+  // Update productThumbnail only if a new image is uploaded
+  if (productThumbnail) {
+    query += ", productThumbnail = ?";
+    params.push(productThumbnail);
   }
 
-  // Update blogImageMobile only if a new image is uploaded
-  if (blogImageMobile) {
-    query += ", blogImageMobile = ?";
-    params.push(blogImageMobile);
+  // Update productImg2 only if a new image is uploaded
+  if (productImg2) {
+    query += ", productImg2 = ?";
+    params.push(productImg2);
   }
 
-  query += " WHERE blogId = ?";
-  params.push(blogId);
+  // Update productImg3 only if a new image is uploaded
+  if (productImg3) {
+    query += ", productImg3 = ?";
+    params.push(productImg3);
+  }
+
+  // Update productImg4 only if a new image is uploaded
+  if (productImg4) {
+    query += ", productImg4 = ?";
+    params.push(productImg4);
+  }
+
+  // Update productImg5 only if a new image is uploaded
+  if (productImg5) {
+    query += ", productImg5 = ?";
+    params.push(productImg5);
+  }
+
+  query += " WHERE productId = ?";
+  params.push(productId);
 
   await db.query(query, params);
 
