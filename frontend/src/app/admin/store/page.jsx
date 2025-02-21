@@ -857,7 +857,7 @@ const Store = () => {
                         </Zoom>
                       </td>
                       <td>{item.productName}</td>
-                      <td>Rs.{item.productOriginalPrice}</td>
+                      <td>Rs.{item.productDiscountPrice}</td>
                       <td>
                         {item.productSet === 0
                           ? "New Arrivals"
