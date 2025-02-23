@@ -5,12 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import axios from "axios";
 import useConsumerContext from "@/context/ConsumerContext";
+import useProductContext from "@/context/ProductContext";
+import { FaCartShopping } from "react-icons/fa6";
 
 const Header = () => {
   const pathname = usePathname();
 
   const { consumerLogout, consumerLoggedIn, currentConsumer } =
     useConsumerContext();
+  const { getCartItemsCount } = useProductContext();
 
   const [headerData, setHeaderData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -171,7 +174,7 @@ const Header = () => {
   };
 
   return (
-    <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white shadow-md text-sm py-1 font-RedditSans">
+    <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white shadow-md text-sm py-3 font-RedditSans">
       <nav className="max-w-[90rem] w-full mx-auto px-4 flex flex-wrap basis-full items-center justify-between">
         <div className="flex flex-wrap items-center">
           <button
@@ -228,7 +231,47 @@ const Header = () => {
             />
           </Link>
         </div>
+
         <div className="sm:order-3 flex items-center gap-x-2">
+          <Link
+            href="/my/bag"
+            className="bg-white py-1 px-4 rounded-full flex items-center gap-3 group"
+          >
+            <div className="relative scale-110">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                className="m-auto text-black"
+              >
+                <path
+                  data-name="Rectangle 159"
+                  fill="none"
+                  d="M0 0h24v24H0z"
+                ></path>
+                <path
+                  data-name="Path 77525"
+                  d="M7.611 7.248a3.169 3.169 0 0 0-3.137 3.617l.809 5.657a3.961 3.961 0 0 0 3.921 3.4h5.594a3.961 3.961 0 0 0 3.921-3.4l.808-5.657a3.169 3.169 0 0 0-3.138-3.617Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                ></path>
+                <path
+                  data-name="Path 77526"
+                  d="M8.039 4.684a3.96 3.96 0 0 1 3.543-2.189h.836a3.961 3.961 0 0 1 3.542 2.189l.708 1.417a.794.794 0 1 1-1.421.709l-.7-1.415a2.376 2.376 0 0 0-2.126-1.314h-.836a2.376 2.376 0 0 0-2.129 1.314L8.747 6.81a.792.792 0 1 1-1.417-.708Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                ></path>
+              </svg>
+              {getCartItemsCount() > 0 && (
+                <span className="absolute -top-2 left-6 bg-emerald-500 rounded-full p-0.5 px-2 text-sm text-white font-bold">
+                  {getCartItemsCount()}
+                </span>
+              )}
+              <span className="text-xs font-bold">My Bag</span>
+            </div>
+          </Link>
+
           {displayLoginOptions()}
         </div>
 
@@ -353,7 +396,7 @@ const Header = () => {
             href="/store"
             className="block border-b-2 border-gray-200 p-4 hover:bg-emerald-100 transition ease-in-out delay-150"
           >
-           Store
+            Store
           </a>
         </div>
       </div>

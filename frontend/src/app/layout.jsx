@@ -7,6 +7,7 @@ import Contact from "./(components)/Contact";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ConsumerProvider } from "@/context/ConsumerContext";
+import { ProductProvider } from "@/context/ProductContext";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -42,14 +43,14 @@ export default function RootLayout({ children }) {
     return (
       <html lang="en" data-theme="light">
         <head>
-        <link
-          rel="icon"
-          href={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.fav180}`}
-        />
-         <link
-          href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
-          rel="stylesheet"
-        />
+          <link
+            rel="icon"
+            href={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.fav180}`}
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
+            rel="stylesheet"
+          />
         </head>
         <body>
           <main className="min-h-screen">{children}</main>
@@ -68,7 +69,7 @@ export default function RootLayout({ children }) {
         {headerData && (
           <script dangerouslySetInnerHTML={{ __html: headerData.gSeoDetail }} />
         )}
-        
+
         <link
           href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
           rel="stylesheet"
@@ -152,12 +153,14 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className="">
-        <ConsumerProvider>
-        {!isAdminPage && <Header />}
-        <main className="min-h-screen">{children}</main>
-        {!isAdminPage && <Contact />}
-        {!isAdminPage && <Footer />}
-        </ConsumerProvider>
+        <ProductProvider>
+          <ConsumerProvider>
+            {!isAdminPage && <Header />}
+            <main className="min-h-screen">{children}</main>
+            {!isAdminPage && <Contact />}
+            {!isAdminPage && <Footer />}
+          </ConsumerProvider>
+        </ProductProvider>
       </body>
     </html>
   );

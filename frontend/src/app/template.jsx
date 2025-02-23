@@ -1,6 +1,7 @@
 "use client";
 import { AppProvider } from "@/context/AppContext";
 import { ConsumerProvider } from "@/context/ConsumerContext";
+import { ProductProvider } from "@/context/ProductContext";
 import PrelineScript from "@/Prelinescript";
 import React, { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
@@ -30,9 +31,11 @@ const Template = ({ children }) => {
         theme="colored"
         transition={Bounce}
       />
-      <AppProvider>
-        <ConsumerProvider>{children}</ConsumerProvider>
-      </AppProvider>
+      <ProductProvider>
+        <AppProvider>
+          <ConsumerProvider>{children}</ConsumerProvider>
+        </AppProvider>
+      </ProductProvider>
       <PrelineScript />
     </div>
   );
