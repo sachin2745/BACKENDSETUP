@@ -78,6 +78,16 @@ export const ProductProvider = ({ children }) => {
     return cartItems.reduce((acc, item) => acc + item.quantity, 0);
   };
 
+  const updateItemQuantity = (itemId, quantity) => {
+    if (quantity < 1) return;
+    
+    setCartItems(
+      cartItems.map((cartItem) =>
+        cartItem.productId === itemId ? { ...cartItem, quantity } : cartItem
+      )
+    );
+  };
+  
   return (
     <ProductContext.Provider
       value={{
@@ -85,6 +95,7 @@ export const ProductProvider = ({ children }) => {
         setCartOpen,
         cartItems,
         addItemToCart,
+        updateItemQuantity,
         removeItemFromCart,
         clearCart,
         isInCart,

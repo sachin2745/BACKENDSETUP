@@ -26,35 +26,53 @@ body {
 
 .btnShape {
   background: #ffffff;
-  box-shadow: inset 13px 13px 26px #cccccc,
-              inset -13px -13px 26px #ffffff;
+  box-shadow: inset 13px 13px 26px #cccccc, inset -13px -13px 26px #ffffff;
 }
 
-.jodit-content, .jodit-wysiwyg, .jodit-workplace {
-  font-family: 'Reddit Sans', serif !important;
+.jodit-content,
+.jodit-wysiwyg,
+.jodit-workplace {
+  font-family: "Reddit Sans", serif !important;
 }
 
-iframe{
-  width: 100% !important;  
+iframe {
+  width: 100% !important;
 }
 
-.scrollbarWidthThin{
-  scrollbar-width: thin;  
+.scrollbarWidthThin {
+  scrollbar-width: thin;
 }
-.scrollbarWidthNone{
+.scrollbarWidthNone {
   scrollbar-width: none;
 }
-.bgBlueGradient{  
-  --angle: 45deg; 
-    background: linear-gradient(var(--angle), oklab(23.1% 0.001 -0.071), oklab(35.9% 0.006 -0.119))
+.bgBlueGradient {
+  --angle: 45deg;
+  background: linear-gradient(
+    var(--angle),
+    oklab(23.1% 0.001 -0.071),
+    oklab(35.9% 0.006 -0.119)
+  );
 }
-.bgEmerald{
-  --angle: 45deg !important; 
-  background: linear-gradient(var(--angle), oklab(49.2% -0.083 -0.015), oklab(88.6% -0.18 0.047)) !important;
+.bgEmerald {
+  --angle: 45deg !important;
+  background: linear-gradient(
+    var(--angle),
+    oklab(49.2% -0.083 -0.015),
+    oklab(88.6% -0.18 0.047)
+  ) !important;
 }
 .textEmerald {
-  --angle: 45deg !important; 
-  background: linear-gradient(var(--angle), oklab(49.2% -0.083 -0.015), oklab(88.6% -0.18 0.047)) !important;
+  --angle: 45deg !important;
+  background: linear-gradient(
+    var(--angle),
+    oklab(49.2% -0.083 -0.015),
+    oklab(88.6% -0.18 0.047)
+  ) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
+}
+.shadow-all-round {
+  border-radius: 5px;
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  box-shadow: 6px 6px 1px #d4d4d4, -6px -6px 12px #ffffff;
 }

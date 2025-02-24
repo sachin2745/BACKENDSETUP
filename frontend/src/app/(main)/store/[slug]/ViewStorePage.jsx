@@ -18,7 +18,7 @@ const ViewproductPage = ({ slug }) => {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
-  const { addItemToCart, isInCart } = useProductContext();
+  const { addItemToCart, isInCart, cartItems } = useProductContext();
   const router = useRouter();
 
   // Get current URL
@@ -94,11 +94,17 @@ const ViewproductPage = ({ slug }) => {
     if (!isInCart(product.productId)) {
       addItemToCart(product.productId);
     } else {
-      router.replace("/my/bag"); // Replaces current history entry
+      router.replace("/mybag"); // Replaces current history entry
       setTimeout(() => {
-        window.location.href = "/my/bag"; // Hard reload to ensure data refresh
+        window.location.href = "/mybag"; // Hard reload to ensure data refresh
       }, 100);
     }
+  };
+
+  const { updateItemQuantity } = useProductContext();
+
+  const handleQuantityChange = (e) => {
+    updateItemQuantity(product.productId, parseInt(e.target.value));
   };
 
   if (loading) {
@@ -242,7 +248,11 @@ const ViewproductPage = ({ slug }) => {
                     <button
                       onClick={handleClick}
                       type="button"
-                      className="border-2 border-emerald-300 w-full flex cursor-pointer items-center justify-center py-3 rounded-lg font-medium"
+                      className={`border-2 border-emerald-300 w-full flex cursor-pointer items-center hover:bg-emerald-100 transition ease-in justify-center py-3 rounded-lg font-medium ${
+                        isInCart(product.productId)
+                          ? "bg-emerald-100"
+                          : "bg-white"
+                      }`}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -274,16 +284,16 @@ const ViewproductPage = ({ slug }) => {
                         : "Add to Cart"}
                     </button>
                     <a
-                      href="/my/bag"
+                      href="/mybag"
                       type="button"
                       onClick={(e) => {
                         e.preventDefault(); // Prevent default redirection
                         if (!isInCart(product.productId)) {
                           addItemToCart(product.productId);
                         }
-                        window.location.href = "/my/bag"; // Redirect after handling cart logic
+                        window.location.href = "/mybag"; // Redirect after handling cart logic
                       }}
-                      className="w-full bg-emerald-500 text-white flex items-center justify-center py-3 rounded-lg font-medium"
+                      className="w-full bg-emerald-400 hover:bg-emerald-500  text-white flex items-center justify-center py-3 rounded-lg font-medium"
                     >
                       Buy Now
                     </a>
@@ -409,12 +419,16 @@ const ViewproductPage = ({ slug }) => {
                           <span className="pr-2 font-semibold text-gray-600">
                             Quantity :
                           </span>
-                          <select className="select select-bordered select-sm w-16">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                          <select
+                            className="select select-bordered select-sm w-16"
+                            value={product.quantity}
+                            onChange={handleQuantityChange}
+                          >
+                            {[1, 2, 3, 4, 5].map((num) => (
+                              <option key={num} value={num}>
+                                {num}
+                              </option>
+                            ))}
                           </select>
                         </div>
                       </div>

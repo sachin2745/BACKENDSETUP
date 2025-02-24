@@ -232,7 +232,7 @@ const Header = () => {
 
         <div className="sm:order-3 flex items-center gap-x-2">
           <a
-            href="/my/bag"
+            href="/mybag"
             className="bg-white py-1 px-4 rounded-full flex items-center gap-3 group"
           >
             <div className="relative scale-110">
