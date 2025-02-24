@@ -31,11 +31,11 @@ const Template = ({ children }) => {
         theme="colored"
         transition={Bounce}
       />
-      <ProductProvider>
-        <AppProvider>
-          <ConsumerProvider>{children}</ConsumerProvider>
-        </AppProvider>
-      </ProductProvider>
+      <ConsumerProvider>
+        <ProductProvider>
+          <AppProvider>{children}</AppProvider>
+        </ProductProvider>
+      </ConsumerProvider>
       <PrelineScript />
     </div>
   );

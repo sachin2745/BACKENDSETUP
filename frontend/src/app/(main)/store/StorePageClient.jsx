@@ -17,7 +17,7 @@ export default function StorePage() {
           `${process.env.NEXT_PUBLIC_API_URL}/web/products/getall`
         );
         setProducts(response.data.products);
-        console.log(response.data.products);
+        // console.log(response.data.products);
       } catch (err) {
         console.error(err.message);
       } finally {
@@ -306,6 +306,7 @@ export default function StorePage() {
                                   </div>
                                 </div>
                               </div>
+                              
                             </div>
                           </div>
                         </div>

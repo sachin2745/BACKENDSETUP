@@ -6,15 +6,12 @@ import { usePathname } from "next/navigation";
 import axios from "axios";
 import useConsumerContext from "@/context/ConsumerContext";
 import useProductContext from "@/context/ProductContext";
-import { FaCartShopping } from "react-icons/fa6";
 
 const Header = () => {
+  const { getCartItemsCount } = useProductContext();
   const pathname = usePathname();
-
   const { consumerLogout, consumerLoggedIn, currentConsumer } =
     useConsumerContext();
-  const { getCartItemsCount } = useProductContext();
-
   const [headerData, setHeaderData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,6 +37,7 @@ const Header = () => {
 
     fetchData();
   }, []);
+  
 
   if (loading) {
     return (
@@ -233,7 +231,7 @@ const Header = () => {
         </div>
 
         <div className="sm:order-3 flex items-center gap-x-2">
-          <Link
+          <a
             href="/my/bag"
             className="bg-white py-1 px-4 rounded-full flex items-center gap-3 group"
           >
@@ -270,7 +268,7 @@ const Header = () => {
               )}
               <span className="text-xs font-bold">My Bag</span>
             </div>
-          </Link>
+          </a>
 
           {displayLoginOptions()}
         </div>

@@ -12,6 +12,7 @@ import { ProductProvider } from "@/context/ProductContext";
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith("/admin");
+  const isProductViewPage = pathname.startsWith("/store/");
   const isLoginPage = pathname === "/login"; // Detect login page
   const isSignupPage = pathname === "/signup"; // Detect login page
   const isResestPasswordPage = pathname === "/reset-password"; // Detect login page
@@ -153,14 +154,14 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className="">
-        <ProductProvider>
-          <ConsumerProvider>
-            {!isAdminPage && <Header />}
+        <ConsumerProvider>
+          <ProductProvider>
+            {!isAdminPage && !isProductViewPage && <Header />}
             <main className="min-h-screen">{children}</main>
             {!isAdminPage && <Contact />}
             {!isAdminPage && <Footer />}
-          </ConsumerProvider>
-        </ProductProvider>
+          </ProductProvider>
+        </ConsumerProvider>
       </body>
     </html>
   );

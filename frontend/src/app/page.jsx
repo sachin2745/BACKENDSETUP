@@ -41,9 +41,10 @@ export default async function homeWrapper() {
 
   if (home.metaSchema) {
     try {
-      schemaData = typeof home.metaSchema === "string" 
-        ? home.metaSchema 
-        : JSON.stringify(home.metaSchema, null, 2);  // Pretty-print JSON
+      schemaData =
+        typeof home.metaSchema === "string"
+          ? home.metaSchema
+          : JSON.stringify(home.metaSchema, null, 2); // Pretty-print JSON
     } catch (error) {
       console.error("Error parsing metaSchema:", error);
     }
