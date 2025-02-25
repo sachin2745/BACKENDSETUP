@@ -67,8 +67,28 @@ const getProductBySlug = async (req, res) => {
   }
 };
 
+const getCartProducts= async (req, res) => {
+  try {
+    const { productIds } = req.body; // Receive product IDs from frontend
+
+    if (!productIds || productIds.length === 0) {
+      return res.status(400).json({ message: "No product IDs provided" });
+    }
+
+    const placeholders = productIds.map(() => "?").join(",");
+    const query = `SELECT * FROM storeproducts WHERE productId IN (${placeholders})`;
+
+    const [products] = await db.execute(query, productIds);
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching cart products:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getStore,
   getProductBySlug,
   getProducts,
+  getCartProducts,
 };

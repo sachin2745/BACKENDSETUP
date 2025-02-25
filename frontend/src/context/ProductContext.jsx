@@ -69,14 +69,18 @@ export const ProductProvider = ({ children }) => {
     );
   };
 
-  const getSingleItemCartTotal = (itemId) => {
+  const getSingleItemCartTotal = (itemId,productDiscountPrice) => {
     const item = cartItems.find((cartItem) => cartItem.productId === itemId);
-    return item ? item.quantity * (item.price || 0) : 0;
+    return item ? item.quantity * (productDiscountPrice || 0) : 0;
   };
 
+  // const getCartItemsCount = () => {
+  //   return cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  // };
+
   const getCartItemsCount = () => {
-    return cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  };
+    return cartItems.length;
+};
 
   const updateItemQuantity = (itemId, quantity) => {
     if (quantity < 1) return;
