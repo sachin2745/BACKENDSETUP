@@ -13,6 +13,8 @@ export const ProductProvider = ({ children }) => {
   useEffect(() => {
     if (cartItems.length > 0) {
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    } else {
+      localStorage.removeItem("cartItems"); // Ensure localStorage is cleared when cart is empty
     }
   }, [cartItems]);
 
@@ -69,7 +71,7 @@ export const ProductProvider = ({ children }) => {
     );
   };
 
-  const getSingleItemCartTotal = (itemId,productDiscountPrice) => {
+  const getSingleItemCartTotal = (itemId, productDiscountPrice) => {
     const item = cartItems.find((cartItem) => cartItem.productId === itemId);
     return item ? item.quantity * (productDiscountPrice || 0) : 0;
   };
@@ -80,18 +82,18 @@ export const ProductProvider = ({ children }) => {
 
   const getCartItemsCount = () => {
     return cartItems.length;
-};
+  };
 
   const updateItemQuantity = (itemId, quantity) => {
     if (quantity < 1) return;
-    
+
     setCartItems(
       cartItems.map((cartItem) =>
         cartItem.productId === itemId ? { ...cartItem, quantity } : cartItem
       )
     );
   };
-  
+
   return (
     <ProductContext.Provider
       value={{
