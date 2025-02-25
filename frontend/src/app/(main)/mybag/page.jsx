@@ -1,4 +1,5 @@
 "use client";
+import useConsumerContext from "@/context/ConsumerContext";
 import useProductContext from "@/context/ProductContext";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -18,15 +19,17 @@ const bag = () => {
     getSingleItemCartTotal,
   } = useProductContext();
 
+  const { currentConsumer } = useConsumerContext();
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   useEffect(() => {
-    if (cartItems.length > 0) {
+    if (currentConsumer && cartItems.length > 0) {
       fetchCartProducts();
     }
-  }, [cartItems]);
+  }, [cartItems, currentConsumer]);
 
   const fetchCartProducts = async () => {
     try {
@@ -36,8 +39,13 @@ const bag = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/web/cart-products`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productIds }),
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": currentConsumer.token,
+          },
+          body: JSON.stringify({
+            productIds,
+          }),
         }
       );
 
@@ -247,7 +255,7 @@ const bag = () => {
                       </div>
                       <div className="mb-10">
                         <Link
-                        href="/store"
+                          href="/store"
                           className="bgEmerald text-white rounded px-6 py-3 font-medium"
                         >
                           Continue shopping
@@ -310,7 +318,10 @@ const bag = () => {
                                       <button
                                         className="heading-5 py-1 rounded ml-2 shadow-xl  bgEmerald text-white px-1.5 md:px-2"
                                         onClick={() =>
-                                          addItemToCart(item.productId,item.productDiscountPrice)
+                                          addItemToCart(
+                                            item.productId,
+                                            item.productDiscountPrice
+                                          )
                                         }
                                       >
                                         +
@@ -394,10 +405,11 @@ const bag = () => {
                                   <dialog id="my_modal_2" className="modal">
                                     <div className="modal-box rounded">
                                       <h3 className="font-bold text-xl">
-                                      Remove Item
+                                        Remove Item
                                       </h3>
                                       <p className="py-4">
-                                      You are about to remove this item. You cannot undo this action.
+                                        You are about to remove this item. You
+                                        cannot undo this action.
                                       </p>
                                       <div className="flex items-center w-full gap-2 ">
                                         <button
@@ -481,7 +493,10 @@ const bag = () => {
                             </span>
                           </div>
                           <div className="w-full hidden lg:block">
-                            <Link href="/mybag/address" className="w-full rounded inline-flex items-center justify-center py-1.5 bgEmerald text-white font-bold">
+                            <Link
+                              href="/mybag/address"
+                              className="w-full rounded inline-flex items-center justify-center py-1.5 bgEmerald text-white font-bold"
+                            >
                               Next
                             </Link>
                           </div>

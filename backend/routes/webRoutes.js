@@ -61,5 +61,5 @@ router.put("/consumer/update/:id", consumerWebController.updateConsumer);
 router.get('/store/getall', storeWebController.getStore);
 router.get('/products/getall', storeWebController.getProducts);
 router.get('/post/getbyslug/:slug', storeWebController.getProductBySlug);
-router.post("/cart-products", storeWebController.getCartProducts);
+router.post("/cart-products", verifyToken,storeWebController.getCartProducts);
 module.exports = router;

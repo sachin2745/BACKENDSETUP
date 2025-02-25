@@ -1,24 +1,47 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
+import useConsumerContext from "./ConsumerContext";
 
 const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
   const [cartOpen, setCartOpen] = useState(false);
+  const { currentConsumer } = useConsumerContext();
 
-  const cartItemsinSession = JSON.parse(localStorage.getItem("cartItems"));
+  // Fetch cart items for the current consumer from localStorage
+  const getCartItemsForConsumer = () => {
+    const allCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    return allCartItems.filter(
+      (cartItem) => cartItem.consumerId === currentConsumer?.consumerId
+    );
+  };
 
-  const [cartItems, setCartItems] = useState(cartItemsinSession || []);
+  const [cartItems, setCartItems] = useState(getCartItemsForConsumer());
 
+  // Update localStorage whenever cartItems changes
   useEffect(() => {
     if (cartItems.length > 0) {
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      const allCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const updatedCartItems = [
+        ...allCartItems.filter(
+          (item) => item.consumerId !== currentConsumer?.consumerId
+        ), // Remove old items of the same consumer
+        ...cartItems, // Add updated cart items
+      ];
+      localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     } else {
-      localStorage.removeItem("cartItems"); // Ensure localStorage is cleared when cart is empty
+      // Remove consumer's cart from localStorage if empty
+      const allCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const filteredCartItems = allCartItems.filter(
+        (item) => item.consumerId !== currentConsumer?.consumerId
+      );
+      localStorage.setItem("cartItems", JSON.stringify(filteredCartItems));
     }
-  }, [cartItems]);
+  }, [cartItems, currentConsumer]);
 
   const addItemToCart = (itemId, price) => {
+    if (!currentConsumer) return; // Prevent adding items if no consumer is logged in
+
     const exist = cartItems.find((cartItem) => cartItem.productId === itemId);
 
     if (exist) {
@@ -30,29 +53,31 @@ export const ProductProvider = ({ children }) => {
         )
       );
     } else {
-      setCartItems([...cartItems, { productId: itemId, quantity: 1,price  }]);
+      setCartItems([
+        ...cartItems,
+        {
+          productId: itemId,
+          quantity: 1,
+          price,
+          consumerId: currentConsumer.consumerId, // Store consumer ID
+        },
+      ]);
     }
   };
 
   const removeItemFromCart = (itemId) => {
-    const exist = cartItems.find((cartItem) => cartItem.productId === itemId);
-
-    if (exist.quantity === 1) {
-      setCartItems(
-        cartItems.filter((cartItem) => cartItem.productId !== itemId)
-      );
-    } else {
-      setCartItems(
-        cartItems.map((cartItem) =>
+    setCartItems(
+      cartItems
+        .map((cartItem) =>
           cartItem.productId === itemId
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
             : cartItem
         )
-      );
-    }
+        .filter((cartItem) => cartItem.quantity > 0)
+    );
   };
 
-  const removeoneitem = (itemId) => {
+  const removeOneItem = (itemId) => {
     setCartItems(cartItems.filter((cartItem) => cartItem.productId !== itemId));
   };
 
@@ -65,10 +90,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return cartItems.reduce(
-      (acc, item) => acc + (item.price || 0) * item.quantity,
-      0
-    );
+    return cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0);
   };
 
   const getSingleItemCartTotal = (itemId, productDiscountPrice) => {
@@ -76,12 +98,8 @@ export const ProductProvider = ({ children }) => {
     return item ? item.quantity * (productDiscountPrice || 0) : 0;
   };
 
-  // const getCartItemsCount = () => {
-  //   return cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  // };
-
   const getCartItemsCount = () => {
-    return cartItems.length;
+    return cartItems.reduce((acc, item) => acc + item.quantity, 0);
   };
 
   const updateItemQuantity = (itemId, quantity) => {
@@ -107,7 +125,7 @@ export const ProductProvider = ({ children }) => {
         isInCart,
         getCartTotal,
         getCartItemsCount,
-        removeoneitem,
+        removeOneItem,
         getSingleItemCartTotal,
       }}
     >

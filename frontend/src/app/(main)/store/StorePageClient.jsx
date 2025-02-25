@@ -220,7 +220,7 @@ export default function StorePage() {
                             >
                               {post.productName}
                             </span>
-                            <div className="pb-0 pt-0 md:pb-1 md:pt-4">
+                            <div className="pb-1 pt-2 md:pb-1 md:pt-4">
                               <div>
                                 <span className="flex">
                                   <div
