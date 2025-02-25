@@ -44,8 +44,8 @@ export async function middleware(req) {
     }
   }
 
-  // Consumer authorization logic for /blog pages
-  if (url.pathname.startsWith("/blog")) {
+  // Consumer authorization logic for /mybag pages
+  if (url.pathname.startsWith("/mybag")) {
     try {
       const ApiResponse = await fetch("http://localhost:8001/web/authorise", {
         headers: { "x-auth-token": consumer_token.value || "" },
@@ -54,7 +54,7 @@ export async function middleware(req) {
       if (ApiResponse.status === 200) {
         const { role } = await ApiResponse.json();
         if (role === "consumer") {
-          return NextResponse.next(); // Allow access to blog pages for consumers
+          return NextResponse.next(); // Allow access to mybag pages for consumers
         }
       } else {
         return NextResponse.redirect(new URL("/login", req.url));
@@ -71,5 +71,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/blog/:path*", "/login", "/signup", "/reset-password"],
+  matcher: ["/admin/:path*", "/mybag/:path*", "/login", "/signup", "/reset-password"],
 };

@@ -310,7 +310,7 @@ const bag = () => {
                                       <button
                                         className="heading-5 py-1 rounded ml-2 shadow-xl  bgEmerald text-white px-1.5 md:px-2"
                                         onClick={() =>
-                                          addItemToCart(item.productId)
+                                          addItemToCart(item.productId,item.productDiscountPrice)
                                         }
                                       >
                                         +
@@ -447,12 +447,12 @@ const bag = () => {
                           <div className="pb-3 flex justify-between space-x-2">
                             <span className="font-medium Typography_root__TxCor">
                               <span className="text-black text-[16px] leading-[24px]">
-                                Products Total (1 Items)
+                                Products Total ({getCartItemsCount()} Items)
                               </span>
                             </span>
                             <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading7__gujRQ font-semibold Typography_root__TxCor">
                               <span className="text-black text-[18px] leading-[28px]">
-                                ₹2,749
+                                ₹{getCartTotal()}
                               </span>
                             </span>
                           </div>
@@ -476,14 +476,14 @@ const bag = () => {
                             </span>
                             <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading6__f9EKE font-bold Typography_root__TxCor">
                               <span className="text-black text-[24px] leading-[32px]">
-                                ₹2,749
+                                ₹{getCartTotal()}
                               </span>
                             </span>
                           </div>
                           <div className="w-full hidden lg:block">
-                            <button className="w-full rounded inline-flex items-center justify-center py-1.5 bgEmerald text-white font-bold">
+                            <Link href="/mybag/address" className="w-full rounded inline-flex items-center justify-center py-1.5 bgEmerald text-white font-bold">
                               Next
-                            </button>
+                            </Link>
                           </div>
                         </div>
                       </div>

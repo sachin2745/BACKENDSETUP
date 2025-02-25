@@ -92,7 +92,7 @@ const ViewproductPage = ({ slug }) => {
   //ADD TO BAG BUTTON
   const handleClick = () => {
     if (!isInCart(product.productId)) {
-      addItemToCart(product.productId);
+      addItemToCart(product.productId, product.productDiscountPrice);
     } else {
       router.replace("/mybag"); // Replaces current history entry
       setTimeout(() => {
@@ -289,7 +289,7 @@ const ViewproductPage = ({ slug }) => {
                       onClick={(e) => {
                         e.preventDefault(); // Prevent default redirection
                         if (!isInCart(product.productId)) {
-                          addItemToCart(product.productId);
+                          addItemToCart(product.productId,product.productDiscountPrice);
                         }
                         window.location.href = "/mybag"; // Redirect after handling cart logic
                       }}

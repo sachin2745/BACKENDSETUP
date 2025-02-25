@@ -18,7 +18,7 @@ export const ProductProvider = ({ children }) => {
     }
   }, [cartItems]);
 
-  const addItemToCart = (itemId) => {
+  const addItemToCart = (itemId, price) => {
     const exist = cartItems.find((cartItem) => cartItem.productId === itemId);
 
     if (exist) {
@@ -30,7 +30,7 @@ export const ProductProvider = ({ children }) => {
         )
       );
     } else {
-      setCartItems([...cartItems, { productId: itemId, quantity: 1 }]);
+      setCartItems([...cartItems, { productId: itemId, quantity: 1,price  }]);
     }
   };
 
