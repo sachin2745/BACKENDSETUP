@@ -54,7 +54,7 @@ const LoginHome = () => {
               document.cookie = `CToken=${data.token}`;
               formik.resetForm();
               setTimeout(() => {
-                router.push("/");
+                router.push("/mybag");
               }, 2000); // 2000 milliseconds = 2 seconds
             });
           } else {

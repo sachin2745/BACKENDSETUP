@@ -15,7 +15,7 @@ const bag = () => {
     isInCart,
     getCartTotal,
     getCartItemsCount,
-    removeoneitem,
+    removeOneItem,
     getSingleItemCartTotal,
   } = useProductContext();
 
@@ -116,12 +116,17 @@ const bag = () => {
 
       // Check if it's the last item
       if (products.length === 1) {
-        removeoneitem(selectedProductId);
+        removeOneItem(selectedProductId);
         toast.success("Item removed successfully!");
-        window.location.reload(); // Refresh the page
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } else {
-        removeoneitem(selectedProductId);
+        removeOneItem(selectedProductId);
         toast.success("Item removed successfully!");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     }
     document.getElementById("my_modal_2").close();
@@ -320,7 +325,8 @@ const bag = () => {
                                         onClick={() =>
                                           addItemToCart(
                                             item.productId,
-                                            item.productDiscountPrice
+                                            item.productDiscountPrice,
+                                            item.productOriginalPrice
                                           )
                                         }
                                       >

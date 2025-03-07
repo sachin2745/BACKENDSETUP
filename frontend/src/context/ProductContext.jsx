@@ -4,12 +4,16 @@ import useConsumerContext from "./ConsumerContext";
 
 const ProductContext = createContext();
 
+const ISSERVER = typeof window === "undefined";
+
+
 export const ProductProvider = ({ children }) => {
   const [cartOpen, setCartOpen] = useState(false);
   const { currentConsumer } = useConsumerContext();
 
   // Fetch cart items for the current consumer from localStorage
   const getCartItemsForConsumer = () => {
+    if (ISSERVER) return [];
     const allCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
     return allCartItems.filter(
       (cartItem) => cartItem.consumerId === currentConsumer?.consumerId
@@ -20,17 +24,18 @@ export const ProductProvider = ({ children }) => {
 
   // Update localStorage whenever cartItems changes
   useEffect(() => {
+    if (ISSERVER) return;
+
     if (cartItems.length > 0) {
       const allCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
       const updatedCartItems = [
         ...allCartItems.filter(
           (item) => item.consumerId !== currentConsumer?.consumerId
-        ), // Remove old items of the same consumer
-        ...cartItems, // Add updated cart items
+        ),
+        ...cartItems,
       ];
       localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     } else {
-      // Remove consumer's cart from localStorage if empty
       const allCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
       const filteredCartItems = allCartItems.filter(
         (item) => item.consumerId !== currentConsumer?.consumerId
@@ -38,8 +43,9 @@ export const ProductProvider = ({ children }) => {
       localStorage.setItem("cartItems", JSON.stringify(filteredCartItems));
     }
   }, [cartItems, currentConsumer]);
+  
 
-  const addItemToCart = (itemId, price) => {
+  const addItemToCart = (itemId, price, delPrice) => {
     if (!currentConsumer) return; // Prevent adding items if no consumer is logged in
 
     const exist = cartItems.find((cartItem) => cartItem.productId === itemId);
@@ -59,6 +65,7 @@ export const ProductProvider = ({ children }) => {
           productId: itemId,
           quantity: 1,
           price,
+          delPrice,
           consumerId: currentConsumer.consumerId, // Store consumer ID
         },
       ]);
@@ -90,7 +97,17 @@ export const ProductProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0);
+    return cartItems.reduce(
+      (acc, item) => acc + (item.price || 0) * item.quantity,
+      0
+    );
+  };
+
+  const getCartDelTotal = () => {
+    return cartItems.reduce(
+      (acc, item) => acc + (item.delPrice || 0) * item.quantity,
+      0
+    );
   };
 
   const getSingleItemCartTotal = (itemId, productDiscountPrice) => {
@@ -98,8 +115,12 @@ export const ProductProvider = ({ children }) => {
     return item ? item.quantity * (productDiscountPrice || 0) : 0;
   };
 
+  // const getCartItemsCount = () => {
+  //   return cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  // };
+
   const getCartItemsCount = () => {
-    return cartItems.reduce((acc, item) => acc + item.quantity, 0);
+    return cartItems.length;
   };
 
   const updateItemQuantity = (itemId, quantity) => {
@@ -124,6 +145,7 @@ export const ProductProvider = ({ children }) => {
         clearCart,
         isInCart,
         getCartTotal,
+        getCartDelTotal,
         getCartItemsCount,
         removeOneItem,
         getSingleItemCartTotal,
