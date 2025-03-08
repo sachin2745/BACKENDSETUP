@@ -514,7 +514,7 @@ const bag = () => {
                         <div className="space-x-2 flex ">
                           <div className="flex-1">
                             <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading2__2HLSZ font-bold Typography_root__TxCor">
-                              <span className="text-black">₹2,749</span>
+                              <span className="text-black">₹{getCartTotal()}</span>
                             </span>
                             <div>
                               <span className="text-sm underline text-blue font-semibold">
@@ -523,9 +523,9 @@ const bag = () => {
                             </div>
                           </div>
                           <div className="min-w-[160px]">
-                            <button className="w-full inline-flex items-center justify-center py-1.5 bgEmerald text-white font-bold">
+                            <Link href="/mybag/address" className="w-full inline-flex items-center justify-center py-1.5 bgEmerald text-white font-bold">
                               Next
-                            </button>
+                            </Link>
                           </div>
                         </div>
                       </div>

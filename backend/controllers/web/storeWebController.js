@@ -67,7 +67,7 @@ const getProductBySlug = async (req, res) => {
   }
 };
 
-const getCartProducts= async (req, res) => {
+const getCartProducts = async (req, res) => {
   try {
     const { productIds } = req.body; // Receive product IDs from frontend
 
@@ -86,9 +86,40 @@ const getCartProducts= async (req, res) => {
   }
 };
 
+const getState = async (req, res) => {
+  const { city } = req.params;
+  try {
+    const [rows] = await db.execute(
+      `SELECT state.state_name FROM city 
+      JOIN state ON city.city_state = state.state_id 
+      WHERE city.city_name = ?`,
+      [city]
+    );
+
+    if (rows.length > 0) {
+      res.json({ state: rows[0].state_name });
+    } else {
+      res.json({ state: "" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Database Error" });
+  }
+};
+
+const getCities = async (req, res) => {
+  try {
+    const [rows] = await db.execute(`SELECT city_name, city_state FROM city`);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: "Database Error" });
+  }
+};
+
 module.exports = {
   getStore,
   getProductBySlug,
   getProducts,
   getCartProducts,
+  getState,
+  getCities,
 };

@@ -31,7 +31,7 @@ const PaymentGateway = ({ email }) => {
             //Elements instance that was used to create the Payment Element
             elements,
             confirmParams: {
-                return_url: "http://localhost:3000/thankyou",
+                return_url: "http://localhost:3000/mybag/thank-you",
                 receipt_email: email,
 
             },
@@ -50,12 +50,12 @@ const PaymentGateway = ({ email }) => {
    
 
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg font-Jost" withBorder p={30} mt={30}>
+        <div className="max-w-md rounded overflow-hidden  font-RedditSans"  p={30} mt={30}>
 
             <form onSubmit={handleSubmit}>
-                <h1  className='font-Jost my-5'>Secure Payment Gateway</h1>
+                <h1  className='font-semibold my-5'>Secure Payment Gateway</h1>
                 <PaymentElement  />
-                <button disabled={!stripe} type="submit" className="btn bg-sky-500 w-full text-lg text-white mt-10">
+                <button disabled={!stripe} type="submit" className="btn bgEmerald w-full text-lg text-white mt-10">
                     Place Order
                 </button>
             </form>

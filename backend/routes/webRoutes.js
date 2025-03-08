@@ -10,6 +10,7 @@ const homeWebController = require("../controllers/web/homeWebController");
 const aboutWebController = require("../controllers/web/aboutWebController");
 const consumerWebController = require("../controllers/web/consumerWebController");
 const storeWebController = require("../controllers/web/storeWebController");
+const orderWebController = require("../controllers/web/orderWebController");
 
 
 //ROUTES FOR BLOG
@@ -62,4 +63,11 @@ router.get('/store/getall', storeWebController.getStore);
 router.get('/products/getall', storeWebController.getProducts);
 router.get('/post/getbyslug/:slug', storeWebController.getProductBySlug);
 router.post("/cart-products", verifyToken,storeWebController.getCartProducts);
+
+router.get('/getState/:city', storeWebController.getState);
+router.get('/getCities', storeWebController.getCities);
+router.post("/billing/add",verifyToken, orderWebController.addAddress);
+router.post("/order/add", orderWebController.addOrder);
+router.get("/order/getbyid/:id",verifyToken,  orderWebController.getByUser);
+
 module.exports = router;

@@ -10,9 +10,12 @@ import toast from "react-hot-toast";
 import Stripe from "stripe";
 import useConsumerContext from "@/context/ConsumerContext";
 import useProductContext from "@/context/ProductContext";
+import axios from "axios";
+import Select from "react-select";
 
-function Checkout() {
+function Address() {
   const { currentConsumer } = useConsumerContext();
+
   const [products, setProducts] = useState([]);
   const {
     cartItems,
@@ -27,6 +30,39 @@ function Checkout() {
       fetchCartProducts();
     }
   }, [cartItems, currentConsumer]);
+
+  const fetchCities = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/web/getCities`
+      );
+      const options = data.map((city) => ({
+        value: city.city_name,
+        label: city.city_name,
+        stateId: city.city_state,
+      }));
+      setCities(options);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
+  };
+
+  const fetchState = async (city) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/web/getState/${city}`
+      );
+      formik.setFieldValue("state", response.data.state);
+    } catch (error) {
+      console.error("Error fetching state:", error);
+    }
+  };
+
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    fetchCities();
+  }, []);
   const fetchCartProducts = async () => {
     try {
       const productIds = cartItems.map((item) => item.productId);
@@ -55,46 +91,76 @@ function Checkout() {
   };
 
   const checkoutvalidationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    phoneNumber: Yup.string().required("Phone number is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    address: Yup.string().required("Address is required"),
-    locality: Yup.string().required("Locality is required"),
+    name: Yup.string()
+      .required("Name is required")
+      .matches(/^[A-Za-z\s]+$/, "Name can only contain letters and spaces")
+      .min(3, "Name must be at least 3 characters")
+      .max(50, "Name must be less than 50 characters"),
+
+    phoneNumber: Yup.string()
+      .required("Phone number is required")
+      .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
+
+    address: Yup.string()
+      .required("Address is required")
+      .min(10, "Address must be at least 10 characters")
+      .max(100, "Address must be less than 100 characters"),
+
+    locality: Yup.string()
+      .required("Locality is required")
+      .min(3, "Locality must be at least 3 characters"),
+
     city: Yup.string().required("City is required"),
+
     state: Yup.string().required("State is required"),
-    pincode: Yup.string().required("Pincode is required"),
+
+    pincode: Yup.string()
+      .required("Pincode is required")
+      .matches(/^[0-9]{6}$/, "Pincode must be exactly 6 digits"),
   });
 
   const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       name: "",
       phoneNumber: "",
-      email: "",
       address: "",
       locality: "",
       city: "",
       state: "",
       pincode: "",
-      landmark: "",
-      alternativephone: "",
+      cartTotal: 0, // Add initial value for cartTotal
+      cartDelTotal: 0, // Add initial value for cartDelTotal
     },
 
     onSubmit: (values) => {
-      console.log(values);
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/billing/add`, {
+      // Calculate the values for the hidden fields
+      const cartTotal = getCartTotal() + platformfees; // Assuming platformFees is defined
+      const cartDelTotal = getCartDelTotal();
+
+      // Update the values object with the calculated values
+      const finalValues = {
+        ...values,
+        cartTotal,
+        cartDelTotal,
+      };
+      // console.log(values);
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/billing/add`, {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify(finalValues),
         headers: {
           "Content-Type": "application/json",
-          "x-auth-token": currentUser.token,
+          "x-auth-token": currentConsumer.token,
         },
       })
-        .then((response) => {
+        .then(async (response) => {
           console.log(response.status);
+          const data = await response.json();
+          console.log(data);
+          
           if (response.status === 200) {
+            localStorage.setItem("orderId", data.orderId);
             toast.success("Detail Submited ! Now You Can Place Order");
             formik.resetForm();
           } else {
@@ -130,7 +196,7 @@ function Checkout() {
           <div key={item.productId}>
             <ul className="py-6  space-y-6 px-8">
               <li className="grid grid-cols-6 gap-2 ">
-                <div className="col-span-1 self-center">
+                <div className="col-span-1 self-center bg-gray-200">
                   <img
                     src={
                       `${process.env.NEXT_PUBLIC_API_URL}` +
@@ -168,22 +234,19 @@ function Checkout() {
   };
   const platformfees = 10;
 
-  const [currentUser, setCurrentUser] = useState(
-    JSON.parse(sessionStorage.getItem("user"))
-  );
-  // console.log(currentUser);
   const addressRef = useRef();
   const pincodeRef = useRef();
   const contactRef = useRef();
-  const stateRef = useRef();
-  const cityRef = useRef();
+  const stateRef = useRef(null);
+  const cityRef = useRef(null);
   const localityRef = useRef();
-  const fnRef = useRef();
+  const nameRef = useRef();
 
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
   const getPaymentIntent = async () => {
     const shipping = {
-      name: fnRef.current.value ,
+      id: currentConsumer?.consumerId,
+      name: nameRef.current.value,
       address: {
         line1: addressRef.current.value,
         line2: localityRef.current.value,
@@ -203,24 +266,32 @@ function Checkout() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          amount: getCartTotal(),
-          customerData: shipping,
+          amount: getCartTotal() + platformfees,
+          customerData: {
+            ...shipping,
+            email: currentConsumer?.consumerEmail, 
+          },
         }),
       }
     );
     const data = await res.json();
-    console.log(data);
-    setClientSecret(data.clientSecret);
+    if (!res.ok) {
+      console.error("Error creating payment intent:", data);
+    } else {
+      console.log(data);
+      setClientSecret(data.clientSecret);
+    }
   };
 
   const appearance = {
     theme: "stripe",
     variables: {
       colorPrimary: "#153d66",
-      colorBackground: "black",
-      colorText: "white",
+      colorBackground: "white",
+      colorText: "black",
     },
   };
+
   return (
     <>
       <div className="h-full grid grid-cols-3 font-RedditSans">
@@ -238,13 +309,12 @@ function Checkout() {
 
                 <div className="  max-w-screen-md gap-4 ">
                   <div>
-                    
                     <div className="flex flex-col-reverse">
                       <input
                         placeholder="Name*"
                         className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
                         type="text"
-                        ref={fnRef}
+                        ref={nameRef}
                         name="name"
                         id="name"
                         value={formik.values.name}
@@ -255,256 +325,157 @@ function Checkout() {
                       </span>
                     </div>
                     {formik.touched.name && formik.errors.name ? (
-                      <div className="text-red-500 text-xs">
+                      <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
                         {formik.errors.name}
                       </div>
                     ) : null}
                   </div>
 
                   <div className="sm:col-span-2">
-                    {/* <label
-                      htmlFor="phoneNumber"
-                      className="mb-2 inline-block text-sm text-black sm:text-base"
-                    >
-                      Phone Number*
-                    </label>
-
-                    <input
-                      type="number"
-                      ref={contactRef}
-                      name="phoneNumber"
-                      id="phoneNumber"
-                      value={formik.values.phoneNumber}
-                      onChange={formik.handleChange}
-                      className="w-full rounded border bg-white text-black px-3 py-2  outline-none ring-indigo-300 transition duration-100 focus:ring"
-                    />
+                    <div className="flex flex-col-reverse">
+                      <input
+                        placeholder="Mobile Number*"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        type="number"
+                        ref={contactRef}
+                        name="phoneNumber"
+                        id="phoneNumber"
+                        value={formik.values.phoneNumber}
+                        onChange={formik.handleChange}
+                      />
+                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                        Mobile Number*
+                      </span>
+                    </div>
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-                      <div className="text-red-500 text-xs">
+                      <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
                         {formik.errors.phoneNumber}
-                      </div>
-                    ) : null} */}
-
-                    
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="email"
-                      className="mb-2 inline-block text-sm text-black sm:text-base"
-                    >
-                      Email*
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      value={formik.values.email}
-                      onChange={formik.handleChange}
-                      className="w-full rounded border bg-white text-black px-3 py-2  outline-none ring-indigo-300 transition duration-100 focus:ring"
-                    />
-                    {formik.touched.email && formik.errors.email ? (
-                      <div className="text-red-500 text-xs">
-                        {formik.errors.email}
                       </div>
                     ) : null}
                   </div>
+
                   <div className="sm:col-span-2">
-                    <label
-                      htmlFor="address"
-                      className="mb-2 inline-block text-sm text-black sm:text-base"
-                    >
-                      Address (Area and Street)*
-                    </label>
-                    <textarea
-                      type="text"
-                      ref={addressRef}
-                      rows={3}
-                      defaultValue={""}
-                      name="address"
-                      id="address"
-                      value={formik.values.address}
-                      onChange={formik.handleChange}
-                      className="w-full h-20 rounded border bg-white text-black px-3 py-2  outline-none ring-indigo-300 transition duration-100 focus:ring"
-                    />
+                    <div className="flex flex-col-reverse">
+                      <textarea
+                        placeholder="Address*"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-14 focus:rounded-md"
+                        type="text"
+                        ref={addressRef}
+                        name="address"
+                        id="address"
+                        value={formik.values.address}
+                        onChange={formik.handleChange}
+                      />
+                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                        Address (Area and Street)*
+                      </span>
+                    </div>
                     {formik.touched.address && formik.errors.address ? (
-                      <div className="text-red-500 text-xs">
+                      <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
                         {formik.errors.address}
                       </div>
                     ) : null}
                   </div>
                   <div className="sm:col-span-2">
-                    <label
-                      htmlFor="locality"
-                      className="mb-2 inline-block text-sm text-black sm:text-base"
-                    >
-                      Locality*
-                    </label>
-                    <input
-                      type="text"
-                      ref={localityRef}
-                      name="locality"
-                      id="locality"
-                      value={formik.values.locality}
-                      onChange={formik.handleChange}
-                      className="w-full rounded border bg-white text-blackpx-3 py-2  outline-none ring-indigo-300 transition duration-100 focus:ring"
-                    />
+                    <div className="flex flex-col-reverse">
+                      <input
+                        placeholder="Locality*"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        type="text"
+                        ref={localityRef}
+                        name="locality"
+                        id="locality"
+                        value={formik.values.locality}
+                        onChange={formik.handleChange}
+                      />
+                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                        Locality / Town*
+                      </span>
+                    </div>
                     {formik.touched.locality && formik.errors.locality ? (
-                      <div className="text-red-500 text-xs">
+                      <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
                         {formik.errors.locality}
                       </div>
                     ) : null}
                   </div>
                   <div className="sm:col-span-2">
-                    <label
-                      htmlFor="City/ District/ Town"
-                      className="mb-2 inline-block text-sm text-black sm:text-base"
-                    >
-                      City/ District/ Town*
-                    </label>
-
-                    <input
-                      type="text"
-                      ref={cityRef}
-                      name="city"
-                      id="city"
-                      value={formik.values.city}
-                      onChange={formik.handleChange}
-                      className="w-full rounded border bg-white text-black px-3 py-2  outline-none ring-indigo-300 transition duration-100 focus:ring"
-                    />
-
-                    {formik.touched.city && formik.errors.city ? (
-                      <div className="text-red-500 text-xs">
-                        {formik.errors.city}
-                      </div>
-                    ) : null}
+                    <div className="flex flex-col-reverse">
+                      <Select
+                        options={cities}
+                        className="peer outline-none border-2 rounded  duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        name="city"
+                        ref={cityRef}
+                        placeholder="Search City..."
+                        onChange={(option) => {
+                          formik.setFieldValue("city", option.value);
+                          fetchState(option.value);
+                        }}
+                      />
+                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                        City/ District*
+                      </span>
+                    </div>
                   </div>
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="state"
-                      className="mb-2 inline-block text-sm text-black sm:text-base"
-                    >
-                      State*
-                    </label>
 
-                    <select
-                      name="state"
-                      ref={stateRef}
-                      id="state"
-                      value={formik.values.state}
-                      onChange={formik.handleChange}
-                      className="w-full rounded border bg-white text-black px-3 py-2  outline-none ring-indigo-300 transition duration-100 focus:ring"
-                    >
-                      <option value="Select">Select State</option>
-                      <option value="AP">Andhra Pradesh</option>
-                      <option value="AP">Arunachal Pradesh</option>
-                      <option value="Assam">Assam</option>
-                      <option value="Bihar">Bihar</option>
-                      <option value="Chhattisgarh">Chhattisgarh</option>
-                      <option value="Goa">Goa</option>
-                      <option value="Gujarat">Gujarat</option>
-                      <option value="Haryana">Haryana</option>
-                      <option value="HP">Himachal Pradesh</option>
-                      <option value="Jharkhand">Jharkhand</option>
-                      <option value="Karnataka">Karnataka</option>
-                      <option value="Kerala">Kerala</option>
-                      <option value="MP"> Madhya Pradesh</option>
-                      <option value="Maharashtra">Maharashtra</option>
-                      <option value="Manipur">Manipur</option>
-                      <option value="Meghalaya">Meghalaya</option>
-                      <option value="Mizoram">Mizoram</option>
-                      <option value="Nagaland">Nagaland</option>
-                      <option value="Odisha">Odisha</option>
-                      <option value="Punjab">Punjab</option>
-                      <option value="Rajasthan">Rajasthan</option>
-                      <option value="Sikkim">Sikkim</option>
-                      <option value="TN">Tamil Nadu</option>
-                      <option value="Telangana">Telangana</option>
-                      <option value="Tripura">Tripura</option>
-                      <option value="UP"> Uttar Pradesh </option>
-                    </select>
+                  <div className="sm:col-span-2">
+                    <div className="flex flex-col-reverse">
+                      <input
+                        placeholder="State*"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        name="state"
+                        ref={stateRef}
+                        id="state"
+                        value={formik.values.state}
+                        readOnly
+                      />
+                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                        State*
+                      </span>
+                    </div>
                     {formik.touched.state && formik.errors.state ? (
-                      <div className="text-red-500 text-xs">
+                      <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
                         {formik.errors.state}
                       </div>
                     ) : null}
                   </div>
                   <div className="sm:col-span-2">
-                    <label
-                      htmlFor="pincode"
-                      className="mb-2 inline-block text-sm text-black sm:text-base"
-                    >
-                      Pincode*
-                    </label>
-                    <input
-                      type="number"
-                      ref={pincodeRef}
-                      name="pincode"
-                      id="pincode"
-                      value={formik.values.pincode}
-                      onChange={formik.handleChange}
-                      className="w-full rounded border bg-white text-black px-3 py-2  outline-none ring-indigo-300 transition duration-100 focus:ring"
-                    />
+                    <div className="flex flex-col-reverse">
+                      <input
+                        placeholder="Pincode*"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        type="number"
+                        ref={pincodeRef}
+                        name="pincode"
+                        id="pincode"
+                        value={formik.values.pincode}
+                        onChange={formik.handleChange}
+                      />
+                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                        Pincode*
+                      </span>
+                    </div>
                     {formik.touched.pincode && formik.errors.pincode ? (
-                      <div className="text-red-500 text-xs">
+                      <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
                         {formik.errors.pincode}
                       </div>
                     ) : null}
                   </div>
-
-                  <h2 className="uppercase tracking-wide text-lg font-semibold text-black my-2">
-                    Additional Information
-                  </h2>
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="landmark"
-                      className="mb-2 inline-block text-sm text-black sm:text-base"
-                    >
-                      Landmark(Optional)
-                    </label>
-                    <textarea
-                      type="text"
-                      rows={3}
-                      defaultValue={""}
-                      name="landmark"
-                      id="landmark"
-                      value={formik.values.landmark}
-                      onChange={formik.handleChange}
-                      className="h-24 w-full rounded border bg-white text-black px-3 py-2  outline-none ring-indigo-300 transition duration-100 focus:ring"
-                    />
-                    {formik.touched.landmark && formik.errors.landmark ? (
-                      <div className="text-red-500 text-xs">
-                        {formik.errors.landmark}
-                      </div>
-                    ) : null}
-                  </div>
-
-                  <div className="sm:col-span-2 mb-10">
-                    <label
-                      htmlFor="alternativephone"
-                      className="mb-2 inline-block text-sm text-black sm:text-base"
-                    >
-                      Alternative Phone(Optional)
-                    </label>
-                    <input
-                      type="number"
-                      name="alternativephone"
-                      id="alternativephone"
-                      value={formik.values.alternativephone}
-                      onChange={formik.handleChange}
-                      className=" w-full rounded border bg-white text-black px-3 py-2  outline-none ring-indigo-300 transition duration-100 focus:ring"
-                    />
-                    {formik.touched.alternativephone &&
-                    formik.errors.alternativephone ? (
-                      <div className="text-red-500 text-xs">
-                        {formik.errors.alternativephone}
-                      </div>
-                    ) : null}
-                  </div>
                 </div>
-                <div className="w-80">
+                <input
+                  type="hidden"
+                  name="cartTotal"
+                  value={getCartTotal() + platformfees} // Calculate and set the value
+                />
+                <input
+                  type="hidden"
+                  name="cartDelTotal"
+                  value={getCartDelTotal()} // Set the value
+                />
+                <div className="w-80 my-10">
                   <button
                     type="submit"
                     onClick={getPaymentIntent}
-                    className="btn bg-sky-500 w-full text-lg text-black"
+                    className="btn bg-emerald-500 w-full text-lg text-black"
                   >
                     Submit Detail
                   </button>
@@ -514,7 +485,7 @@ function Checkout() {
           </div>
         </div>
 
-        <div className="col-span-1 bg-white lg:block hidden border-solid border-2 border-black ">
+        <div className="w-full col-span-3 lg:col-span-1 bg-white  border-solid border-4 border-gray-100 rounded ">
           <h1 className="py-6 text-xl text-black font-bold px-8">
             Order Summary
           </h1>
@@ -548,7 +519,7 @@ function Checkout() {
             <span>₹{getCartTotal() + platformfees}</span>
           </div>
 
-          <div className="bg-white border-solid border-2 border-white shadow p-8 rounded-lg">
+          <div className="bg-white    p-8">
             <div className=" items-center mb-4">
               <h2 className="text-md text-black">
                 {" "}
@@ -571,7 +542,7 @@ function Checkout() {
                     appearance,
                   }}
                 >
-                  <PaymentGateway email={currentUser.email} />
+                  <PaymentGateway email={currentConsumer.consumerEmail} />
                 </Elements>
               )}
             </div>
@@ -582,4 +553,4 @@ function Checkout() {
   );
 }
 
-export default Checkout;
+export default Address;
