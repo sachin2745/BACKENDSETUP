@@ -114,13 +114,46 @@ const OrderHistory = () => {
       if (response.data.success) {
         toast.success("Delivery time set successfully!");
         document.getElementById("my_modal_3").close();
-        fetchData(); 
+        fetchData();
       } else {
         toast.error("Error setting delivery time");
       }
     } catch (error) {
       console.error("Error updating delivery time:", error);
       toast.error("Failed to update delivery time");
+    }
+  };
+
+  const [selectedStatus, setSelectedStatus] = useState(1);
+
+  const statuses = [
+    { id: 1, label: "New", color: "bg-blue-500" },
+    { id: 2, label: "Confirm", color: "bg-green-500" },
+    { id: 3, label: "On the Way", color: "bg-yellow-500" },
+    { id: 4, label: "Completed", color: "bg-gray-500" },
+  ];
+
+  const openModalTwo = (orderId) => {
+    setSelectedOrderId(orderId);
+    document.getElementById("order_status_modal").showModal();
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/update-order-status`,
+        {
+          orderId: selectedOrderId,
+          orderHistoryStatus: selectedStatus,
+        }
+      );
+
+      // console.log(response.data);
+      toast.success("Order status updated successfully!");
+      document.getElementById("order_status_modal").close();
+      fetchData();
+    } catch (error) {
+      console.error("Error updating order status:", error);
     }
   };
 
@@ -267,7 +300,10 @@ const OrderHistory = () => {
                             className="dropdown-content menu bg-base-100 rounded-md text-xs font-semibold  z-[1] min-w-40 p-1 shadow"
                           >
                             <li className=" rounded">
-                              <button className="hover:bg-emerald-200 ">
+                              <button
+                                onClick={() => openModalTwo(item.orderId)}
+                                className="hover:bg-emerald-200 "
+                              >
                                 Update Order Status
                               </button>
                             </li>
@@ -291,6 +327,7 @@ const OrderHistory = () => {
         </div>
       </div>
 
+      {/* FOR VIEW INVOICE */}
       {isOpen && invoiceData && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-RedditSans cursor-pointer">
           <div className="relative bg-white p-6 rounded-lg max-w-xl shadow-lg text-quaternary">
@@ -470,7 +507,7 @@ const OrderHistory = () => {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal FOR SET DELIVERY DATE */}
       <dialog id="my_modal_3" className="modal">
         <div className="modal-box rounded font-RedditSans">
           <form method="dialog">
@@ -485,9 +522,47 @@ const OrderHistory = () => {
             min={new Date().toISOString().split("T")[0]} // Prevent past dates
             onChange={(e) => setSelectedDate(e.target.value)}
           />
-          <button className="bgEmerald py-1.5 rounded font-bold uppercase text-white mt-4 w-full" onClick={handleSave}>
+          <button
+            className="bgEmerald py-1.5 rounded font-bold uppercase text-white mt-4 w-full"
+            onClick={handleSave}
+          >
             Save
           </button>
+        </div>
+      </dialog>
+
+      {/* MODAL FOR UPDATE ORDER STATUS */}
+      <dialog id="order_status_modal" className="modal">
+        <div className="modal-box font-RedditSans rounded">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <h3 className="font-bold text-lg">Update Order Status</h3>
+          <div className="flex justify-center gap-4 my-4">
+            {statuses.map((status) => (
+              <button
+                key={status.id}
+                onClick={() => setSelectedStatus(status.id)}
+                className={`w-32 h-10 flex items-center font-semibold justify-center rounded text-white ${
+                  selectedStatus === status.id
+                    ? `${status.color} ring-2 ring-offset-2 ring-offset-white`
+                    : "bg-gray-400 "
+                }`}
+              >
+                {status.label}
+              </button>
+            ))}
+          </div>
+          <div className="text-center mt-6">
+            <button
+              onClick={handleSubmit}
+              className="bgEmerald text-white font-bold uppercase px-4 py-1.5 rounded "
+            >
+              Submit
+            </button>
+          </div>
         </div>
       </dialog>
     </>
