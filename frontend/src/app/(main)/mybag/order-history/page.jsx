@@ -245,11 +245,15 @@ const OrderHistory = () => {
                         : "inherit",
                   }}
                 >
-                  {invoiceData[0].orderDeliveryTime === 0
+                   {invoiceData[0].orderDeliveryTime === 0
                     ? "Waiting for confirmation"
                     : new Date(
                         invoiceData[0].orderDeliveryTime * 1000
-                      ).toLocaleDateString()}
+                      ).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
                 </span>
               </p>
             </div>
