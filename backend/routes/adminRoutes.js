@@ -236,6 +236,7 @@ router.post(
 
 router.get("/order-history/getall", orderHistoryController.getOrderHistory);
 router.post("/invoice/getById", orderHistoryController.getInvoice);
+router.post("/setDeliveryTime", orderHistoryController.setDeliveryDate);
 
 
 module.exports = router;

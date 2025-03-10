@@ -27,7 +27,7 @@ const getInvoice = async (req, res) => {
   try {
     const { orderId } = req.body;
 
-    if (!orderId ) {
+    if (!orderId) {
       return res
         .status(400)
         .json({ status: "error", message: "Missing required fields" });
@@ -54,7 +54,34 @@ const getInvoice = async (req, res) => {
   }
 };
 
+const setDeliveryDate = async (req, res) => {
+  const { orderId, orderDeliveryTime } = req.body;
+
+  if (!orderId || !orderDeliveryTime) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {   
+
+    const [result] = await db.execute(
+      "UPDATE orderhistory SET orderDeliveryTime = ? WHERE opOrderId  = ?",
+      [orderDeliveryTime, orderId]
+    );
+
+
+    if (result.affectedRows > 0) {
+      return res.status(200).json({ success: true });
+    } else {
+      return res.status(400).json({ error: "Order not found or not updated" });
+    }
+  } catch (error) {
+    console.error("Database error:", error);
+    return res.status(500).json({ error: "Database connection error" });
+  }
+};
+
 module.exports = {
   getOrderHistory,
   getInvoice,
+  setDeliveryDate,
 };

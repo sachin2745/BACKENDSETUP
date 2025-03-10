@@ -65,7 +65,7 @@ const OrderHistory = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            orderId
+            orderId,
           }),
         }
       );
@@ -83,6 +83,44 @@ const OrderHistory = () => {
     } catch (error) {
       console.error("Error fetching invoice:", error);
       alert("Failed to load invoice. Try again.");
+    }
+  };
+
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+
+  const openModal = (orderId) => {
+    setSelectedOrderId(orderId); // Store the order ID
+    document.getElementById("my_modal_3").showModal(); // Open modal
+  };
+  const handleSave = async (orderId) => {
+    if (!selectedDate) {
+      toast.error("Please select a date");
+      return;
+    }
+
+    // Convert date to Unix timestamp
+    const unixTimestamp = Math.floor(new Date(selectedDate).getTime() / 1000);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/setDeliveryTime`,
+        {
+          orderId: selectedOrderId,
+          orderDeliveryTime: unixTimestamp,
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Delivery time set successfully!");
+        document.getElementById("my_modal_3").close();
+        fetchData(); 
+      } else {
+        toast.error("Error setting delivery time");
+      }
+    } catch (error) {
+      console.error("Error updating delivery time:", error);
+      toast.error("Failed to update delivery time");
     }
   };
 
@@ -169,9 +207,6 @@ const OrderHistory = () => {
                                 day: "2-digit",
                                 month: "short",
                                 year: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: true,
                               })
                               .replace(",", "")
                           : "N/A"}
@@ -205,7 +240,7 @@ const OrderHistory = () => {
                       </td>
 
                       <td>
-                        <div className="dropdown dropdown-hover font-RedditSans">
+                        <div className="dropdown dropdown-hover dropdown-end font-RedditSans">
                           <div
                             tabIndex={0}
                             role="button"
@@ -229,11 +264,19 @@ const OrderHistory = () => {
                           </div>
                           <ul
                             tabIndex={0}
-                            className="dropdown-content menu bg-base-100 rounded-md  z-[1] min-w-24 p-2 shadow"
+                            className="dropdown-content menu bg-base-100 rounded-md text-xs font-semibold  z-[1] min-w-40 p-1 shadow"
                           >
                             <li className=" rounded">
                               <button className="hover:bg-emerald-200 ">
-                                Edit
+                                Update Order Status
+                              </button>
+                            </li>
+                            <li className=" rounded">
+                              <button
+                                onClick={() => openModal(item.orderId)}
+                                className="hover:bg-emerald-200"
+                              >
+                                Set Delivery Time
                               </button>
                             </li>
                           </ul>
@@ -288,7 +331,8 @@ const OrderHistory = () => {
                 <strong>Name:</strong> {invoiceData[0].orderName}
               </p>
               <p>
-                <strong>Address:</strong> {invoiceData[0].orderBillingAddress}, {invoiceData[0].odPincode}
+                <strong>Address:</strong> {invoiceData[0].orderBillingAddress},{" "}
+                {invoiceData[0].odPincode}
               </p>
             </div>
             <div className="flex justify-between text-xs mb-2 leading-relaxed">
@@ -346,7 +390,11 @@ const OrderHistory = () => {
                     ? "Waiting for confirmation"
                     : new Date(
                         invoiceData[0].orderDeliveryTime * 1000
-                      ).toLocaleDateString()}
+                      ).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
                 </span>
               </p>
             </div>
@@ -421,6 +469,27 @@ const OrderHistory = () => {
           </div>
         </div>
       )}
+
+      {/* Modal */}
+      <dialog id="my_modal_3" className="modal">
+        <div className="modal-box rounded font-RedditSans">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <h3 className="font-bold text-lg">Set Delivery Time</h3>
+          <input
+            type="date"
+            className="border p-2 w-full mt-2 rounded"
+            min={new Date().toISOString().split("T")[0]} // Prevent past dates
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
+          <button className="bgEmerald py-1.5 rounded font-bold uppercase text-white mt-4 w-full" onClick={handleSave}>
+            Save
+          </button>
+        </div>
+      </dialog>
     </>
   );
 };
