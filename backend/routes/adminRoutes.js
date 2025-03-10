@@ -12,6 +12,7 @@ const aboutController = require("../controllers/aboutController");
 const settingController = require("../controllers/settingController");
 const faqController = require("../controllers/faqController");
 const storeController = require("../controllers/storeController");
+const orderHistoryController = require("../controllers/orderHistoryController");
 
 // Dynamic folder storage setup
 const storage = multer.diskStorage({
@@ -232,5 +233,9 @@ router.post(
   ]),
   storeController.updateProduct
 );
+
+router.get("/order-history/getall", orderHistoryController.getOrderHistory);
+router.post("/invoice/getById", orderHistoryController.getInvoice);
+
 
 module.exports = router;

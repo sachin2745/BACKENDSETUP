@@ -20,16 +20,18 @@ const Sidebar = ({ isCollapsed }) => {
   // Sample data for demonstration
   const options = [
     { name: "Dashboard", path: "/admin/dashboard" },
-    { name: "Blog", path: "/admin/blog" },
-    { name: "User", path: "/admin/user" },
-    { name: "Blog Category", path: "/admin/blog-category" },
     { name: "Mission & Vision", path: "/admin/about/mission-vision" },
     { name: "Founder", path: "/admin/about/founder" },
+    { name: "Banner", path: "/admin/about/banner" },
     { name: "General Setting", path: "/admin/appearance/general" },
     { name: "Page Content", path: "/admin/appearance/page-content" },
-    { name: "Banner", path: "/admin/about/banner" },
+    { name: "Website Faq", path: "/admin/faq/website-faq" },
+    { name: "Blog", path: "/admin/blog" },
+    { name: "Blog Category", path: "/admin/blog-category" },
+    { name: "User", path: "/admin/user" },
     { name: "Enquiry", path: "/admin/enquiry" },
     { name: "Store Product", path: "/admin/store" },
+    { name: "Order History", path: "/admin/order-history" },
     // Add more options as needed
   ];
 
@@ -147,7 +149,7 @@ const Sidebar = ({ isCollapsed }) => {
                   <Link
                     className={` ${
                       pathname === "/admin/dashboard"
-                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                         : ""
                     } flex items-center gap-x-3 py-2 px-2.5  text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/dashboard"
@@ -223,7 +225,7 @@ const Sidebar = ({ isCollapsed }) => {
                         <Link
                           className={` ${
                             pathname === "/admin/about/mission-vision"
-                              ? "bg-emerald-200 border-b-2 border-emerald-500"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                               : ""
                           } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
                           href="/admin/about/mission-vision"
@@ -235,7 +237,7 @@ const Sidebar = ({ isCollapsed }) => {
                         <Link
                           className={` ${
                             pathname === "/admin/about/founder"
-                              ? "bg-emerald-200 border-b-2 border-emerald-500"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                               : ""
                           } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
                           href="/admin/about/founder"
@@ -247,7 +249,7 @@ const Sidebar = ({ isCollapsed }) => {
                         <Link
                           className={` ${
                             pathname === "/admin/about/banner"
-                              ? "bg-emerald-200 border-b-2 border-emerald-500"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                               : ""
                           } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
                           href="/admin/about/banner"
@@ -329,7 +331,7 @@ const Sidebar = ({ isCollapsed }) => {
                         <Link
                           className={` ${
                             pathname === "/admin/appearance/general"
-                              ? "bg-emerald-200 border-b-2 border-emerald-500"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                               : ""
                           } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
                           href="/admin/appearance/general"
@@ -341,7 +343,7 @@ const Sidebar = ({ isCollapsed }) => {
                         <Link
                           className={` ${
                             pathname === "/admin/appearance/page-content"
-                              ? "bg-emerald-200 border-b-2 border-emerald-500"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                               : ""
                           } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
                           href="/admin/appearance/page-content"
@@ -415,7 +417,7 @@ const Sidebar = ({ isCollapsed }) => {
                         <Link
                           className={` ${
                             pathname === "/admin/faq/website-faq"
-                              ? "bg-emerald-200 border-b-2 border-emerald-500"
+                              ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                               : ""
                           } flex items-center gap-x-3 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-emerald-100 focus:outline-none focus:bg-emerald-100`}
                           href="/admin/faq/website-faq"
@@ -431,7 +433,7 @@ const Sidebar = ({ isCollapsed }) => {
                   <Link
                     className={` ${
                       pathname === "/admin/blog"
-                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                         : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/blog"
@@ -464,7 +466,7 @@ const Sidebar = ({ isCollapsed }) => {
                   <Link
                     className={`${
                       pathname === "/admin/blog-category"
-                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                         : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/blog-category"
@@ -478,7 +480,7 @@ const Sidebar = ({ isCollapsed }) => {
                   <Link
                     className={`${
                       pathname === "/admin/user"
-                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                         : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/user"
@@ -491,12 +493,12 @@ const Sidebar = ({ isCollapsed }) => {
                   <Link
                     className={`${
                       pathname === "/admin/enquiry"
-                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                         : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/enquiry"
                   >
-                    <HiOutlineChatBubbleLeftRight   className="size-4" />
+                    <HiOutlineChatBubbleLeftRight className="size-4" />
                     Enquiry
                   </Link>
                 </li>
@@ -504,13 +506,65 @@ const Sidebar = ({ isCollapsed }) => {
                   <Link
                     className={`${
                       pathname === "/admin/store"
-                        ? "bg-emerald-200 border-b-2 border-emerald-500"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
                         : ""
                     } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
                     href="/admin/store"
                   >
-                    <IoStorefrontOutline   className="size-4" />
+                    <IoStorefrontOutline className="size-4" />
                     Store Product
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className={`${
+                      pathname === "/admin/order-history"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
+                        : ""
+                    } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                    href="/admin/order-history"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="nav-icon size-4 font-bold"
+                      viewBox="0 0 49.65 49.65"
+                      id="order-by"
+                    >
+                      <rect
+                        width="47.65"
+                        height="47.65"
+                        x="1"
+                        y="1"
+                        fill="none"
+                        stroke="#231f20"
+                        strokeMiterlimit="10"
+                        strokeWidth="2"
+                        rx="6.72"
+                      ></rect>
+                      <path
+                        fill="none"
+                        stroke="#231f20"
+                        strokeMiterlimit="10"
+                        strokeWidth="2"
+                        d="M8.82 35.47V12.93a4.11 4.11 0 0 1 4.1-4.11h23.8a4.11 4.11 0 0 1 4.11 4.11v23.79a4.11 4.11 0 0 1-4.11 4.11H14.81"
+                      ></path>
+                      <path
+                        fill="none"
+                        stroke="#231f20"
+                        strokeMiterlimit="10"
+                        strokeWidth="2"
+                        d="M15.34 36.92v3.39a.52.52 0 0 1-.86.39l-5.5-4.91a.52.52 0 0 1 .35-.91h4a2 2 0 0 1 2.01 2.04Z"
+                      ></path>
+                      <path
+                        fill="none"
+                        stroke="#231f20"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M14.12 16.29h10.7M14.12 21.59h10.7M14.12 26.9h10.7M33.79 28.05V16.66a.38.38 0 0 0-.37-.37h-2.69a.38.38 0 0 0-.38.37v11.39a.37.37 0 0 1-.37.37h-1.12l2.93 3.41a.37.37 0 0 0 .56 0l2.93-3.41h-1.12a.38.38 0 0 1-.37-.37Z"
+                      ></path>
+                    </svg>
+                    Order History
                   </Link>
                 </li>
               </ul>
