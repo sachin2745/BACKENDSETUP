@@ -152,7 +152,7 @@ const OrderHistory = () => {
 
       {/* Modal */}
       {isOpen && invoiceData && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-RedditSans">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-RedditSans cursor-pointer">
           <div className="relative bg-white p-6 rounded-lg max-w-xl shadow-lg text-quaternary">
             <button
               className="absolute  top-6 right-6 text-gray-900 transform hover:scale-110 transition duration-300 ease-in-out"
@@ -206,26 +206,51 @@ const OrderHistory = () => {
             <div className="flex justify-between text-xs mb-2 leading-relaxed">
               <p>
                 <strong>Status:</strong>{" "}
-                {(() => {
-                  const statusMap = {
-                    1: "New Order",
-                    2: "Confirm",
-                    3: "On the Way",
-                    4: "Completed",
-                  };
-                  return (
-                    statusMap[invoiceData[0].orderHistoryStatus] || "Unknown"
-                  );
-                })()}
+                <span
+                  className="font-semibold"
+                  style={{
+                    color:
+                      invoiceData[0].orderHistoryStatus === 1
+                        ? "blue"
+                        : invoiceData[0].orderHistoryStatus === 2
+                        ? "orange"
+                        : invoiceData[0].orderHistoryStatus === 3
+                        ? "purple"
+                        : invoiceData[0].orderHistoryStatus === 4
+                        ? "green"
+                        : "red",
+                  }}
+                >
+                  {(() => {
+                    const statusMap = {
+                      1: "New Order",
+                      2: "Confirm",
+                      3: "On the Way",
+                      4: "Completed",
+                    };
+                    return (
+                      statusMap[invoiceData[0].orderHistoryStatus] || "Unknown"
+                    );
+                  })()}
+                </span>
               </p>
 
               <p>
                 <strong>Delivered by:</strong>{" "}
-                {invoiceData[0].orderDeliveryTime === 0
-                  ? "Waiting for confirmation"
-                  : new Date(
-                      invoiceData[0].orderDeliveryTime * 1000
-                    ).toLocaleDateString()}
+                <span
+                  style={{
+                    color:
+                      invoiceData[0].orderDeliveryTime !== 0
+                        ? "green"
+                        : "inherit",
+                  }}
+                >
+                  {invoiceData[0].orderDeliveryTime === 0
+                    ? "Waiting for confirmation"
+                    : new Date(
+                        invoiceData[0].orderDeliveryTime * 1000
+                      ).toLocaleDateString()}
+                </span>
               </p>
             </div>
 
