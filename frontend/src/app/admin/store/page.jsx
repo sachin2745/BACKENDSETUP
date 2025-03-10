@@ -2645,9 +2645,10 @@ const Store = () => {
             </h1>
 
             <form
-              onSubmit={formikAdd.handleSubmit}
+              onSubmit={formik.handleSubmit}
               className="flex flex-wrap gap-4 sm:gap-6 text-sm"
               autoComplete="off"
+              encType="multipart/form-data"
             >
               <div className="sm:flex w-full items-center">
                 <label

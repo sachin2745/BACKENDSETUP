@@ -1736,7 +1736,7 @@ const Blog = () => {
                                 item.commentStatus
                               )
                             }
-                            className="flex justify-center items-center w-8 h-8 rounded-lg transition-all duration-300 
+                            className="flex justify-center items-center w-8 h-8 rounded transition-all duration-300 
                                   bg-transparent  border-2 border-gray-300 "
                           >
                             {item.commentStatus === "2" ? (
@@ -1751,18 +1751,18 @@ const Blog = () => {
                       </td>
 
                       <td>
-                        <div className="m-1 hs-dropdown [--trigger:hover] relative inline-flex cursor-pointer">
+                        <div className="m-1 relative inline-flex cursor-pointer group">
                           <button
                             id="hs-dropdown-hover-event"
                             type="button"
-                            className="hs-dropdown-toggle py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                            className="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded border-2 border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
                             aria-haspopup="menu"
                             aria-expanded="false"
                             aria-label="Dropdown"
                           >
                             Actions
                             <svg
-                              className="hs-dropdown-open:rotate-180 size-4"
+                              className="size-4 transition-transform duration-200 group-hover:rotate-180"
                               xmlns="http://www.w3.org/2000/svg"
                               width="24"
                               height="24"
@@ -1777,15 +1777,16 @@ const Blog = () => {
                             </svg>
                           </button>
 
+                          {/* Dropdown Menu */}
                           <div
-                            className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 z-50 hidden min-w-24 bg-white shadow-md rounded-lg mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+                            className="absolute left-0 mt-9 min-w-24 bg-white shadow-md rounded transition-opacity duration-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible"
                             role="menu"
                             aria-orientation="vertical"
                             aria-labelledby="hs-dropdown-hover-event"
                           >
                             <div className="p-1 space-y-0.5">
                               <div
-                                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
+                                className="flex items-center gap-x-3.5 py-2 px-3 rounded text-sm text-gray-800 hover:bg-red-100 focus:outline-none focus:bg-red-100"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   handleCommentDelete(item.blogCommentId);
