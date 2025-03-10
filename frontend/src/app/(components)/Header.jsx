@@ -172,7 +172,7 @@ const Header = () => {
 
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white shadow-md text-sm py-3 font-RedditSans">
-      <nav className="max-w-[90rem] w-full mx-auto px-4 flex flex-wrap basis-full items-center justify-between">
+      <nav className="max-w-[90rem] w-full mx-auto px-4 flex flex-nowwrap basis-full items-center justify-between">
         <div className="flex flex-wrap items-center">
           <button
             type="button"
@@ -232,9 +232,9 @@ const Header = () => {
         <div className="sm:order-3 flex items-center gap-x-2">
           <a
             href="/mybag/order-history"
-            className="bg-white py-1 px-4 rounded-full flex items-center gap-3 group"
+            className="bg-white  py-1 sm:px-4 rounded-full flex items-center gap-3 group"
           >
-            <div className="relative scale-110">
+            <div className="relative scale-110 hidden sm:block">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -277,12 +277,12 @@ const Header = () => {
                 </g>
               </svg>
 
-              <span className="text-xs font-bold">My Orders</span>
+              <span className="text-[11px] sm:text-xs font-bold">My Orders</span>
             </div>
           </a>
           <a
             href="/mybag"
-            className="bg-white py-1 px-4 rounded-full flex items-center gap-3 group"
+            className="bg-white py-1 px-1 sm:px-4 rounded-full flex items-center gap-3 group"
           >
             <div className="relative scale-110">
               <svg
@@ -315,14 +315,14 @@ const Header = () => {
                   {getCartItemsCount()}
                 </span>
               )}
-              <span className="text-xs font-bold">My Bag</span>
+              <span className="text-[11px] sm:text-xs font-bold">My Bag</span>
             </div>
           </a>
 
           {displayLoginOptions()}
         </div>
 
-        <div className=" hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
+        <div className=" ml-56 hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
           <div className="flex flex-col gap-10 text-[16px] mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
             <Link
               className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
@@ -444,6 +444,12 @@ const Header = () => {
             className="block border-b-2 border-gray-200 p-4 hover:bg-emerald-100 transition ease-in-out delay-150"
           >
             Store
+          </a>
+          <a
+            href="/mybag/order-history"
+            className="block border-b-2 border-gray-200 p-4 hover:bg-emerald-100 transition ease-in-out delay-150"
+          >
+            My Orders
           </a>
         </div>
       </div>
