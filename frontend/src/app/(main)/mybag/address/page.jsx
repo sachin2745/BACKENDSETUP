@@ -155,13 +155,16 @@ function Address() {
         },
       })
         .then(async (response) => {
-          console.log(response.status);
+          // console.log(response.status);
           const data = await response.json();
-          console.log(data);
+          // console.log(data);
           
           if (response.status === 200) {
             localStorage.setItem("orderId", data.orderId);
             toast.success("Detail Submited ! Now You Can Place Order");
+
+            await getPaymentIntent();
+
             formik.resetForm();
           } else {
             toast.error("Some Error Occured");
@@ -295,13 +298,13 @@ function Address() {
   return (
     <>
       <div className="h-full grid grid-cols-3 font-RedditSans">
-        <div className="lg:col-span-2 col-span-3 bg-white text-black  px-12 p-10">
-          <h1 className=" mb-2  p-2 text-2xl font-bold text-black ">
+        <div className="lg:col-span-2 col-span-3 bg-white text-black  px-12 p-5">
+          <h1 className=" mb-2   text-2xl font-bold text-black ">
             Add Delivery Address
           </h1>
 
-          <div className="rounded-md mt-9 font-Quicksand">
-            <form onSubmit={formik.handleSubmit}>
+          <div className="rounded-md mt-4 font-Quicksand">
+            <form onSubmit={formik.handleSubmit} autoComplete="off">
               <section>
                 <h2 className="uppercase tracking-wide text-lg font-semibold text-black my-2">
                   Shipping &amp; Billing Information
@@ -320,7 +323,7 @@ function Address() {
                         value={formik.values.name}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                      <span className="pl-2 font-semibold  duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
                         Name*
                       </span>
                     </div>
@@ -343,7 +346,7 @@ function Address() {
                         value={formik.values.phoneNumber}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
                         Mobile Number*
                       </span>
                     </div>
@@ -366,7 +369,7 @@ function Address() {
                         value={formik.values.address}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
                         Address (Area and Street)*
                       </span>
                     </div>
@@ -388,7 +391,7 @@ function Address() {
                         value={formik.values.locality}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
                         Locality / Town*
                       </span>
                     </div>
@@ -411,7 +414,7 @@ function Address() {
                           fetchState(option.value);
                         }}
                       />
-                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
                         City/ District*
                       </span>
                     </div>
@@ -428,7 +431,7 @@ function Address() {
                         value={formik.values.state}
                         readOnly
                       />
-                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
                         State*
                       </span>
                     </div>
@@ -450,7 +453,7 @@ function Address() {
                         value={formik.values.pincode}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 mt-1.5 duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
+                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
                         Pincode*
                       </span>
                     </div>
@@ -474,8 +477,8 @@ function Address() {
                 <div className="w-80 my-10">
                   <button
                     type="submit"
-                    onClick={getPaymentIntent}
-                    className="btn bg-emerald-500 w-full text-lg text-black"
+                    // onClick={getPaymentIntent}
+                    className="btn bgEmerald w-full text-lg text-white"
                   >
                     Submit Detail
                   </button>

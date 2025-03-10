@@ -129,8 +129,44 @@ const getByUser = async (req, res) => {
   }
 };
 
+const getInvoice = async (req, res) => {
+  try {
+    const { orderId, consumerId } = req.body;
+
+    if (!orderId || !consumerId ) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "Missing required fields" });
+    }
+
+
+    const [rows] = await db.execute(
+      `SELECT * FROM orderdetails
+          LEFT JOIN orderhistory ON orderdetails.orderId = orderhistory.opOrderId
+          LEFT JOIN storeproducts ON orderhistory.opProductId = storeproducts.productId 
+          WHERE orderdetails.orderId = ?
+          AND orderdetails.orderConsumerId = ?`,
+      [orderId, consumerId]
+    );
+
+    
+
+    if (rows.length === 0) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "Invoice not found" });
+    }
+
+    res.json({ status: "success", data: rows });
+  } catch (error) {
+    console.error("Error fetching invoice:", error);
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+};
+
 module.exports = {
   addAddress,
   addOrder,
   getByUser,
+  getInvoice,
 };

@@ -249,19 +249,19 @@ const bag = () => {
                         </svg>
                       </div>
                       <div className="mt-3 ">
-                        <span className="Text_textNormal__eX6Yw font-semibold">
+                        <span className=" font-bold text-black">
                           Your bag is empty
                         </span>
                       </div>
                       <div className="mt-1 mb-10">
-                        <span className="Text_textNormal__eX6Yw font-medium">
+                        <span className="Text_textNormal__eX6Yw font-medium text-gray-500">
                           Let's fill some fantastic products
                         </span>
                       </div>
                       <div className="mb-10">
                         <Link
                           href="/store"
-                          className="bgEmerald text-white rounded px-6 py-3 font-medium"
+                          className="bgEmerald text-white rounded px-6 py-3 font-bold uppercase leading-4"
                         >
                           Continue shopping
                         </Link>

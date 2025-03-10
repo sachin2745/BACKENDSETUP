@@ -89,9 +89,9 @@ const thankYou = () => {
         },
       }
     );
-    console.log(response.status);
+    // console.log(response.status);
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     return data;
   };
 
@@ -109,47 +109,49 @@ const thankYou = () => {
 
   return (
     <>
-      <section className="py-40 relative bg-mate_black h-screen ">
+      <section className="py-40 relative bg-white h-screen font-RedditSans">
         <div className="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto ">
           <div>
             {params.get("redirect_status") === "succeeded" ? (
               <>
-                <div className="flex justify-center  font-manrope font-bold text-6xl leading-10 font-Quicksand text-secondary items-center content-center">
-                  <GiConfirmed className="text-green-500 mb-5 " />
+                <div className="flex justify-center items-center">
+                  <GiConfirmed className="text-emerald-500 text-7xl mb-4" />
                 </div>
-                <h2 className="font-manrope font-bold text-4xl leading-10 font-Quicksand text-secondary text-center">
+                <h2 className=" font-bold text-5xl textEmerald text-center">
                   Payment Successful
                 </h2>
-                <p className="mt-4 font-normal text-lg leading-8 text-secondary font-Quicksand mb-1 text-center">
+                <p className="mt-4  text-xl font-semibold text-black text-center">
                   Your order has been placed successfully.
                 </p>
-                <p className=" font-normal text-lg leading-8 text-secondary font-Quicksand mb-11 text-center">
-                  We've sent a confirmation email to your email address.
+                <p className="mt-1  text-md font-medium text-gray-500 text-center">
+                  A confirmation email has been sent to your registered email.
                 </p>
-                <Link
-                  href="/order-history"
-                  className="flex justify-center font-manrope font-bold text-2xl leading-10 font-Quicksand text-secondary items-center content-center"
-                >
-                  Check Order History
-                </Link>
+                <div className="flex justify-center mt-8">
+                  <Link
+                    href="/mybag/order-history"
+                    className="bg-white font-bold textEmerald border-2 border-b-4 border-emerald-500   text-lg px-6 py-2 rounded uppercase "
+                  >
+                    View Order History
+                  </Link>
+                </div>
               </>
             ) : (
               <>
-                <div className="flex justify-center  font-manrope font-bold text-6xl leading-10 font-Quicksand text-secondary items-center content-center">
+                <div className="flex justify-center   font-bold text-6xl leading-10 text-secondary items-center content-center">
                   <MdOutlineSmsFailed className="text-red-500 mb-5 " />
                 </div>
-                <h2 className="font-manrope font-bold text-4xl leading-10 font-Quicksand text-secondary text-center">
+                <h2 className=" font-bold text-4xl leading-10 text-secondary text-center">
                   Payment Failed
                 </h2>
-                <p className="mt-4 font-normal text-lg leading-8 text-secondary font-Quicksand mb-1 text-center">
+                <p className="mt-4 font-semibold text-lg leading-8 text-black mb-1 text-center">
                   Your payment was not successful. Please try again.
                 </p>
-                <p className=" font-normal text-lg leading-8 text-secondary font-Quicksand mb-11 text-center">
+                <p className=" font-medium text-lg leading-8 text-gray-500 mb-11 text-center">
                   If the problem persists, please contact us.
                 </p>
                 <Link
                   href="/"
-                  className="flex justify-center font-manrope font-bold text-2xl leading-10 font-Quicksand text-secondary items-center content-center"
+                  className="flex justify-center  font-bold text-2xl leading-10 text-secondary items-center content-center"
                 >
                   Go to Home
                 </Link>

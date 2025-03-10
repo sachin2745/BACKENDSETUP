@@ -37,7 +37,6 @@ const Header = () => {
 
     fetchData();
   }, []);
-  
 
   if (loading) {
     return (
@@ -231,6 +230,56 @@ const Header = () => {
         </div>
 
         <div className="sm:order-3 flex items-center gap-x-2">
+          <a
+            href="/mybag/order-history"
+            className="bg-white py-1 px-4 rounded-full flex items-center gap-3 group"
+          >
+            <div className="relative scale-110">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                className="m-auto"
+              >
+                <g
+                  id="Group_35298"
+                  data-name="Group 35298"
+                  transform="translate(-317 -21)"
+                >
+                  <rect
+                    id="Rectangle_8867"
+                    data-name="Rectangle 8867"
+                    width="24"
+                    height="24"
+                    transform="translate(317 21)"
+                    fill="none"
+                  ></rect>
+                  <g
+                    id="box_1_"
+                    data-name="box (1)"
+                    transform="translate(309.878 23.735)"
+                  >
+                    <g
+                      id="Group_35301"
+                      data-name="Group 35301"
+                      transform="translate(10.25)"
+                    >
+                      <path
+                        id="Path_77527"
+                        data-name="Path 77527"
+                        d="M27.975,4.583V4.544c-.02-.039-.02-.078-.039-.118v-.02a.427.427,0,0,0-.078-.1l-.02-.02c-.02-.02-.059-.039-.078-.059l-.02-.02h-.02l-.02-.02L19.377.059a.624.624,0,0,0-.529,0l-2.8,1.391,8.363,4.289.02.02c.02,0,.02.02.039.02.02.02.02.039.039.059v4.6a.206.206,0,0,1-.1.176l-1.684.881a.2.2,0,0,1-.274-.078.147.147,0,0,1-.02-.1V6.875L13.971,2.507l-.02-.02L10.563,4.172l-.02.02h-.02l-.02.02c-.02.02-.059.039-.078.059l-.02.02c-.039.039-.059.078-.1.118v.02a.278.278,0,0,0-.039.118v.039c0,.039-.02.059-.02.1v9.147a.577.577,0,0,0,.333.529l8.246,4.113a.538.538,0,0,0,.392.039l.039-.02c.039,0,.059-.02.1-.039l8.3-4.113A.59.59,0,0,0,28,13.808V4.681A.177.177,0,0,1,27.975,4.583Z"
+                        transform="translate(-10.25)"
+                        fill="currentColor"
+                      ></path>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+
+              <span className="text-xs font-bold">My Orders</span>
+            </div>
+          </a>
           <a
             href="/mybag"
             className="bg-white py-1 px-4 rounded-full flex items-center gap-3 group"
