@@ -76,3 +76,10 @@ iframe {
   background: linear-gradient(145deg, #ffffff, #e6e6e6);
   box-shadow: 6px 6px 1px #d4d4d4, -6px -6px 12px #ffffff;
 }
+
+.formBorder {
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow:  6px 6px 12px #949494,
+               -6px -6px 12px #ffffff;
+}

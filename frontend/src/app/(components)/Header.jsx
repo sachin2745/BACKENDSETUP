@@ -325,8 +325,8 @@ const Header = () => {
         <div className=" ml-56 hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
           <div className="flex flex-col gap-10 text-[16px] mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
             <Link
-              className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
-                pathname === "/" ? "text-primary" : "text-spaceblack"
+              className={`font-semibold  hover:text-emerald-500  focus:outline-none focus:textEmerald ${
+                pathname === "/" ? "textEmerald" : "text-spaceblack"
               }`}
               href="/"
               aria-current="page"
@@ -334,32 +334,32 @@ const Header = () => {
               Home
             </Link>
             <Link
-              className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
-                pathname === "/about-us" ? "text-primary" : "text-spaceblack"
+              className={`font-semibold  hover:text-emerald-500  focus:outline-none focus:textEmerald ${
+                pathname === "/about-us" ? "textEmerald" : "text-spaceblack"
               }`}
               href="/about-us"
             >
               About
             </Link>
             <Link
-              className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
-                pathname === "/blog" ? "text-primary" : "text-spaceblack"
+              className={`font-semibold  hover:text-emerald-500  focus:outline-none focus:textEmerald ${
+                pathname === "/blog" ? "textEmerald" : "text-spaceblack"
               }`}
               href="/blog"
             >
               Blog
             </Link>
             <Link
-              className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
-                pathname === "/contact-us" ? "text-primary" : "text-spaceblack"
+              className={`font-semibold  hover:text-emerald-500  focus:outline-none focus:textEmerald ${
+                pathname === "/contact-us" ? "textEmerald" : "text-spaceblack"
               }`}
               href="/contact-us"
             >
               Contact Us
             </Link>
             <Link
-              className={`font-semibold  hover:text-primary focus:outline-none focus:text-primary ${
-                pathname === "/store" ? "text-primary" : "text-spaceblack"
+              className={`font-semibold  hover:text-emerald-500  focus:outline-none focus:textEmerald ${
+                pathname === "/store" ? "textEmerald" : "text-spaceblack"
               }`}
               href="/store"
             >

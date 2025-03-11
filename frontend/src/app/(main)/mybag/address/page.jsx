@@ -12,9 +12,11 @@ import useConsumerContext from "@/context/ConsumerContext";
 import useProductContext from "@/context/ProductContext";
 import axios from "axios";
 import Select from "react-select";
+const ISSERVER = typeof window === "undefined";
 
 function Address() {
   const { currentConsumer } = useConsumerContext();
+  const [cities, setCities] = useState([]);
 
   const [products, setProducts] = useState([]);
   const {
@@ -58,11 +60,10 @@ function Address() {
     }
   };
 
-  const [cities, setCities] = useState([]);
-
   useEffect(() => {
     fetchCities();
   }, []);
+
   const fetchCartProducts = async () => {
     try {
       const productIds = cartItems.map((item) => item.productId);
@@ -158,9 +159,11 @@ function Address() {
           // console.log(response.status);
           const data = await response.json();
           // console.log(data);
-          
+
           if (response.status === 200) {
-            localStorage.setItem("orderId", data.orderId);
+            if (!ISSERVER) {
+              localStorage.setItem("orderId", data.orderId);
+            }
             toast.success("Detail Submited ! Now You Can Place Order");
 
             await getPaymentIntent();
@@ -272,7 +275,7 @@ function Address() {
           amount: getCartTotal() + platformfees,
           customerData: {
             ...shipping,
-            email: currentConsumer?.consumerEmail, 
+            email: currentConsumer?.consumerEmail,
           },
         }),
       }
@@ -298,24 +301,27 @@ function Address() {
   return (
     <>
       <div className="h-full grid grid-cols-3 font-RedditSans">
-        <div className="lg:col-span-2 col-span-3 bg-white text-black  px-12 p-5">
+        <div className="lg:col-span-2 col-span-3 bg-white text-black  lg:ps-12 p-5">
           <h1 className=" mb-2   text-2xl font-bold text-black ">
             Add Delivery Address
           </h1>
 
-          <div className="rounded-md mt-4 font-Quicksand">
+          <div className="rounded-md mt-4 font-RedditSans border-2 shadow p-4">
             <form onSubmit={formik.handleSubmit} autoComplete="off">
               <section>
-                <h2 className="uppercase tracking-wide text-lg font-semibold text-black my-2">
+                <h2 className="uppercase tracking-wide text-lg font-semibold text-black my-2 border-b-2 pb-2">
                   Shipping &amp; Billing Information
                 </h2>
 
-                <div className="  max-w-screen-md gap-4 ">
+                <div className="max-w-screen-xl gap-4  ">
                   <div>
-                    <div className="flex flex-col-reverse">
+                    <div className="flex flex-col">
+                      <label htmlFor="name" className="pl-2 font-semibold">
+                        Name
+                      </label>
                       <input
                         placeholder="Name*"
-                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        className="peer  outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-gray-300 focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
                         type="text"
                         ref={nameRef}
                         name="name"
@@ -323,9 +329,6 @@ function Address() {
                         value={formik.values.name}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 font-semibold  duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
-                        Name*
-                      </span>
                     </div>
                     {formik.touched.name && formik.errors.name ? (
                       <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
@@ -335,10 +338,16 @@ function Address() {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <div className="flex flex-col-reverse">
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="phoneNumber"
+                        className="pl-2 mt-3 font-semibold"
+                      >
+                        Mobile Number
+                      </label>
                       <input
                         placeholder="Mobile Number*"
-                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-gray-300 focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
                         type="number"
                         ref={contactRef}
                         name="phoneNumber"
@@ -346,9 +355,6 @@ function Address() {
                         value={formik.values.phoneNumber}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
-                        Mobile Number*
-                      </span>
                     </div>
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                       <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
@@ -358,10 +364,17 @@ function Address() {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <div className="flex flex-col-reverse">
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="address"
+                        className="pl-2 mt-3 font-semibold"
+                      >
+                        Address (Area and Street)
+                      </label>
+
                       <textarea
                         placeholder="Address*"
-                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-14 focus:rounded-md"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-gray-300 focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-14 focus:rounded-md"
                         type="text"
                         ref={addressRef}
                         name="address"
@@ -369,9 +382,6 @@ function Address() {
                         value={formik.values.address}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
-                        Address (Area and Street)*
-                      </span>
                     </div>
                     {formik.touched.address && formik.errors.address ? (
                       <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
@@ -380,10 +390,17 @@ function Address() {
                     ) : null}
                   </div>
                   <div className="sm:col-span-2">
-                    <div className="flex flex-col-reverse">
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="locality"
+                        className="pl-2 mt-3 font-semibold"
+                      >
+                        Locality / Town
+                      </label>
+
                       <input
                         placeholder="Locality*"
-                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-gray-300 focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
                         type="text"
                         ref={localityRef}
                         name="locality"
@@ -391,9 +408,6 @@ function Address() {
                         value={formik.values.locality}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
-                        Locality / Town*
-                      </span>
                     </div>
                     {formik.touched.locality && formik.errors.locality ? (
                       <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
@@ -402,10 +416,13 @@ function Address() {
                     ) : null}
                   </div>
                   <div className="sm:col-span-2">
-                    <div className="flex flex-col-reverse">
+                    <div className="flex flex-col">
+                      <label htmlFor="city" className="pl-2 mt-3 font-semibold">
+                        City/ District
+                      </label>
                       <Select
                         options={cities}
-                        className="peer outline-none border-2 rounded  duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        className="peer outline-none border-2 rounded  duration-500 border-gray-300 focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
                         name="city"
                         ref={cityRef}
                         placeholder="Search City..."
@@ -414,26 +431,27 @@ function Address() {
                           fetchState(option.value);
                         }}
                       />
-                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
-                        City/ District*
-                      </span>
                     </div>
                   </div>
 
                   <div className="sm:col-span-2">
-                    <div className="flex flex-col-reverse">
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="state"
+                        className="pl-2 mt-3 font-semibold"
+                      >
+                        State
+                      </label>
+
                       <input
                         placeholder="State*"
-                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-gray-300 focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
                         name="state"
                         ref={stateRef}
                         id="state"
                         value={formik.values.state}
                         readOnly
                       />
-                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
-                        State*
-                      </span>
                     </div>
                     {formik.touched.state && formik.errors.state ? (
                       <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
@@ -442,10 +460,17 @@ function Address() {
                     ) : null}
                   </div>
                   <div className="sm:col-span-2">
-                    <div className="flex flex-col-reverse">
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="pincode"
+                        className="pl-2 mt-3 font-semibold"
+                      >
+                        Pincode
+                      </label>
+
                       <input
                         placeholder="Pincode*"
-                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-black focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
+                        className="peer outline-none border-2 rounded pl-2 py-1.5 px-2 duration-500 border-gray-300 focus:border-dashed relative placeholder:duration-500 placeholder:absolute focus:placeholder:pt-10 focus:rounded-md"
                         type="number"
                         ref={pincodeRef}
                         name="pincode"
@@ -453,9 +478,6 @@ function Address() {
                         value={formik.values.pincode}
                         onChange={formik.handleChange}
                       />
-                      <span className="pl-2 mt-1.5 font-semibold duration-500 opacity-0 peer-focus:opacity-100 -translate-y-5 peer-focus:translate-y-0">
-                        Pincode*
-                      </span>
                     </div>
                     {formik.touched.pincode && formik.errors.pincode ? (
                       <div className="text-red-500 text-xs pl-2 mt-1 font-medium">
@@ -488,8 +510,8 @@ function Address() {
           </div>
         </div>
 
-        <div className="w-full col-span-3 lg:col-span-1 bg-white  border-solid border-4 border-gray-100 rounded ">
-          <h1 className="py-6 text-xl text-black font-bold px-8">
+        <div className="w-full col-span-3 lg:col-span-1 bg-white   ">
+          <h1 className="py-6 text-xl text-black font-bold px-8 ">
             Order Summary
           </h1>
           {/* <!-- product - start --> */}
@@ -499,7 +521,7 @@ function Address() {
             <div className="flex justify-between py-2 text-black">
               <span>Products Total ({getCartItemsCount()} Items)</span>
               <span className="font-semibold text-black">
-                ₹{getCartTotal()}
+                ₹{getCartDelTotal()}
               </span>
             </div>
             <div className="flex justify-between py-2 text-black">
@@ -522,7 +544,7 @@ function Address() {
             <span>₹{getCartTotal() + platformfees}</span>
           </div>
 
-          <div className="bg-white    p-8">
+          <div className="bg-white  p-8">
             <div className=" items-center mb-4">
               <h2 className="text-md text-black">
                 {" "}

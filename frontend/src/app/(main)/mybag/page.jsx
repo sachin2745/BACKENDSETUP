@@ -16,6 +16,7 @@ const bag = () => {
     getCartTotal,
     getCartItemsCount,
     removeOneItem,
+    getCartDelTotal,
     getSingleItemCartTotal,
   } = useProductContext();
 
@@ -470,7 +471,19 @@ const bag = () => {
                             </span>
                             <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading7__gujRQ font-semibold Typography_root__TxCor">
                               <span className="text-black text-[18px] leading-[28px]">
-                                ₹{getCartTotal()}
+                                ₹{getCartDelTotal()}
+                              </span>
+                            </span>
+                          </div>
+                          <div className="pb-3 flex justify-between space-x-2">
+                            <span className="font-medium Typography_root__TxCor">
+                              <span className="text-black text-[16px] leading-[24px]">
+                                MRP Discount
+                              </span>
+                            </span>
+                            <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading7__gujRQ font-semibold Typography_root__TxCor">
+                              <span className="text-green-500 text-[18px] leading-[28px]">
+                              -₹{getCartDelTotal() - getCartTotal()}
                               </span>
                             </span>
                           </div>
