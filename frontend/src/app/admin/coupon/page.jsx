@@ -272,12 +272,12 @@ const Coupen = () => {
     ) {
       newErrors.coupenMinAmount = "Coupon Minimum Amount is required.";
     }
-    if (
-      !formData.coupenMaximumAmt ||
-      String(formData.coupenMaximumAmt).trim() === ""
-    ) {
-      newErrors.coupenMaximumAmt = "Coupon Maximum Amount is required.";
-    }
+    // if (
+    //   !formData.coupenMaximumAmt ||
+    //   String(formData.coupenMaximumAmt).trim() === ""
+    // ) {
+    //   newErrors.coupenMaximumAmt = "Coupon Maximum Amount is required.";
+    // }
     if (
       !formData.coupenDiscountAmt ||
       String(formData.coupenDiscountAmt).trim() === ""
@@ -311,7 +311,7 @@ const Coupen = () => {
           updatedData.append(key, Math.floor(value.getTime() / 1000));
         } else {
           updatedData.append(key, value);
-        }
+        }       
       });
 
       await axios.put(
