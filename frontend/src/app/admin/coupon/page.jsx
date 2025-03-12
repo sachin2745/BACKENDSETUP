@@ -306,14 +306,14 @@ const Coupen = () => {
     try {
       const updatedData = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'coupenValidTill' && value) {
+        if (key === "coupenValidTill" && value) {
           // Convert the Date object to a UNIX timestamp (in seconds)
           updatedData.append(key, Math.floor(value.getTime() / 1000));
         } else {
           updatedData.append(key, value);
         }
       });
-  
+
       await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/update-coupon/${found?.coupenId}`,
         updatedData,
@@ -322,7 +322,7 @@ const Coupen = () => {
         }
       );
       toast.success("Coupon updated successfully!");
-  
+
       // Reload the page after a short delay
       setTimeout(() => {
         window.location.reload();
@@ -466,7 +466,14 @@ const Coupen = () => {
                         {item.coupenMaximumAmt ? item.coupenMaximumAmt : 0}
                       </td>
 
-                      <td>{item.coupenDiscountAmt}</td>
+                      <td>
+                        {item.coupenType === 1
+                          ? `Rs. ${item.coupenDiscountAmt}`
+                          : item.coupenType === 2
+                          ? `${item.coupenDiscountAmt}%`
+                          : item.coupenDiscountAmt}
+                      </td>
+
                       <td>
                         {item.coupenValidTill
                           ? format(
@@ -911,33 +918,35 @@ const Coupen = () => {
                 </div>
 
                 <div className="sm:flex w-full items-center">
-  <label
-    htmlFor="coupenValidTill"
-    className="w-[15%] text-gray-700 flex items-center font-medium"
-  >
-    Coupon Valid Till:
-  </label>
-  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-    <DatePicker
-      selected={formData.coupenValidTill} // Expects a Date object
-      onChange={(date) => {
-        setFormData({
-          ...formData,
-          coupenValidTill: date, // Store the Date object directly
-        });
-      }}
-      showTimeSelect
-      timeFormat="HH:mm"
-      timeIntervals={15}
-      dateFormat="dd/MM/yyyy hh:mm aa" // Format for display
-      placeholderText="Enter Coupon Valid Till"
-      className="w-full border-2 border-gray-300 p-2 rounded"
-    />
-    {errors.coupenValidTill && (
-      <p className="text-red-500 text-sm">{errors.coupenValidTill}</p>
-    )}
-  </div>
-</div>
+                  <label
+                    htmlFor="coupenValidTill"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Coupon Valid Till:
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <DatePicker
+                      selected={formData.coupenValidTill} // Expects a Date object
+                      onChange={(date) => {
+                        setFormData({
+                          ...formData,
+                          coupenValidTill: date, // Store the Date object directly
+                        });
+                      }}
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={15}
+                      dateFormat="dd/MM/yyyy hh:mm aa" // Format for display
+                      placeholderText="Enter Coupon Valid Till"
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {errors.coupenValidTill && (
+                      <p className="text-red-500 text-sm">
+                        {errors.coupenValidTill}
+                      </p>
+                    )}
+                  </div>
+                </div>
 
                 <div className="sm:flex w-full items-center">
                   <label
