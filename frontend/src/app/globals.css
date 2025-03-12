@@ -78,8 +78,13 @@ iframe {
 }
 
 .formBorder {
-  border-radius: 14px;
   background: #ffffff;
   box-shadow:  6px 6px 12px #949494,
                -6px -6px 12px #ffffff;
+}
+
+.react-datepicker-wrapper {
+  display: block !important;
+  padding: 0;
+  border: 0;
 }

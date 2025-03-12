@@ -9,6 +9,7 @@ import { FaAtlassian } from "react-icons/fa";
 import { FaQuestion } from "react-icons/fa6";
 import { IoStorefrontOutline } from "react-icons/io5";
 import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
+import { RiCouponLine } from "react-icons/ri";
 const Sidebar = ({ isCollapsed }) => {
   const pathname = usePathname();
 
@@ -32,6 +33,7 @@ const Sidebar = ({ isCollapsed }) => {
     { name: "Enquiry", path: "/admin/enquiry" },
     { name: "Store Product", path: "/admin/store" },
     { name: "Order History", path: "/admin/order-history" },
+    { name: "Coupon", path: "/admin/coupon" },
     // Add more options as needed
   ];
 
@@ -565,6 +567,19 @@ const Sidebar = ({ isCollapsed }) => {
                       ></path>
                     </svg>
                     Order History
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className={`${
+                      pathname === "/admin/coupon"
+                        ? "bg-emerald-200 border-b-2 border-emerald-500 font-semibold"
+                        : ""
+                    } flex items-center gap-x-3 py-2 px-2.5 text-sm text-quaternary rounded-lg hover:bg-emerald-100 hover:font-semibold`}
+                    href="/admin/coupon"
+                  >
+                    <RiCouponLine className="size-4" />
+                    Coupon
                   </Link>
                 </li>
               </ul>

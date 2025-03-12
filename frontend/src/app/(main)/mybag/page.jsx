@@ -1,5 +1,6 @@
 "use client";
 import useConsumerContext from "@/context/ConsumerContext";
+import { useCoupon } from "@/context/CouponContext";
 import useProductContext from "@/context/ProductContext";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -58,47 +59,6 @@ const bag = () => {
       console.error("Error fetching cart products:", error);
     }
   };
-  // if (loading) {
-  //   return (
-  //     <div className="py-2 lg:py-5 mx-auto max-w-7xl px-0 md:px-3 w-full font-RedditSans">
-  //       <div className="px-3 lg:px-0">
-  //         <div className="animate-pulse flex space-x-4">
-  //           <div className="h-6 bg-gray-300 rounded w-10"></div>
-  //           <div className="h-6 bg-gray-300 rounded w-24"></div>
-  //         </div>
-  //       </div>
-  //       <div className="lg:flex justify-between lg:space-x-4 lg:pr-3 mt-4">
-  //         <div className="flex-1">
-  //           <div className="flex flex-col space-y-4">
-  //             {Array(3)
-  //               .fill(0)
-  //               .map((_, index) => (
-  //                 <div
-  //                   key={index}
-  //                   className="shadow rounded-lg p-4 w-full animate-pulse bg-gray-200"
-  //                 >
-  //                   <div className="h-24 bg-gray-300 rounded"></div>
-  //                   <div className="h-6 bg-gray-300 rounded w-3/4 mt-4"></div>
-  //                   <div className="h-4 bg-gray-300 rounded w-1/2 mt-2"></div>
-  //                 </div>
-  //               ))}
-  //           </div>
-  //         </div>
-  //         <div className="mt-4 lg:mt-0 flex justify-center lg:sticky lg:top-[130px]">
-  //           <div className="w-[400px] max-w-[100vw] px-3 md:px-0">
-  //             <div className="rounded-xl p-4 lg:p-6 shadow-lg animate-pulse bg-gray-200">
-  //               <div className="h-6 bg-gray-300 rounded w-40 mb-4"></div>
-  //               <div className="h-5 bg-gray-300 rounded w-32 mb-2"></div>
-  //               <div className="h-5 bg-gray-300 rounded w-24 mb-2"></div>
-  //               <div className="h-5 bg-gray-300 rounded w-24"></div>
-  //               <div className="h-8 bg-gray-300 rounded w-full mt-4"></div>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   const getQuantity = (productId) => {
     const item = cartItems.find((item) => item.productId === productId);
@@ -131,6 +91,17 @@ const bag = () => {
       }
     }
     document.getElementById("my_modal_2").close();
+  };
+
+  const { coupon, applyCoupon, removeCoupon } = useCoupon();
+  const [code, setCode] = useState("");
+
+  const handleApply = () => {
+    if (code === "DISCOUNT10") {
+      applyCoupon(code, 10); // 10% discount
+    } else {
+      alert("Invalid coupon code");
+    }
   };
 
   return (
@@ -451,13 +422,104 @@ const bag = () => {
             </div>
           </div>
           {products.length > 0 && (
-            <div className="mt-0 lg:mt-4 flex h-fit justify-center lg:sticky lg:top-[130px] mb-4">
+            <div className="mt-0 lg:mt-4 flex h-fit justify-center lg:sticky lg:top-[130px] mb-4 font-RedditSans">
               <div className="w-[400px] max-w-[100vw] px-3 md:px-0">
+                <div className="rounded p-4 mb-6 formBorder lg:p-6 shadow-all-round lg:pb-6 w-full transform">
+                  <div>
+                    <div className="text-sm font-bold uppercase mb-[12px]">
+                      Coupons
+                    </div>
+                    <div className="relative pb-[12px] pl-[36px]">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        className="absolute left-0 top-[3px] "
+                      >
+                        <g
+                          fill="none"
+                          fillRule="evenodd"
+                          transform="rotate(45 6.086 5.293)"
+                        >
+                          <path
+                            stroke="#000"
+                            d="M17.5 10V1a1 1 0 0 0-1-1H5.495a1 1 0 0 0-.737.323l-4.136 4.5a1 1 0 0 0 0 1.354l4.136 4.5a1 1 0 0 0 .737.323H16.5a1 1 0 0 0 1-1z"
+                          ></path>
+                          <circle
+                            cx="5.35"
+                            cy="5.35"
+                            r="1.35"
+                            fill="#000"
+                            fillRule="nonzero"
+                          ></circle>
+                        </g>
+                      </svg>
+                      <div className=" text-md font-medium">Apply Coupons</div>
+                      <div className="drawer-content">
+                        {/* Apply Button that opens the drawer */}
+                        <label
+                          htmlFor="my-drawer-4"
+                          className="absolute top-0 right-0 font-bold text-black border border-black px-3 text-xs py-1.5 rounded cursor-pointer"
+                        >
+                          Apply
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="drawer drawer-end">
+                  <input
+                    id="my-drawer-4"
+                    type="checkbox"
+                    className="drawer-toggle"
+                  />
+
+                  <div className="drawer-side z-500">
+                    <label
+                      htmlFor="my-drawer-4"
+                      aria-label="close sidebar"
+                      className="drawer-overlay"
+                    ></label>
+                    <ul className="menu bg-base-200 text-base-content min-h-full w-full lg:w-[400px] p-4">
+                      <div className="p-4 border rounded">
+                        <h2 className="text-lg font-bold mb-2">Apply Coupon</h2>
+                        <input
+                          type="text"
+                          value={code}
+                          onChange={(e) => setCode(e.target.value)}
+                          placeholder="Enter coupon code"
+                          className="border p-2 rounded mr-2"
+                        />
+                        <button
+                          onClick={handleApply}
+                          className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                          Apply
+                        </button>
+                        {coupon && (
+                          <div className="mt-2">
+                            <p className="text-green-600">
+                              Applied Coupon: {coupon.code} ({coupon.discount}%)
+                            </p>
+                            <button
+                              onClick={removeCoupon}
+                              className="text-red-500"
+                            >
+                              Remove Coupon
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+
                 <div>
                   <div>
                     <div>
                       <div>
-                        <div className="rounded-xl p-4 lg:p-6 shadow-all-round lg:pb-6 w-full transform">
+                        <div className="rounded p-4 lg:p-6 formBorder lg:pb-6 w-full ">
                           <div className="pb-2 border-b mb-3">
                             <span className="Typography_heading6__f9EKE font-bold Typography_root__TxCor">
                               <span className="text-black">Order Details</span>
@@ -483,7 +545,7 @@ const bag = () => {
                             </span>
                             <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading7__gujRQ font-semibold Typography_root__TxCor">
                               <span className="text-green-500 text-[18px] leading-[28px]">
-                              -₹{getCartDelTotal() - getCartTotal()}
+                                -₹{getCartDelTotal() - getCartTotal()}
                               </span>
                             </span>
                           </div>
@@ -527,7 +589,9 @@ const bag = () => {
                         <div className="space-x-2 flex ">
                           <div className="flex-1">
                             <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading2__2HLSZ font-bold Typography_root__TxCor">
-                              <span className="text-black">₹{getCartTotal()}</span>
+                              <span className="text-black">
+                                ₹{getCartTotal()}
+                              </span>
                             </span>
                             <div>
                               <span className="text-sm underline text-blue font-semibold">
@@ -536,7 +600,10 @@ const bag = () => {
                             </div>
                           </div>
                           <div className="min-w-[160px]">
-                            <Link href="/mybag/address" className="w-full inline-flex items-center justify-center py-1.5 bgEmerald text-white font-bold">
+                            <Link
+                              href="/mybag/address"
+                              className="w-full inline-flex items-center justify-center py-1.5 bgEmerald text-white font-bold"
+                            >
                               Next
                             </Link>
                           </div>

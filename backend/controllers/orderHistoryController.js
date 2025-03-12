@@ -100,9 +100,201 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+const getCoupon = async (req, res) => {
+  try {
+    const [rows] = await db.execute(
+      `SELECT * FROM coupen
+      WHERE coupenStatus != 3
+       ORDER BY couponSortBy ASC`
+    );
+
+    if (rows.length === 0) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "Coupon not found" });
+    }
+
+    res.json({ status: "success", data: rows });
+  } catch (error) {
+    console.error("Error fetching Coupon:", error);
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+};
+
+const updateCouponStatus = async (req, res) => {
+  const coupenId = req.params.id;
+  const { couponSortBy, coupenStatus } = req.body;
+
+  let query = "";
+  const params = [];
+
+  try {
+    // Build the query and parameters dynamically
+    if (couponSortBy !== undefined) {
+      query = "UPDATE coupen SET couponSortBy = ? WHERE coupenId = ?";
+      params.push(couponSortBy, coupenId);
+    } else if (coupenStatus !== undefined) {
+      query = "UPDATE coupen SET coupenStatus = ? WHERE coupenId = ?";
+      params.push(coupenStatus, coupenId);
+    } else {
+      return res.status(400).send("No valid fields provided for update.");
+    }
+
+    // Execute the query
+    const [result] = await db.execute(query, params);
+
+    if (result.affectedRows === 0) {
+      res.status(404).send("Coupon not found.");
+    } else {
+      res.status(200).send("Coupon updated successfully.");
+    }
+  } catch (err) {
+    console.error("Error updating Coupon:", err);
+    res.status(500).send("Error updating Coupon.");
+  }
+};
+
+const addCoupon = async (req, res) => {
+  try {
+    // Debug: Log request body to check incoming data
+    // console.log("Request Body:", req.body);
+
+    const {
+      coupenCode,
+      coupenDesc,
+      coupenMinAmount,
+      coupenMaximumAmt,
+      coupenDiscountAmt,
+      coupenType,
+      coupenValidTill,
+    } = req.body;
+
+    // Step 1: Validate required fields
+    if (
+      !coupenCode ||
+      !coupenDesc ||
+      !coupenMinAmount ||
+      !coupenDiscountAmt ||
+      !coupenType ||
+      !coupenValidTill
+    ) {
+      return res.status(400).send({
+        message: "Missing required fields",
+        error: "All required fields must be provided",
+      });
+    }
+
+    // Step 2: Get the maximum coupenId and calculate couponSortBy
+    const getMaxUserIdQuery = `SELECT MAX(coupenId) AS maxUserId FROM coupen`;
+    const [maxUserIdResult] = await db.execute(getMaxUserIdQuery);
+    const nextUserId = (maxUserIdResult[0].maxUserId || 0) + 1;
+    const couponSortBy = nextUserId;
+
+    // Step 3: Construct query dynamically
+    let insertUserQuery = `
+      INSERT INTO coupen (coupenCode, coupenDesc, coupenMinAmount, coupenDiscountAmt, coupenType, coupenValidTill, couponSortBy
+    `;
+
+    let values = [
+      coupenCode,
+      coupenDesc,
+      coupenMinAmount,
+      coupenDiscountAmt,
+      coupenType,
+      coupenValidTill,
+      couponSortBy,
+    ];
+
+    if (coupenMaximumAmt !== undefined) {
+      insertUserQuery += `, coupenMaximumAmt`;
+      values.push(coupenMaximumAmt);
+    }
+
+    insertUserQuery += `) VALUES (${values.map(() => "?").join(", ")})`;
+
+    // Step 4: Execute the query
+    const [insertResult] = await db.execute(insertUserQuery, values);
+
+    res.status(200).send({
+      message: "Coupon added successfully",
+      coupenId: insertResult.insertId,
+    });
+  } catch (err) {
+    console.error("Error adding Coupon:", err);
+    res.status(500).send({
+      message: "Error adding Coupon",
+      error: err.sqlMessage || err.message,
+    });
+  }
+};
+
+const getCouponById = async (req, res) => {
+  const coupenId = req.params.id;
+  const query = "SELECT * FROM coupen WHERE coupenId  = ?";
+
+  try {
+    const [rows] = await db.execute(query, [coupenId]); // Use execute for parameterized queries
+    if (rows.length === 0) {
+      return res.status(404).send({ message: "Coupen not found" });
+    }
+    res.send(rows[0]);
+  } catch (error) {
+    console.error("Database query error:", error);
+    res
+      .status(500)
+      .send({ message: "An error occurred while fetching the website Coupen" });
+  }
+};
+
+const updateCoupon = async (req, res) => {
+  const coupenId = req.params.id;
+  const {
+    coupenCode,
+    coupenDesc,
+    coupenMinAmount,
+    coupenMaximumAmt,
+    coupenDiscountAmt,
+    coupenType,
+    coupenValidTill,
+  } = req.body;
+
+  let query = `
+    UPDATE coupen
+    SET
+      coupenCode = ?,
+      coupenDesc = ?,
+      coupenMinAmount = ?,
+      coupenMaximumAmt = ?,
+      coupenDiscountAmt = ?,
+      coupenType = ?,
+      coupenValidTill = ?
+  `;
+
+  const params = [coupenCode, coupenDesc, coupenMinAmount, coupenMaximumAmt, coupenDiscountAmt, coupenType, coupenValidTill];
+
+  query += ` WHERE coupenId = ?`;
+  params.push(coupenId);
+
+  try {
+    const [result] = await db.execute(query, params);
+    if (result.affectedRows === 0) {
+      return res.status(404).send({ message: "Coupon not found" });
+    }
+    res.send({ message: "Coupon updated successfully" });
+  } catch (error) {
+    console.error("Database update error:", error);
+    res.status(500).send({ message: "Error updating Coupon" });
+  }
+};
+
 module.exports = {
   getOrderHistory,
   getInvoice,
   setDeliveryDate,
   updateOrderStatus,
+  getCoupon,
+  updateCouponStatus,
+  addCoupon,
+  getCouponById,
+  updateCoupon,
 };

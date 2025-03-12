@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ConsumerProvider } from "@/context/ConsumerContext";
 import { ProductProvider } from "@/context/ProductContext";
+import { CouponProvider } from "@/context/CouponContext";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -156,10 +157,12 @@ export default function RootLayout({ children }) {
       <body className="">
         <ConsumerProvider>
           <ProductProvider>
-            {!isAdminPage && !isProductViewPage && <Header />}
-            <main className="min-h-screen">{children}</main>
-            {!isAdminPage && <Contact />}
-            {!isAdminPage && <Footer />}
+            <CouponProvider>
+              {!isAdminPage && !isProductViewPage && <Header />}
+              <main className="min-h-screen">{children}</main>
+              {!isAdminPage && <Contact />}
+              {!isAdminPage && <Footer />}
+            </CouponProvider>
           </ProductProvider>
         </ConsumerProvider>
       </body>

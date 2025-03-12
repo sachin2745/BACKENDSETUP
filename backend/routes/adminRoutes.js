@@ -239,5 +239,15 @@ router.post("/invoice/getById", orderHistoryController.getInvoice);
 router.post("/setDeliveryTime", orderHistoryController.setDeliveryDate);
 router.post("/update-order-status", orderHistoryController.updateOrderStatus);
 
+//COUPON
+router.get("/coupon/getall", orderHistoryController.getCoupon);
+router.put("/coupon-status/:id", orderHistoryController.updateCouponStatus);
+router.post("/add-coupon",upload.none(), orderHistoryController.addCoupon);
+router.get("/get-coupon/:id", orderHistoryController.getCouponById);
+router.put(
+  "/update-coupon/:id",
+  upload.none(),
+  orderHistoryController.updateCoupon
+);
 
 module.exports = router;

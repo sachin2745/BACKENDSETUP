@@ -1,6 +1,7 @@
 "use client";
 import { AppProvider } from "@/context/AppContext";
 import { ConsumerProvider } from "@/context/ConsumerContext";
+import { CouponProvider } from "@/context/CouponContext";
 import { ProductProvider } from "@/context/ProductContext";
 import PrelineScript from "@/Prelinescript";
 import React, { useEffect } from "react";
@@ -33,7 +34,9 @@ const Template = ({ children }) => {
       />
       <ConsumerProvider>
         <ProductProvider>
-          <AppProvider>{children}</AppProvider>
+          <CouponProvider>
+            <AppProvider>{children}</AppProvider>
+          </CouponProvider>
         </ProductProvider>
       </ConsumerProvider>
       <PrelineScript />
