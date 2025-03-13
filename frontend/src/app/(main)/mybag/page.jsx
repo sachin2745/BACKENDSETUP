@@ -6,6 +6,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ImHome3 } from "react-icons/im";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const bag = () => {
   const {
@@ -94,14 +95,113 @@ const bag = () => {
   };
 
   const { coupon, applyCoupon, removeCoupon } = useCoupon();
-  const [code, setCode] = useState("");
+  const [coupons, setCoupons] = useState([]);
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
 
-  const handleApply = () => {
-    if (code === "DISCOUNT10") {
-      applyCoupon(code, 10); // 10% discount
-    } else {
-      alert("Invalid coupon code");
+  // Fetch coupons on mount
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/web/coupon/getall`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (!response.ok) throw new Error("Failed to fetch coupons");
+
+        const result = await response.json();
+        if (result.status === "success" && Array.isArray(result.data)) {
+          setCoupons(result.data);
+        } else {
+          throw new Error("Invalid coupon data format");
+        }
+      } catch (error) {
+        console.error("Error fetching coupons:", error);
+      }
+    };
+
+    fetchCoupons();
+  }, []);
+
+  const handleApply = (selectedCoupon) => {
+    if (coupon) {
+      Swal.fire({
+        icon: "warning",
+        title: "Coupon Already Applied",
+        text: `You have already applied the coupon: ${coupon.coupenCode}. Remove it to apply a new one.`,
+        timer: 3000,
+        showConfirmButton: false,
+      });
+      return;
     }
+
+    if (!selectedCoupon?.coupenCode) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Coupon",
+        text: "Please enter a valid coupon code.",
+        timer: 3000,
+        showConfirmButton: false,
+      });
+      return;
+    }
+
+    const discountValue =
+      selectedCoupon.coupenType === 1
+        ? selectedCoupon.coupenDiscountAmt // Fixed discount
+        : selectedCoupon.coupenMaximumAmt; // Percentage discount with max limit
+
+    console.log(
+      "discountValue",
+      selectedCoupon.coupenDiscountAmt,
+      selectedCoupon.coupenMaximumAmt
+    );
+
+    // Check if cartItems price is greater than discount value
+    if (
+      (selectedCoupon.coupenType === 1 &&
+        getCartTotal() < selectedCoupon.coupenMinAmount) ||
+      (selectedCoupon.coupenType == 2 &&
+        getCartTotal() < selectedCoupon.coupenMinAmount)
+    ) {
+      document.getElementById("my_modal_3").close();
+
+      setTimeout(() => {
+        Swal.fire({
+          icon: "warning",
+          title: "Coupon Not Applicable",
+          text: `This coupon is only valid for orders above ${
+            selectedCoupon.coupenType === 1
+              ? selectedCoupon.coupenMinAmount
+              : selectedCoupon.coupenMinAmount
+          }.`,
+          timer: 3000,
+          showConfirmButton: false,
+        });
+      }, 300);
+      return;
+    }
+
+    applyCoupon(selectedCoupon.coupenCode, discountValue);
+    document.getElementById("my_modal_3").close();
+
+    setTimeout(() => {
+      Swal.fire({
+        icon: "success",
+        title: "Coupon Applied",
+        width: 400,
+        text: `Coupon "${selectedCoupon.coupenCode}" has been applied successfully!`,
+        timer: 3000,
+        showConfirmButton: false,
+      });
+    }, 300);
+
+    setCouponApplied(true);
+    setCouponCode(selectedCoupon.coupenCode);
   };
 
   return (
@@ -429,13 +529,13 @@ const bag = () => {
                     <div className="text-sm font-bold uppercase mb-[12px]">
                       Coupons
                     </div>
-                    <div className="relative pb-[12px] pl-[36px]">
+                    <div className="relative pb-[12px] pl-[25px]">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="18"
                         height="18"
                         viewBox="0 0 18 18"
-                        className="absolute left-0 top-[3px] "
+                        className="absolute left-0 top-[3px]"
                       >
                         <g
                           fill="none"
@@ -451,67 +551,125 @@ const bag = () => {
                             cy="5.35"
                             r="1.35"
                             fill="#000"
-                            fillRule="nonzero"
                           ></circle>
                         </g>
                       </svg>
-                      <div className=" text-md font-medium">Apply Coupons</div>
-                      <div className="drawer-content">
-                        {/* Apply Button that opens the drawer */}
-                        <label
-                          htmlFor="my-drawer-4"
-                          className="absolute top-0 right-0 font-bold text-black border border-black px-3 text-xs py-1.5 rounded cursor-pointer"
-                        >
-                          Apply
-                        </label>
+                      <div className="text-md font-medium">
+                        {coupon ? "1 Coupon Applied" : "Apply Coupons"}
+                      </div>
+                      <label
+                        onClick={() =>
+                          document
+                            .getElementById(
+                              coupon ? "my_modal_4" : "my_modal_3"
+                            )
+                            .showModal()
+                        }
+                        className="absolute top-0 right-0 font-bold text-black border border-black px-3 text-xs py-1.5 rounded cursor-pointer"
+                      >
+                        {coupon ? "Remove Coupon" : "Apply"}
+                      </label>
+                      <div className="text-sm text-emerald-500 font-normal">
+                        {coupon
+                          ? `You saved additionally ₹${coupon.discount}`
+                          : ""}
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="drawer drawer-end">
-                  <input
-                    id="my-drawer-4"
-                    type="checkbox"
-                    className="drawer-toggle"
-                  />
 
-                  <div className="drawer-side z-500">
-                    <label
-                      htmlFor="my-drawer-4"
-                      aria-label="close sidebar"
-                      className="drawer-overlay"
-                    ></label>
-                    <ul className="menu bg-base-200 text-base-content min-h-full w-full lg:w-[400px] p-4">
-                      <div className="p-4 border rounded">
-                        <h2 className="text-lg font-bold mb-2">Apply Coupon</h2>
-                        <input
-                          type="text"
-                          value={code}
-                          onChange={(e) => setCode(e.target.value)}
-                          placeholder="Enter coupon code"
-                          className="border p-2 rounded mr-2"
-                        />
-                        <button
-                          onClick={handleApply}
-                          className="bg-blue-500 text-white px-4 py-2 rounded"
-                        >
-                          Apply
-                        </button>
-                        {coupon && (
-                          <div className="mt-2">
-                            <p className="text-green-600">
-                              Applied Coupon: {coupon.code} ({coupon.discount}%)
-                            </p>
-                            <button
-                              onClick={removeCoupon}
-                              className="text-red-500"
-                            >
-                              Remove Coupon
-                            </button>
-                          </div>
-                        )}
+                    {/* Apply Coupon Modal */}
+                    <dialog id="my_modal_3" className="modal">
+                      <div className="modal-box border-none rounded focus:outline-none">
+                        <form method="dialog">
+                          <button className="btn btn-sm btn-circle btn-ghost absolute right-5 top-5 focus:outline-none">
+                            ✕
+                          </button>
+                        </form>
+                        <h2 className="text-lg font-bold mb-2 border-b-2 pb-2">
+                          Apply Coupon
+                        </h2>
+                        <div className="p-3">
+                          <h2 className="uppercase text-md mb-5 font-semibold text-xl">
+                            Available Coupons
+                          </h2>
+                          {coupons.length > 0 ? (
+                            coupons.map((c) => (
+                              <div
+                                key={c.coupenId}
+                                className="relative mb-[30px] pb-3 border-b-2"
+                              >
+                                <div className="flex item gap-3">
+                                  <div className="h-[35px] border-2 px-3 py-2 bgEmerald font-bold rounded flex items-center gap-3 mb-[15px]">
+                                    <img
+                                      width={20}
+                                      height={20}
+                                      src="https://learn.careerwave.org/images/companyLogo/1730816853.png"
+                                      className="_3vTc2"
+                                      alt="coupon logo"
+                                    />
+                                    <span className="font-semibold text-white text-lg">
+                                      {c.coupenCode}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="text-lg text-quaternary font-medium mb-1">
+                                  {c.coupenType === 1
+                                    ? `Get ₹${c.coupenDiscountAmt} off`
+                                    : `Get ${c.coupenDiscountAmt}% off`}
+                                </div>
+                                <div className="text-md text-gray-500 font-normal mb-3">
+                                  {c.coupenType === 1
+                                    ? `Use code ${c.coupenCode} & get ₹${c.coupenDiscountAmt} off on orders above ₹${c.coupenMinAmount}.`
+                                    : `Use code ${c.coupenCode} & get ${c.coupenDiscountAmt}% off on orders above ₹${c.coupenMinAmount}. Max discount: ₹${c.coupenMaximumAmt}.`}
+                                </div>
+                                <button
+                                  onClick={() => handleApply(c)}
+                                  className="border text-sm font-semibold border-emerald-500 textEmerald bg-white px-2 py-1.5 hover:scale-105 transition duration-300 ease-in-out rounded"
+                                >
+                                  APPLY COUPON
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <p>No coupons available</p>
+                          )}
+                        </div>
                       </div>
-                    </ul>
+                    </dialog>
+
+                    {/* Remove Coupon Modal */}
+                    <dialog id="my_modal_4" className="modal">
+                      <form method="dialog" className="modal-box rounded">
+                        <h3 className="text-lg font-bold">Remove Coupon</h3>
+                        <p>Are you sure you want to remove the coupon?</p>
+                        <div className="modal-action">
+                          <button
+                            className="btn btn-danger focus:outline-none"
+                            onClick={() => {
+                              removeCoupon();
+                              toast.success("Coupon removed successfully!", {
+                                position: "top-center",
+                                autoClose: 3000,
+                                hideProgressBar: true,
+                                closeOnClick: true,
+                                pauseOnHover: false,
+                                draggable: true,
+                                theme: "colored",
+                              });
+                            }}
+                          >
+                            Yes, Remove
+                          </button>
+                          <button
+                            className="btn focus:outline-none"
+                            onClick={() =>
+                              document.getElementById("my_modal_4").close()
+                            }
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    </dialog>
                   </div>
                 </div>
 
@@ -561,6 +719,18 @@ const bag = () => {
                               </span>
                             </span>
                           </div>
+                          <div className="pb-3 flex justify-between space-x-2">
+                            <span className="font-medium Typography_root__TxCor">
+                              <span className="text-black text-[16px] leading-[24px]">
+                                {coupon ? `Coupon Discount` : ""}
+                              </span>
+                            </span>
+                            <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading7__gujRQ font-semibold Typography_root__TxCor">
+                              <span className="text-green-500 text-[18px] leading-[28px]">
+                                {coupon ? `-₹${coupon.discount}` : ""}
+                              </span>
+                            </span>
+                          </div>
                           <div className="pb-3 pt-2.5 flex justify-between border-t space-x-2">
                             <span className="Typography_heading7__gujRQ font-medium Typography_root__TxCor">
                               <span className="text-black mt-[2px] text-[18px] leading-[28px]">
@@ -569,7 +739,9 @@ const bag = () => {
                             </span>
                             <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading6__f9EKE font-bold Typography_root__TxCor">
                               <span className="text-black text-[24px] leading-[32px]">
-                                ₹{getCartTotal()}
+                                ₹
+                                {getCartTotal() -
+                                  (coupon ? coupon.discount : 0)}
                               </span>
                             </span>
                           </div>
@@ -590,7 +762,9 @@ const bag = () => {
                           <div className="flex-1">
                             <span className="Typography_whitespaceNowrap__nm0U6 Typography_heading2__2HLSZ font-bold Typography_root__TxCor">
                               <span className="text-black">
-                                ₹{getCartTotal()}
+                                ₹
+                                {getCartTotal() -
+                                  (coupon ? coupon.discount : 0)}
                               </span>
                             </span>
                             <div>

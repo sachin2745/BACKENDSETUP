@@ -22,6 +22,8 @@ const addAddress = async (req, res) => {
       cartTotal,
       orderStatus,
       orderPaymentType,
+      orderCoupenCode,
+      orderCoupenDiscountAmt,
     } = req.body;
 
     const orderTime = Math.floor(Date.now() / 1000);
@@ -30,8 +32,8 @@ const addAddress = async (req, res) => {
         INSERT INTO orderdetails 
         (orderConsumerId, orderName, orderMobile, orderBillingAddress, 
           odPincode, odLocality, odCity, odState, orderOriginalTotalAmount,orderDiscountTotalAmount,
-         orderStatus, orderPaymentType, orderTime) 
-        VALUES (?, ?, ?, ?, ?,?,?, ?, ?, ?, ?, ?, ?)`;
+         orderStatus, orderPaymentType, orderTime,orderCoupenCode,orderCoupenDiscountAmt) 
+        VALUES (?, ?, ?, ?, ?,?,?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
       orderConsumerId,
@@ -47,6 +49,8 @@ const addAddress = async (req, res) => {
       orderStatus || 1,
       orderPaymentType || 1,
       orderTime,
+      orderCoupenCode,
+      orderCoupenDiscountAmt,
     ];
 
     const [result] = await db.execute(query, values);
@@ -133,12 +137,11 @@ const getInvoice = async (req, res) => {
   try {
     const { orderId, consumerId } = req.body;
 
-    if (!orderId || !consumerId ) {
+    if (!orderId || !consumerId) {
       return res
         .status(400)
         .json({ status: "error", message: "Missing required fields" });
     }
-
 
     const [rows] = await db.execute(
       `SELECT * FROM orderdetails
@@ -148,8 +151,6 @@ const getInvoice = async (req, res) => {
           AND orderdetails.orderConsumerId = ?`,
       [orderId, consumerId]
     );
-
-    
 
     if (rows.length === 0) {
       return res
@@ -164,9 +165,31 @@ const getInvoice = async (req, res) => {
   }
 };
 
+const getCoupon = async (req, res) => {
+  try {
+    const [rows] = await db.execute(
+      `SELECT * FROM coupen
+      WHERE coupenStatus = 0
+      ORDER BY couponSortBy ASC`
+    );
+
+    if (rows.length === 0) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "coupon not found" });
+    }
+
+    res.json({ status: "success", data: rows });
+  } catch (error) {
+    console.error("Error fetching coupon:", error);
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+};
+
 module.exports = {
   addAddress,
   addOrder,
   getByUser,
   getInvoice,
+  getCoupon,
 };

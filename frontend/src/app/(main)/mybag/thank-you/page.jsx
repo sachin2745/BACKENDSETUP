@@ -5,6 +5,7 @@ import useProductContext from "@/context/ProductContext";
 import Link from "next/link";
 import { MdOutlineSmsFailed } from "react-icons/md";
 import { GiConfirmed } from "react-icons/gi";
+import { useCoupon } from "@/context/CouponContext";
 
 const thankYou = () => {
   const hasRun = useRef(false);
@@ -13,6 +14,8 @@ const thankYou = () => {
       ? JSON.parse(localStorage.getItem("consumer"))
       : null
   );
+    const { coupon, applyCoupon, removeCoupon } = useCoupon();
+  
   const {
     cartItems,
     getCartTotal,
@@ -22,17 +25,17 @@ const thankYou = () => {
     clearCart,
   } = useProductContext();
 
-  console.log(currentConsumer);
+  // console.log(currentConsumer);
 
   const params = useSearchParams();
-  console.log(params);
+  // console.log(params);
   const platformfees = 10;
 
   const savePayment = async () => {
     try {
       const paymentDetails = await retrievePaymentIntent();
       const orderId = localStorage.getItem("orderId");
-      const cartTotal = getCartTotal() + platformfees; // Assuming platformFees is defined
+      const cartTotal = getCartTotal() + platformfees - (coupon?.discount || 0); // Assuming platformFees is defined
       const cartDelTotal = getCartDelTotal();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/web/order/add`,
@@ -56,8 +59,8 @@ const thankYou = () => {
 
       const responseData = await response.json(); // Parse JSON response
 
-      console.log("Response Status:", response.status);
-      console.log("Response Data:", responseData);
+      // console.log("Response Status:", response.status);
+      // console.log("Response Data:", responseData);
       // console.log("Request Payload:", JSON.stringify({
       //   consumer: currentConsumer.consumerId,
       //   items: cartItems,
@@ -72,6 +75,7 @@ const thankYou = () => {
         localStorage.removeItem("orderId"); // Clear after use
 
         clearCart();
+        removeCoupon();
       }
     } catch (error) {
       console.error("Error saving payment:", error);

@@ -12,10 +12,13 @@ import useConsumerContext from "@/context/ConsumerContext";
 import useProductContext from "@/context/ProductContext";
 import axios from "axios";
 import Select from "react-select";
+import { useCoupon } from "@/context/CouponContext";
 const ISSERVER = typeof window === "undefined";
 
 function Address() {
   const { currentConsumer } = useConsumerContext();
+  const { coupon, applyCoupon, removeCoupon } = useCoupon();
+
   const [cities, setCities] = useState([]);
 
   const [products, setProducts] = useState([]);
@@ -133,18 +136,24 @@ function Address() {
       pincode: "",
       cartTotal: 0, // Add initial value for cartTotal
       cartDelTotal: 0, // Add initial value for cartDelTotal
+      orderCoupenDiscountAmt: 0,
+      orderCoupenCode: "",
     },
 
     onSubmit: (values) => {
       // Calculate the values for the hidden fields
-      const cartTotal = getCartTotal() + platformfees; // Assuming platformFees is defined
+      const cartTotal = getCartTotal() + platformfees - (coupon?.discount || 0); // Assuming platformFees is defined
       const cartDelTotal = getCartDelTotal();
+      const orderCoupenDiscountAmt = coupon?.discount || 0;
+      const orderCoupenCode = coupon?.code || "";
 
       // Update the values object with the calculated values
       const finalValues = {
         ...values,
         cartTotal,
         cartDelTotal,
+        orderCoupenDiscountAmt,
+        orderCoupenCode,
       };
       // console.log(values);
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/web/billing/add`, {
@@ -272,7 +281,7 @@ function Address() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          amount: getCartTotal() + platformfees,
+          amount: getCartTotal() + platformfees - (coupon?.discount || 0), 
           customerData: {
             ...shipping,
             email: currentConsumer?.consumerEmail,
@@ -489,13 +498,27 @@ function Address() {
                 <input
                   type="hidden"
                   name="cartTotal"
-                  value={getCartTotal() + platformfees} // Calculate and set the value
+                  value={
+                    getCartTotal() + platformfees - (coupon?.discount || 0) // Use optional chaining for safety
+                  }
                 />
+
                 <input
                   type="hidden"
                   name="cartDelTotal"
                   value={getCartDelTotal()} // Set the value
                 />
+                <input
+                  type="hidden"
+                  name="orderCoupenDiscountAmt"
+                  value={coupon?.discount || 0}
+                />
+                <input
+                  type="hidden"
+                  name="orderCoupenCode"
+                  value={coupon?.code || ""}
+                />
+
                 <div className="w-80 my-10">
                   <button
                     type="submit"
@@ -530,6 +553,7 @@ function Address() {
                 -₹{getCartDelTotal() - getCartTotal()}
               </span>
             </div>
+
             <div className="flex justify-between py-2 text-black">
               <span>Shipping Charges</span>
               <span className="font-semibold textEmerald">Free</span>
@@ -538,10 +562,18 @@ function Address() {
               <span>Platform fees</span>
               <span className="font-semibold text-black">₹10</span>
             </div>
+            <div className="flex justify-between py-2 text-black">
+              <span>{coupon ? `Coupon Discount` : ""}</span>
+              <span className="font-semibold textEmerald">
+                {coupon ? `-₹${coupon.discount}` : ""}
+              </span>
+            </div>
           </div>
           <div className="font-semibold text-xl px-8 flex justify-between py-8 text-black border-b">
             <span>Total</span>
-            <span>₹{getCartTotal() + platformfees}</span>
+            <span>
+              ₹{getCartTotal() + platformfees - (coupon ? coupon.discount : 0)}
+            </span>
           </div>
 
           <div className="bg-white  p-8">

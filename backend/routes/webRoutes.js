@@ -70,5 +70,6 @@ router.post("/billing/add",verifyToken, orderWebController.addAddress);
 router.post("/order/add", orderWebController.addOrder);
 router.get("/order/getbyid/:id",verifyToken,  orderWebController.getByUser);
 router.post("/invoice", orderWebController.getInvoice);
+router.get("/coupon/getall", orderWebController.getCoupon);
 
 module.exports = router;

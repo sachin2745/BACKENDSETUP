@@ -1,4 +1,5 @@
 "use client";
+import { useCoupon } from "@/context/CouponContext";
 import useProductContext from "@/context/ProductContext";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
@@ -12,6 +13,7 @@ const OrderHistory = () => {
       setCurrentConsumer(JSON.parse(localStorage.getItem("consumer")) || null);
     }
   }, []);
+  const { coupon, applyCoupon, removeCoupon } = useCoupon();
 
   const [paymentData, setPaymentData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -245,7 +247,7 @@ const OrderHistory = () => {
                         : "inherit",
                   }}
                 >
-                   {invoiceData[0].orderDeliveryTime === 0
+                  {invoiceData[0].orderDeliveryTime === 0
                     ? "Waiting for confirmation"
                     : new Date(
                         invoiceData[0].orderDeliveryTime * 1000
@@ -312,15 +314,22 @@ const OrderHistory = () => {
                     ₹10
                   </td>
                 </tr>
+                <tr>
+                  <td className="border px-4 py-1.5 font-semibold">
+                    {invoiceData[0].orderCoupenDiscountAmt
+                      ? "Coupon Discount"
+                      : ""}
+                  </td>
+                  <td className="border px-4 py-1.5 text-left text-emerald-500 font-normal">
+                    {invoiceData?.[0]?.orderCoupenDiscountAmt
+                      ? `- ₹${invoiceData[0].orderCoupenDiscountAmt}`
+                      : ""}
+                  </td>
+                </tr>
                 <tr className="bg-gray-100 font-bold">
                   <td className="border px-4 py-1.5">Grand Total</td>
                   <td className="border px-4 py-1.5 text-left font-semibold">
-                    ₹
-                    {invoiceData.reduce(
-                      (total, item) =>
-                        total + item.opDiscountPrice * item.opQuantity,
-                      0
-                    ) + 10}
+                    ₹{invoiceData[0].orderDiscountTotalAmount}
                   </td>
                 </tr>
               </tbody>
