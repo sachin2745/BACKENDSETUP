@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { ImHome3 } from "react-icons/im";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { PiSealPercentBold } from "react-icons/pi";
 
 const bag = () => {
   const {
@@ -598,15 +599,13 @@ const bag = () => {
                                 className="relative mb-[30px] pb-3 border-b-2"
                               >
                                 <div className="flex item gap-3">
-                                  <div className="h-[35px] border-2 px-3 py-2 bgEmerald font-bold rounded flex items-center gap-3 mb-[15px]">
+                                  <div className="bg-white font-bold rounded flex items-center  mb-[15px]">
                                     <img
-                                      width={20}
-                                      height={20}
-                                      src="https://learn.careerwave.org/images/companyLogo/1730816853.png"
-                                      className="_3vTc2"
+                                      src="./couponImg.png"
+                                      className="h-10 w-14 rounded"
                                       alt="coupon logo"
                                     />
-                                    <span className="font-semibold text-white text-lg">
+                                    <span className="font-semibold text-quaternary text-lg">
                                       {c.coupenCode}
                                     </span>
                                   </div>
@@ -616,11 +615,29 @@ const bag = () => {
                                     ? `Get ₹${c.coupenDiscountAmt} off`
                                     : `Get ${c.coupenDiscountAmt}% off`}
                                 </div>
-                                <div className="text-md text-gray-500 font-normal mb-3">
+                                <div className="text-md text-gray-500 font-normal mb-1">
                                   {c.coupenType === 1
                                     ? `Use code ${c.coupenCode} & get ₹${c.coupenDiscountAmt} off on orders above ₹${c.coupenMinAmount}.`
                                     : `Use code ${c.coupenCode} & get ${c.coupenDiscountAmt}% off on orders above ₹${c.coupenMinAmount}. Max discount: ₹${c.coupenMaximumAmt}.`}
                                 </div>
+                                <div className="text-sm text-gray-900 font-normal mb-3">
+                                  Expires on: {""}
+                                  {new Date(c.coupenValidTill * 1000)
+                                    .toLocaleDateString("en-GB", {
+                                      day: "2-digit",
+                                      month: "short",
+                                      year: "numeric",
+                                    })
+                                    .replace(/ /g, "-")}{" "}
+                                  {new Date(
+                                    c.coupenValidTill * 1000
+                                  ).toLocaleTimeString("en-US", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  })}
+                                </div>
+
                                 <button
                                   onClick={() => handleApply(c)}
                                   className="border text-sm font-semibold border-emerald-500 textEmerald bg-white px-2 py-1.5 hover:scale-105 transition duration-300 ease-in-out rounded"

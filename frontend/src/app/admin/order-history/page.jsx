@@ -195,7 +195,7 @@ const OrderHistory = () => {
                   <th>Name</th>
                   <th>Mobile No.</th>
                   <th>Order Time</th>
-                  <th>Delivery Time</th>
+                  <th>Delivery Date</th>
                   <th>Amount</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -490,15 +490,22 @@ const OrderHistory = () => {
                     ₹10
                   </td>
                 </tr>
+                <tr>
+                  <td className="border px-4 py-1.5 font-semibold text-xs">
+                    {invoiceData[0].orderCoupenDiscountAmt
+                      ? "Coupon Discount"
+                      : ""}
+                  </td>
+                  <td className="border px-4 py-1.5 text-left text-emerald-500 font-normal text-xs">
+                    {invoiceData?.[0]?.orderCoupenDiscountAmt
+                      ? `- ₹${invoiceData[0].orderCoupenDiscountAmt}`
+                      : ""}
+                  </td>
+                </tr>
                 <tr className="bg-gray-100 font-bold text-xs">
                   <td className="border px-4 py-1.5 text-xs">Grand Total</td>
-                  <td className="border px-4 py-1.5 text-left font-semibold text-xs">
-                    ₹
-                    {invoiceData.reduce(
-                      (total, item) =>
-                        total + item.opDiscountPrice * item.opQuantity,
-                      0
-                    ) + 10}
+                  <td className="border px-4 py-1.5 text-left font-semibold">
+                    ₹{invoiceData[0].orderDiscountTotalAmount}
                   </td>
                 </tr>
               </tbody>
