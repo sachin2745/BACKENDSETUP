@@ -112,6 +112,7 @@ router.post(
 
 //ROUTES FOR DASHBOARD
 router.get("/getCounts", dashboardController.getCounts);
+router.get("/order-history-data/getall", dashboardController.getOrderHistoryData);
 
 //ROUTES FOR COMMENTS
 router.post("/update-comment-status", adminController.updateComment);

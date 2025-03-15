@@ -465,7 +465,7 @@ const Founder = () => {
                       </td>
 
                       <td
-                        className="cursor-pointer hover:text-emerald-500 hover:font-bold"
+                        className="cursor-pointer textEmerald font-semibold hover:text-emerald-500 hover:font-bold"
                         onClick={() => fetchFound(item.founderId)}
                       >
                         {item.founderName}
