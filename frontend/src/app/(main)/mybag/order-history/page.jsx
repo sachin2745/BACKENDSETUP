@@ -106,6 +106,32 @@ const OrderHistory = () => {
                   <h3 className="text-lg font-semibold">
                     Order ID: #{order.orderHistoryId}
                   </h3>
+                  <div
+                    className={`
+                      px-3 py-1 text-sm font-semibold text-white rounded-full
+                      ${
+                        order.orderHistoryStatus === 1
+                          ? "bg-blue-500" // New
+                          : order.orderHistoryStatus === 2
+                          ? "bg-yellow-500" // Confirm
+                          : order.orderHistoryStatus === 3
+                          ? "bg-orange-500" // On the Way
+                          : order.orderHistoryStatus === 4
+                          ? "bg-green-500" // Completed
+                          : "bg-gray-500" // Default fallback
+                      }
+                    `}
+                  >
+                    {order.orderHistoryStatus === 1
+                      ? "New"
+                      : order.orderHistoryStatus === 2
+                      ? "Confirm"
+                      : order.orderHistoryStatus === 3
+                      ? "On the Way"
+                      : order.orderHistoryStatus === 4
+                      ? "Completed"
+                      : "Unknown"}
+                  </div>
                 </div>
                 <hr className="my-2" />
                 <div className="flex justify-between items-center text-sm my-4">
