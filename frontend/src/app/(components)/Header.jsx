@@ -10,9 +10,10 @@ import useProductContext from "@/context/ProductContext";
 const Header = () => {
   const { getCartItemsCount } = useProductContext();
   const pathname = usePathname();
-  const { consumerLogout, consumerLoggedIn, currentConsumer } =
-    useConsumerContext();
-  const [headerData, setHeaderData] = useState(null);
+  const { consumerLogout, consumerLoggedIn, currentConsumer } = useConsumerContext();
+  const [headerData, setHeaderData] = useState({
+    companyLogo: "", 
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -277,7 +278,9 @@ const Header = () => {
                 </g>
               </svg>
 
-              <span className="text-[11px] sm:text-xs font-bold">My Orders</span>
+              <span className="text-[11px] sm:text-xs font-bold">
+                My Orders
+              </span>
             </div>
           </a>
           <a
@@ -383,11 +386,13 @@ const Header = () => {
             href="/"
           >
             <img
-              src={`${process.env.NEXT_PUBLIC_API_URL}${headerData?.companyLogo}`}
+              src={`${process.env.NEXT_PUBLIC_API_URL}${
+                headerData?.companyLogo || "/logo.png"
+              }`}
               width={56}
               height={56}
               className="h-10 w-10  md:h-14  md:mr-3 rounded-full shadow-md"
-              alt="Logo"
+              alt="Company Logo"
             />
           </a>
           <button

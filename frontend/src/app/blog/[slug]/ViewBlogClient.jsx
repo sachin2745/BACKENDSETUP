@@ -266,11 +266,13 @@ const ViewBlog = ({ slug }) => {
                   <img
                     src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImage}`}
                     alt={blog.blogImgAlt}
+                    loading="lazy"
                     className="w-full hidden sm:block h-[503px] rounded-lg"
                   />
                   <img
                     width={690}
                     height={450}
+                    loading="lazy"
                     src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImageMobile}`}
                     alt={blog.blogImgAlt}
                     className="w-full block sm:hidden h-[158px] rounded-lg"
@@ -336,6 +338,7 @@ const ViewBlog = ({ slug }) => {
                       <img
                         src={`${process.env.NEXT_PUBLIC_API_URL}${blog.blogImage}`}
                         alt={blog.blogImgAlt}
+                        loading="lazy"
                         className="w-16 h-16 rounded"
                       />
                       <Link

@@ -67,12 +67,12 @@ export default function BlogPage() {
                     src={`${process.env.NEXT_PUBLIC_API_URL}${post.blogImageMobile}`}
                     alt={post.blogTitle}
                     loading="lazy"
-                    decoding="async"
                   />
                   <img
                     className="hidden sm:block h-48 lg:h-48 md:h-36 w-full object-fit opacity-80 hover:opacity-100 transition-opacity duration-300"
                     src={`${process.env.NEXT_PUBLIC_API_URL}${post.blogImage}`}
                     alt={post.blogTitle}
+                    loading="lazy"
                   />
                   <div className="px-6 py-3  text-center space-y-3">
                     <Link

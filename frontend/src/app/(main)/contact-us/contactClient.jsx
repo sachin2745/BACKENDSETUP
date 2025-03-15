@@ -77,7 +77,7 @@ const ContactUs = () => {
   }
 
   const openGoogleMaps = () => {
-    const companyName = settings?.companyName || "Career Wave";
+    const companyName = settings?.companyName || "Mine One";
     const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
       companyName
     )}`;
@@ -128,14 +128,14 @@ const ContactUs = () => {
             </div>
 
             <div className="w-full md:w-[75%] mt-5 md:mt-0">
-              {typeof window !== "undefined" && (
-                <div
-                  loading="lazy"
-                  decoding="async"
-                  dangerouslySetInnerHTML={{ __html: settings.embedMapUrl }}
-                />
-              )}
-            </div>
+            {typeof window !== "undefined" && (
+              <div
+                loading="lazy"
+                decoding="async"
+                dangerouslySetInnerHTML={{ __html: settings.embedMapUrl }}
+              />
+            )}
+          </div>
           </div>
 
           {faqs.length > 0 && (
