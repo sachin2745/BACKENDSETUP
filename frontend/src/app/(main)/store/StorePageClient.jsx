@@ -13,6 +13,7 @@ export default function StorePage() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  
   // Fetch the page number from URL (if exists) to persist state
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);

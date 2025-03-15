@@ -119,7 +119,7 @@ const Signup = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg">
-          <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={formik.handleSubmit} autoComplete="off">
             <div className="mb-2 sm:mb-4">
               <div>
                 <label

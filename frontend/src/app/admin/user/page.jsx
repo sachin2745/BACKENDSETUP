@@ -164,7 +164,7 @@ const User = () => {
       userPassword: "",
       userMobile: "",
       userPopular: 0,
-      userSortBy: 0,
+      // userSortBy: 0,
       userStatus: 0,
       userImage: null,
     },
@@ -192,7 +192,7 @@ const User = () => {
       formData.append("userPassword", values.userPassword);
       formData.append("userMobile", values.userMobile);
       formData.append("userPopular", values.userPopular);
-      formData.append("userSortBy", values.userSortBy);
+      // formData.append("userSortBy", values.userSortBy);
       formData.append("userStatus", values.userStatus);
       formData.append("userImage", values.userImage); // Append image
       formData.append("userCreatedAt", Math.floor(Date.now() / 1000)); // Add current UNIX timestamp
@@ -246,6 +246,8 @@ const User = () => {
     userStatus: 0,
   });
 
+ 
+
   const fetchUserData = async (id) => {
     try {
       const response = await axios.get(
@@ -259,7 +261,7 @@ const User = () => {
         userPassword: response.data.userPassword,
         userPopular: response.data.userPopular,
         userStatus: response.data.userStatus,
-        userImage: null,
+        userImage: response.data.userImage || "",
       });
 
       // Set the initial image for preview
@@ -277,6 +279,7 @@ const User = () => {
       toast.error("Error fetching user data:", error);
     }
   };
+ 
 
   const [errors, setErrors] = useState({}); // State for validation errors
 

@@ -311,7 +311,7 @@ const Coupen = () => {
           updatedData.append(key, Math.floor(value.getTime() / 1000));
         } else {
           updatedData.append(key, value);
-        }       
+        }
       });
 
       await axios.put(
@@ -781,32 +781,64 @@ const Coupen = () => {
               )}
 
               {/* Coupon Discount Amount */}
-              <div className="sm:flex w-full items-center ">
-                <label
-                  htmlFor="coupenDiscountAmt"
-                  className="w-[15%] text-gray-700 flex items-center font-medium"
-                >
-                  Coupon Discount Amount:
-                </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <input
-                    type="number"
-                    id="coupenDiscountAmt"
-                    name="coupenDiscountAmt"
-                    placeholder="Enter Coupon Discount Amount"
-                    onChange={userForm.handleChange}
-                    onBlur={userForm.handleBlur}
-                    value={userForm.values.coupenDiscountAmt}
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                  />
-                  {userForm.touched.coupenDiscountAmt &&
-                    userForm.errors.coupenDiscountAmt && (
-                      <p className="text-red-500 text-sm">
-                        {userForm.errors.coupenDiscountAmt}
-                      </p>
-                    )}
+              {userForm.values.coupenType === "1" ? (
+                <div className="sm:flex w-full items-center ">
+                  <label
+                    htmlFor="coupenDiscountAmt"
+                    className="w-[15%] text-gray-700 flex items-center font-medium"
+                  >
+                    Coupon Discount Amount
+                  </label>
+                  <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                    <input
+                      type="number"
+                      id="coupenDiscountAmt"
+                      name="coupenDiscountAmt"
+                      placeholder="Enter Coupon Discount Amount"
+                      onChange={userForm.handleChange}
+                      onBlur={userForm.handleBlur}
+                      value={userForm.values.coupenDiscountAmt}
+                      className="w-full border-2 border-gray-300 p-2 rounded"
+                    />
+                    {userForm.touched.coupenDiscountAmt &&
+                      userForm.errors.coupenDiscountAmt && (
+                        <p className="text-red-500 text-sm">
+                          {userForm.errors.coupenDiscountAmt}
+                        </p>
+                      )}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  {" "}
+                  <div className="sm:flex w-full items-center ">
+                    <label
+                      htmlFor="coupenDiscountAmt"
+                      className="w-[15%] text-gray-700 flex items-center font-medium"
+                    >
+                      Coupon Discount Percentage
+                    </label>
+                    <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
+                      <input
+                        type="number"
+                        id="coupenDiscountAmt"
+                        name="coupenDiscountAmt"
+                        placeholder="Enter Coupon Discount Amount"
+                        onChange={userForm.handleChange}
+                        onBlur={userForm.handleBlur}
+                        value={userForm.values.coupenDiscountAmt}
+                        className="w-full border-2 border-gray-300 p-2 rounded"
+                      />
+                      {userForm.touched.coupenDiscountAmt &&
+                        userForm.errors.coupenDiscountAmt && (
+                          <p className="text-red-500 text-sm">
+                            {userForm.errors.coupenDiscountAmt}
+                          </p>
+                        )}
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* Submit Button */}
               <div className="w-full flex justify-start gap-4">
@@ -1010,7 +1042,7 @@ const Coupen = () => {
                     htmlFor="coupenDiscountAmt"
                     className="w-[15%] text-gray-700 flex items-center font-medium"
                   >
-                    Coupon Discount Amount:
+                     {formData.coupenType === "1" ? "Coupon Discount Amount:":"Coupon Discount Percentage:"}
                   </label>
                   <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
                     <input
