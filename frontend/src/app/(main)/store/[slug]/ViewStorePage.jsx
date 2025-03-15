@@ -92,7 +92,11 @@ const ViewproductPage = ({ slug }) => {
   //ADD TO BAG BUTTON
   const handleClick = () => {
     if (!isInCart(product.productId)) {
-      addItemToCart(product.productId, product.productDiscountPrice, product.productOriginalPrice);
+      addItemToCart(
+        product.productId,
+        product.productDiscountPrice,
+        product.productOriginalPrice
+      );
     } else {
       router.replace("/mybag"); // Replaces current history entry
       setTimeout(() => {
@@ -248,10 +252,15 @@ const ViewproductPage = ({ slug }) => {
                     <button
                       onClick={handleClick}
                       type="button"
-                      className={`border-2 border-emerald-300 w-full flex cursor-pointer items-center hover:bg-emerald-100 transition ease-in justify-center py-3 rounded-lg font-medium ${
+                      disabled={product.productStock === 1}
+                      className={`border-2 border-emerald-300 w-full flex items-center justify-center py-3 rounded-lg font-medium transition ease-in ${
                         isInCart(product.productId)
                           ? "bg-emerald-100"
                           : "bg-white"
+                      } ${
+                        product.productStock === 1
+                          ? "cursor-not-allowed opacity-50"
+                          : "cursor-pointer hover:bg-emerald-100"
                       }`}
                     >
                       <svg
@@ -288,12 +297,26 @@ const ViewproductPage = ({ slug }) => {
                       type="button"
                       onClick={(e) => {
                         e.preventDefault(); // Prevent default redirection
-                        if (!isInCart(product.productId)) {
-                          addItemToCart(product.productId, product.productDiscountPrice, product.productOriginalPrice);
+                        if (product.productStock !== 1) {
+                          if (!isInCart(product.productId)) {
+                            addItemToCart(
+                              product.productId,
+                              product.productDiscountPrice,
+                              product.productOriginalPrice
+                            );
+                          }
+                          window.location.href = "/mybag"; // Redirect after handling cart logic
                         }
-                        window.location.href = "/mybag"; // Redirect after handling cart logic
                       }}
-                      className="w-full bg-emerald-400 hover:bg-emerald-500  text-white flex items-center justify-center py-3 rounded-lg font-medium"
+                      className={`w-full text-white flex items-center justify-center py-3 rounded-lg font-medium ${
+                        product.productStock === 1
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-emerald-400 hover:bg-emerald-500"
+                      }`}
+                      style={{
+                        pointerEvents:
+                          product.productStock === 1 ? "none" : "auto",
+                      }}
                     >
                       Buy Now
                     </a>
@@ -405,7 +428,13 @@ const ViewproductPage = ({ slug }) => {
                           href="http://schema.org/InStock"
                         />
                         <div className="flex justify-start items-center">
-                          <span className="text-[14px] font-bold textEmerald">
+                          <span
+                            className={`text-[14px] font-bold ${
+                              product.productStock === 0
+                                ? "textEmerald"
+                                : "text-red-500"
+                            }`}
+                          >
                             {product.productStock === 0
                               ? "In Stock"
                               : "Out of Stock"}

@@ -85,7 +85,7 @@ export default function StorePage() {
               {store?.storeTitle || ""}
             </h1>
             <p
-              className="text-gray-700 text-[14px] text-base sm:text-[16px] leading-relaxed"
+              className="text-gray-700 text-[14px] text-base sm:text-[16px] leading-relaxed mb-6"
               dangerouslySetInnerHTML={{
                 __html: store?.storeDescription || "",
               }}
@@ -301,7 +301,7 @@ export default function StorePage() {
                                       className="text-[12px] md:text-[14px] font-semibold text-white"
                                       itemProp="ratingValue"
                                     >
-                                      4.8
+                                     {post.productStar}
                                     </span>
                                   </div>
                                 </div>

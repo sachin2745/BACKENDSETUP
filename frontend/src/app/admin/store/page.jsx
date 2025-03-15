@@ -459,6 +459,8 @@ const Store = () => {
   const editorStructure = useRef(null);
   const editorHelp = useRef(null);
   const editorDetail = useRef(null);
+  const editorDescription = useRef(null);
+  const editorLongDescription = useRef(null);
 
   /* The most important point*/
   const config = useMemo(
@@ -2681,14 +2683,19 @@ const Store = () => {
                 >
                   Store Description:
                 </label>
-                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <textarea
-                    rows={3}
+                <div className="w-full sm:w-[80%] mt-1 sm:mt-0">                 
+                  <JoditEditor
+                    ref={editorDescription}
+                    config={config}
                     id="storeDescription"
                     name="storeDescription"
                     placeholder="Enter Store Description"
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                    onChange={formik.handleChange}
+                    onChange={(newContent) => {
+                      formik.setFieldValue("storeDescription", newContent);
+                    }}
+                    onBlur={() => {
+                      formik.setFieldTouched("storeDescription", true);
+                    }}
                     value={formik.values.storeDescription}
                   />
                   {formik.errors.storeDescription && (
@@ -2707,13 +2714,19 @@ const Store = () => {
                   Store Long Description:
                 </label>
                 <div className="w-full sm:w-[80%] mt-1 sm:mt-0">
-                  <textarea
-                    rows={3}
+                 
+                  <JoditEditor
+                    ref={editorLongDescription}
+                    config={config}
                     id="storeLongDescription"
                     name="storeLongDescription"
                     placeholder="Enter Store Long Description"
-                    className="w-full border-2 border-gray-300 p-2 rounded"
-                    onChange={formik.handleChange}
+                    onChange={(newContent) => {
+                      formik.setFieldValue("storeLongDescription", newContent);
+                    }}
+                    onBlur={() => {
+                      formik.setFieldTouched("storeLongDescription", true);
+                    }}
                     value={formik.values.storeLongDescription}
                   />
                   {formik.errors.storeLongDescription && (
