@@ -5,10 +5,20 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import { AiOutlineHome } from "react-icons/ai";
+import { useRouter } from "next/navigation";
 
 export default function StorePage() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  // Fetch the page number from URL (if exists) to persist state
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = parseInt(urlParams.get("page")) || 1;
+    setCurrentPage(page);
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,6 +36,19 @@ export default function StorePage() {
     };
     fetchProducts();
   }, []);
+
+  // Paginated Data
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const paginatedProducts = products.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Handle Page Change
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    router.push(`?page=${newPage}`, { scroll: false }); // Update URL without scrolling
+  };
 
   const [store, setStore] = useState(null);
   useEffect(() => {
@@ -133,7 +156,7 @@ export default function StorePage() {
      sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5
     "
             >
-              {products.map((post, index) => (
+              {paginatedProducts.map((post, index) => (
                 <div key={post.productId}>
                   <div className="relative">
                     <Link href={`/store/${post.productSlug}`}>
@@ -301,12 +324,11 @@ export default function StorePage() {
                                       className="text-[12px] md:text-[14px] font-semibold text-white"
                                       itemProp="ratingValue"
                                     >
-                                     {post.productStar}
+                                      {post.productStar}
                                     </span>
                                   </div>
                                 </div>
                               </div>
-                              
                             </div>
                           </div>
                         </div>
@@ -318,6 +340,54 @@ export default function StorePage() {
             </div>
           </div>
         )}
+      </div>
+      {/* Pagination Controls */}
+      <div className="container-fluid pb-16 mx-auto font-RedditSans">
+        <div className="flex justify-center  max-w-[78rem] mx-auto items-center gap-3">
+          {/* Pagination Buttons */}
+          <div className="flex gap-2 items-center font-semibold">
+            {/* Previous Button */}
+            <button
+              className={`px-3 py-1 border rounded ${
+                currentPage === 1
+                  ? "opacity-50 cursor-not-allowed"
+                  : "text-white bgEmerald"
+              }`}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </button>
+
+            {/* Page Number Buttons */}
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index + 1}
+                className={`px-3 py-1 border rounded ${
+                  currentPage === index + 1
+                    ? "bgEmerald text-white"
+                    : "text-gray-700"
+                }`}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </button>
+            ))}
+
+            {/* Next Button */}
+            <button
+              className={`px-3 py-1 border rounded ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : "text-white bgEmerald"
+              }`}
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );
