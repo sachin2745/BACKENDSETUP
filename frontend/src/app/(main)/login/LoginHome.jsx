@@ -54,7 +54,11 @@ const LoginHome = () => {
               document.cookie = `CToken=${data.token}`;
               formik.resetForm();
               setTimeout(() => {
-                router.push("/store");
+                if (document.referrer && new URL(document.referrer).origin === window.location.origin) {
+                  router.back(); // Go back if coming from the same site
+                } else {
+                  router.push("/store"); // Otherwise, redirect to store
+                }
               }, 2000); // 2000 milliseconds = 2 seconds
             });
           } else {
@@ -95,7 +99,7 @@ const LoginHome = () => {
         }
       } catch (err) {
         console.error("Error fetching header data:", err);
-      }finally{
+      } finally {
         setLoading(false);
       }
     };
@@ -103,8 +107,8 @@ const LoginHome = () => {
     fetchData();
   }, []);
 
-  if(loading){
-    return <div>Loading...</div>
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -262,8 +266,11 @@ const LoginHome = () => {
               </Link>
             </p>
             <p className="mt-1 mb-5 text-center text-sm  transition hover:scale-110 ease-in-out duration-300">
-              <Link href="/" className="font-semibold text-spaceblack hover:text-quaternary ">
-              Go to Home
+              <Link
+                href="/"
+                className="font-semibold text-spaceblack hover:text-quaternary "
+              >
+                Go to Home
               </Link>
             </p>
           </div>
