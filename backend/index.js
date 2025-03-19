@@ -16,7 +16,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors('*'));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
@@ -38,11 +38,9 @@ app.post("/create-payment-intent", async (req, res) => {
     const { amount, customerData } = req.body;
 
     if (!amount || !customerData || !customerData.email) {
-      return res
-        .status(400)
-        .json({
-          error: "Amount and valid customer data with email are required",
-        });
+      return res.status(400).json({
+        error: "Amount and valid customer data with email are required",
+      });
     }
 
     console.log("Received Amount:", amount);

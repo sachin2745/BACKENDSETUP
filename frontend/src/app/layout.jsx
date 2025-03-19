@@ -1,4 +1,5 @@
 "use client";
+
 import { usePathname } from "next/navigation";
 import Footer from "./(components)/Footer";
 import Header from "./(components)/Header";
@@ -21,24 +22,25 @@ export default function RootLayout({ children }) {
   const [headerData, setHeaderData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/web/header-data`
-        );
+    if (typeof window !== "undefined") {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/web/header-data`
+          );
 
-        if (response.status === 200) {
-          setHeaderData(response.data.headerData);
-          // console.log("Header data:", response.data.headerData);
-        } else {
-          console.error(`Unexpected response status: ${response.status}`);
+          if (response.status === 200) {
+            setHeaderData(response.data.headerData);
+            // console.log("Header data:", response.data.headerData);
+          } else {
+            console.error(`Unexpected response status: ${response.status}`);
+          }
+        } catch (err) {
+          console.error("Error fetching header data:", err);
         }
-      } catch (err) {
-        console.error("Error fetching header data:", err);
-      }
-    };
-
-    fetchData();
+      };
+      fetchData();
+    }
   }, []);
 
   if (isLoginPage || isSignupPage || isResestPasswordPage) {
@@ -71,33 +73,33 @@ export default function RootLayout({ children }) {
         {headerData && (
           <script dangerouslySetInnerHTML={{ __html: headerData.gSeoDetail }} />
         )}
-
+        <script
+          src="https://code.jquery.com/jquery-3.7.1.js"
+          integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+          crossOrigin="anonymous"
+        ></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
+          rel="stylesheet"
+        ></link>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Oswald:wght@200..700&family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
           rel="stylesheet"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Oswald:wght@200..700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
           rel="stylesheet"
-        />
+        ></link>
         <link
-          href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
           rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lilita+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lilita+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Syne:wght@400..800&display=swap"
-          rel="stylesheet"
-        />
-       
-        <link
-          href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap"
-          rel="stylesheet"
-        />
-
+        ></link>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -105,11 +107,7 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
-        <script
-          src="https://code.jquery.com/jquery-3.7.1.js"
-          integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-          crossOrigin="anonymous"
-        ></script>
+
         <link
           href="https://cdn.datatables.net/v/dt/dt-2.2.0/datatables.min.css"
           rel="stylesheet"

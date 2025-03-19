@@ -31,7 +31,7 @@ const OrderHistory = () => {
       }
     );
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     setPaymentData(data);
     setLoading(false);
   };

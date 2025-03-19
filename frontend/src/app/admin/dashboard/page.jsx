@@ -39,7 +39,7 @@ const Dashboard = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/admin/order-history-data/getall`
       ); // Making GET request to the API endpoint
       const data = response.data; // Extracting the data from the response
-      console.log(data);
+      // console.log(data);
 
       // Setting the state with the fetched data
       setOrderHistory(data);
@@ -169,7 +169,7 @@ const Dashboard = () => {
                     </td>
                     <td className="">
                       <span
-                        className={`px-3 py-1 rounded-lg-md text-xs font-semibold text-white inline-block ${
+                        className={`px-3 py-1 rounded-lg-md text-xs font-bold rounded text-white inline-block ${
                           order.orderHistoryStatus === 1
                             ? "bg-blue-500"
                             : order.orderHistoryStatus === 2

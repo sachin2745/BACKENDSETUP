@@ -301,18 +301,18 @@ const OrderHistory = () => {
                           >
                             <li className=" rounded">
                               <button
-                                onClick={() => openModalTwo(item.orderId)}
-                                className="hover:bg-emerald-200 "
+                                onClick={() => openModal(item.orderId)}
+                                className="hover:bg-emerald-200"
                               >
-                                Update Order Status
+                                1. Set Delivery Time
                               </button>
                             </li>
                             <li className=" rounded">
                               <button
-                                onClick={() => openModal(item.orderId)}
-                                className="hover:bg-emerald-200"
+                                onClick={() => openModalTwo(item.orderId)}
+                                className="hover:bg-emerald-200 "
                               >
-                                Set Delivery Time
+                                2. Update Order Status
                               </button>
                             </li>
                           </ul>
