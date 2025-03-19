@@ -35,4 +35,7 @@ export default {
   daisyui: {
     themes: ["light"], // DaisyUI themes
   },
+  future: {
+    experimentalColorFunctions: true,
+  },
 };

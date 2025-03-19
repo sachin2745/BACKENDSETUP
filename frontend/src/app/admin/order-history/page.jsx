@@ -8,6 +8,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { FaCheck } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas-pro";
+import { MdOutlineFileDownload } from "react-icons/md";
 
 const OrderHistory = () => {
   const [orderHistory, setOrderHistory] = useState([]);
@@ -155,6 +158,20 @@ const OrderHistory = () => {
     } catch (error) {
       console.error("Error updating order status:", error);
     }
+  };
+
+  const downloadInvoice = () => {
+    const invoiceElement = document.getElementById("invoice-content");
+
+    html2canvas(invoiceElement, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
+      pdf.save(`invoice-${invoiceData[0].orderHistoryId}.pdf`);
+    });
   };
 
   return (
@@ -330,186 +347,201 @@ const OrderHistory = () => {
       {/* FOR VIEW INVOICE */}
       {isOpen && invoiceData && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-RedditSans cursor-pointer">
-          <div className="relative bg-white p-6 rounded-lg max-w-xl shadow-lg text-quaternary">
-            <button
-              className="absolute  top-6 right-6 text-gray-900 transform hover:scale-110 transition duration-300 ease-in-out"
-              onClick={() => setIsOpen(false)}
-            >
-              <IoMdCloseCircle className="text-xl" />
-            </button>
-            <h3 className="text-lg font-bold mb-4 border-b-2">
-              Invoice Details
-            </h3>
-            <div className="flex justify-between text-xs mb-2 leading-relaxed">
-              <p>
-                <strong>Order ID:</strong> #{invoiceData[0].orderHistoryId}
-              </p>
-              <p>
-                <strong>Order Date:</strong>{" "}
-                {new Date(invoiceData[0].orderTime * 1000)
-                  .toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })
-                  .replace(/ /g, "-")}{" "}
-                {new Date(invoiceData[0].orderTime * 1000).toLocaleTimeString(
-                  "en-US",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                  }
-                )}
-              </p>
+          <div className="relative bg-white rounded-lg max-w-xl shadow-lg text-quaternary">
+            <div className="absolute top-6 right-6">
+              <button
+                onClick={downloadInvoice}
+                className="tooltip text-black transform hover:scale-110 transition duration-300 ease-in-out px-4"
+                data-tip="Download"
+              >
+                <MdOutlineFileDownload className="text-xl" />
+              </button>
+              <button
+                className=" text-gray-900 transform hover:scale-110 transition duration-300 ease-in-out"
+                onClick={() => setIsOpen(false)}
+              >
+                <IoMdCloseCircle className="text-xl" />
+              </button>
             </div>
-            <div className="flex justify-between text-xs mb-2 leading-relaxed">
-              <p>
-                <strong>Name:</strong> {invoiceData[0].orderName}
-              </p>
-              <p>
-                <strong>Address:</strong> {invoiceData[0].orderBillingAddress},{" "}
-                {invoiceData[0].odPincode}
-              </p>
-            </div>
-            <div className="flex justify-between text-xs mb-2 leading-relaxed">
-              <p>
-                <strong>Mobile:</strong> {invoiceData[0].orderMobile}
-              </p>
-              <p>
-                <strong>Location :</strong> {invoiceData[0].odCity},{" "}
-                {invoiceData[0].odState}
-              </p>
-            </div>
-            <div className="flex justify-between text-xs mb-2 leading-relaxed">
-              <p>
-                <strong>Status:</strong>{" "}
-                <span
-                  className="font-semibold"
-                  style={{
-                    color:
-                      invoiceData[0].orderHistoryStatus === 1
-                        ? "blue"
-                        : invoiceData[0].orderHistoryStatus === 2
-                        ? "orange"
-                        : invoiceData[0].orderHistoryStatus === 3
-                        ? "purple"
-                        : invoiceData[0].orderHistoryStatus === 4
-                        ? "green"
-                        : "red",
-                  }}
-                >
-                  {(() => {
-                    const statusMap = {
-                      1: "New Order",
-                      2: "Confirm",
-                      3: "On the Way",
-                      4: "Completed",
-                    };
-                    return (
-                      statusMap[invoiceData[0].orderHistoryStatus] || "Unknown"
-                    );
-                  })()}
-                </span>
-              </p>
+            <div id="invoice-content" className=" p-6 ">
+              <h3 className="text-lg font-bold mb-4 border-b-2">
+                Invoice Details
+              </h3>
+              <div className="flex justify-between text-xs mb-2 leading-relaxed">
+                <p>
+                  <strong>Order ID:</strong> #{invoiceData[0].orderHistoryId}
+                </p>
+                <p>
+                  <strong>Order Date:</strong>{" "}
+                  {new Date(invoiceData[0].orderTime * 1000)
+                    .toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })
+                    .replace(/ /g, "-")}{" "}
+                  {new Date(invoiceData[0].orderTime * 1000).toLocaleTimeString(
+                    "en-US",
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    }
+                  )}
+                </p>
+              </div>
+              <div className="bg-gray-100 rounded p-2 text-xs mb-2 leading-relaxed">
+                <p>
+                  <strong>Name:</strong> {invoiceData[0].orderName}
+                </p>
+                <p>
+                  <strong>Mobile:</strong> {invoiceData[0].orderMobile}
+                </p>
+                <p>
+                  <strong>Address:</strong> {invoiceData[0].orderBillingAddress}{" "}
+                  , {invoiceData[0].odCity}, {invoiceData[0].odState}.
+                </p>
+                <p>
+                  <strong>Pincode:</strong> {invoiceData[0].odPincode}
+                </p>
+              </div>
 
-              <p>
-                <strong>Delivered by:</strong>{" "}
-                <span
-                  style={{
-                    color:
-                      invoiceData[0].orderDeliveryTime !== 0
-                        ? "green"
-                        : "inherit",
-                  }}
-                >
-                  {invoiceData[0].orderDeliveryTime === 0
-                    ? "Waiting for confirmation"
-                    : new Date(
-                        invoiceData[0].orderDeliveryTime * 1000
-                      ).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                </span>
-              </p>
-            </div>
+              <div className="flex justify-between text-xs mb-2 leading-relaxed">
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <span
+                    className="font-semibold"
+                    style={{
+                      color:
+                        invoiceData[0].orderHistoryStatus === 1
+                          ? "blue"
+                          : invoiceData[0].orderHistoryStatus === 2
+                          ? "orange"
+                          : invoiceData[0].orderHistoryStatus === 3
+                          ? "purple"
+                          : invoiceData[0].orderHistoryStatus === 4
+                          ? "green"
+                          : "red",
+                    }}
+                  >
+                    {(() => {
+                      const statusMap = {
+                        1: "New Order",
+                        2: "Confirm",
+                        3: "On the Way",
+                        4: "Completed",
+                      };
+                      return (
+                        statusMap[invoiceData[0].orderHistoryStatus] ||
+                        "Unknown"
+                      );
+                    })()}
+                  </span>
+                </p>
 
-            {/* Table for products */}
-            <table className="w-full mt-4 border ">
-              <thead>
-                <tr className="bg-gray-100 text-xs">
-                  <th className="border px-2">S.No</th>
-                  <th className="border px-2">Item</th>
-                  <th className="border px-2">Price</th>
-                  <th className="border px-2">Qty</th>
-                  <th className="border px-2">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invoiceData.map((item, index) => (
-                  <tr key={index} className="text-start text-xs">
-                    <td className="border px-2 font-bold">{index + 1}</td>
-                    <td className="border px-2 font-medium">
-                      {item.productName}
+                <p>
+                  <strong>Delivered by:</strong>{" "}
+                  <span
+                    style={{
+                      color:
+                        invoiceData[0].orderDeliveryTime !== 0
+                          ? "green"
+                          : "inherit",
+                    }}
+                  >
+                    {invoiceData[0].orderDeliveryTime === 0
+                      ? "Waiting for confirmation"
+                      : new Date(
+                          invoiceData[0].orderDeliveryTime * 1000
+                        ).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
+                  </span>
+                </p>
+              </div>
+
+              {/* Table for products */}
+              <table className="w-full mt-4 border ">
+                <thead>
+                  <tr className="bg-gray-100 text-xs">
+                    <th className="border px-2">S.No</th>
+                    <th className="border px-2">Item</th>
+                    <th className="border px-2">Price</th>
+                    <th className="border px-2">Qty</th>
+                    <th className="border px-2">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoiceData.map((item, index) => (
+                    <tr key={index} className="text-start text-xs">
+                      <td className="border px-2 font-bold">{index + 1}</td>
+                      <td className="border px-2 font-medium">
+                        {item.productName}
+                      </td>
+                      <td className="border px-2">
+                        ₹{item.productDiscountPrice}
+                      </td>
+                      <td className="border px-2">{item.opQuantity}</td>
+                      <td className="border px-2">
+                        ₹{item.opDiscountPrice * item.opQuantity}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Summary Table */}
+              <table className="w-full mt-4">
+                <tbody>
+                  <tr>
+                    <td className="border  px-4 py-1.5 font-semibold text-xs">
+                      Sub Total
                     </td>
-                    <td className="border px-2">
-                      ₹{item.productDiscountPrice}
-                    </td>
-                    <td className="border px-2">{item.opQuantity}</td>
-                    <td className="border px-2">
-                      ₹{item.opDiscountPrice * item.opQuantity}
+                    <td className="border px-4 py-1.5 text-left font-normal text-xs">
+                      ₹
+                      {invoiceData.reduce(
+                        (total, item) =>
+                          total + item.opDiscountPrice * item.opQuantity,
+                        0
+                      )}
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                  <tr>
+                    <td className="border px-4 py-1.5 font-semibold text-xs">
+                      Platform Fees
+                    </td>
+                    <td className="border px-4 py-1.5 text-left font-normal text-xs">
+                      ₹10
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border px-4 py-1.5 font-semibold text-xs">
+                      {invoiceData[0].orderCoupenDiscountAmt
+                        ? "Coupon Discount"
+                        : ""}
+                    </td>
+                    <td className="border px-4 py-1.5 text-left text-emerald-500 font-normal text-xs">
+                      {invoiceData?.[0]?.orderCoupenDiscountAmt
+                        ? `- ₹${invoiceData[0].orderCoupenDiscountAmt}`
+                        : ""}
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-100 font-bold text-xs">
+                    <td className="border px-4 py-1.5 text-xs">Grand Total</td>
+                    <td className="border px-4 py-1.5 text-left font-semibold">
+                      ₹{invoiceData[0].orderDiscountTotalAmount}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
-            {/* Summary Table */}
-            <table className="  w-full mt-4  ">
-              <tbody>
-                <tr>
-                  <td className="border px-4 py-1.5 font-semibold text-xs">
-                    Sub Total
-                  </td>
-                  <td className="border px-4 py-1.5 text-left font-normal text-xs">
-                    ₹
-                    {invoiceData.reduce(
-                      (total, item) =>
-                        total + item.opDiscountPrice * item.opQuantity,
-                      0
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border px-4 py-1.5 font-semibold text-xs">
-                    Platform Fees
-                  </td>
-                  <td className="border px-4 py-1.5 text-left font-normal text-xs">
-                    ₹10
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border px-4 py-1.5 font-semibold text-xs">
-                    {invoiceData[0].orderCoupenDiscountAmt
-                      ? "Coupon Discount"
-                      : ""}
-                  </td>
-                  <td className="border px-4 py-1.5 text-left text-emerald-500 font-normal text-xs">
-                    {invoiceData?.[0]?.orderCoupenDiscountAmt
-                      ? `- ₹${invoiceData[0].orderCoupenDiscountAmt}`
-                      : ""}
-                  </td>
-                </tr>
-                <tr className="bg-gray-100 font-bold text-xs">
-                  <td className="border px-4 py-1.5 text-xs">Grand Total</td>
-                  <td className="border px-4 py-1.5 text-left font-semibold">
-                    ₹{invoiceData[0].orderDiscountTotalAmount}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              <div className="mt-4 text-center text-xs text-gray-600">
+                <p>Thank you for shopping with us!</p>
+                <p>Need help? Contact support at support@pwlive.com</p>
+              </div>
+            </div>
           </div>
         </div>
       )}
