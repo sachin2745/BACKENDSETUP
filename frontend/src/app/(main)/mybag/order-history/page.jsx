@@ -1,10 +1,12 @@
 "use client";
 import { useCoupon } from "@/context/CouponContext";
 import useProductContext from "@/context/ProductContext";
+import axios from "axios";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
+import { toast } from "react-toastify";
 const OrderHistory = () => {
   const [currentConsumer, setCurrentConsumer] = useState(null);
 
@@ -89,6 +91,30 @@ const OrderHistory = () => {
     }
   };
 
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+
+  const openModal = (orderId) => {
+    setSelectedOrderId(orderId);
+    document.getElementById("confirm_modal").showModal();
+  };
+
+  const confirmCancelOrder = async () => {
+    if (!selectedOrderId) return;
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/web/cancel-order`, {
+        orderHistoryId: selectedOrderId,
+        orderHistoryStatus: 5,
+      });
+      toast.success("Order cancelled successfully!");
+      document.getElementById("confirm_modal").close();
+      setTimeout(() => {
+        fetchPaymentHistory(); // Refresh the order history after cancellation
+      }, 2000);
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+    }
+  };
+
   return (
     <>
       <div className="container mx-auto my-5 max-w-7xl p-4 font-RedditSans">
@@ -118,6 +144,8 @@ const OrderHistory = () => {
                           ? "bg-orange-500" // On the Way
                           : order.orderHistoryStatus === 4
                           ? "bg-green-500" // Completed
+                          : order.orderHistoryStatus === 5
+                          ? "bg-red-500" // Completed
                           : "bg-gray-500" // Default fallback
                       }
                     `}
@@ -130,6 +158,8 @@ const OrderHistory = () => {
                       ? "On the Way"
                       : order.orderHistoryStatus === 4
                       ? "Completed"
+                      : order.orderHistoryStatus === 5
+                      ? "Cancelled"
                       : "Unknown"}
                   </div>
                 </div>
@@ -155,12 +185,44 @@ const OrderHistory = () => {
                   </p>
                 </div>
                 <hr className="my-2" />
-                <button
-                  className="w-full bg-spaceblack hover:bg-white text-white py-2 rounded-md hover:text-black hover:border-2 hover:border-black transition duration-300 ease-in-out font-bold uppercase text-sm"
-                  onClick={() => fetchInvoice(order.orderId)}
-                >
-                  View Invoice
-                </button>
+                <div className="flex justify-between gap-5 items-center text-sm ">
+                  <button
+                    className="w-full bg-white-500 hover:bg-white text-red-500 py-1 rounded hover:text-red-500 border border-red-500 transition duration-300 ease-in-out font-bold uppercase text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => openModal(order.orderHistoryId)}
+                    disabled={order.orderHistoryStatus === 5}
+                  >
+                    {order.orderHistoryStatus === 5 ? 'Order Cancelled' : ' Cancel Order'}
+                   
+                  </button>
+                  {/* Confirmation Modal */}
+                  <dialog id="confirm_modal" className="modal">
+                    <div className="modal-box rounded">
+                      <h3 className="font-bold text-xl">
+                        Confirm Cancellation
+                      </h3>
+                      <p className="py-4 text-md font-medium">
+                        Are you sure you want to cancel this order?
+                      </p>
+                      <div className="modal-action">
+                        <form method="dialog">
+                          <button className="btn btn-sm rounded">Close</button>
+                        </form>
+                        <button
+                          className="btn btn-error btn-sm rounded text-white"
+                          onClick={confirmCancelOrder}
+                        >
+                          Confirm
+                        </button>
+                      </div>
+                    </div>
+                  </dialog>
+                  <button
+                    className="w-full bg-spaceblack hover:bg-white text-white py-1 rounded hover:text-black hover:border hover:border-black transition duration-300 ease-in-out font-bold uppercase text-xs"
+                    onClick={() => fetchInvoice(order.orderId)}
+                  >
+                    View Invoice
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -246,6 +308,8 @@ const OrderHistory = () => {
                         ? "purple"
                         : invoiceData[0].orderHistoryStatus === 4
                         ? "green"
+                        : invoiceData[0].orderHistoryStatus === 5
+                        ? "red"
                         : "red",
                   }}
                 >
@@ -255,6 +319,7 @@ const OrderHistory = () => {
                       2: "Confirm",
                       3: "On the Way",
                       4: "Completed",
+                      5: "Cancelled",
                     };
                     return (
                       statusMap[invoiceData[0].orderHistoryStatus] || "Unknown"

@@ -274,6 +274,8 @@ const OrderHistory = () => {
                               ? "bg-orange-500" // On the Way
                               : item.orderHistoryStatus === 4
                               ? "bg-green-500" // Completed
+                              : item.orderHistoryStatus === 5
+                              ? "bg-red-500" // Cancel
                               : "bg-gray-500" // Default
                           }`}
                         >
@@ -285,6 +287,8 @@ const OrderHistory = () => {
                             ? "On the Way"
                             : item.orderHistoryStatus === 4
                             ? "Completed"
+                             : item.orderHistoryStatus === 5
+                            ? "Cancelled"
                             : "Unknown"}
                         </span>
                       </td>
@@ -421,6 +425,8 @@ const OrderHistory = () => {
                           ? "purple"
                           : invoiceData[0].orderHistoryStatus === 4
                           ? "green"
+                           : invoiceData[0].orderHistoryStatus === 5
+                          ? "red"
                           : "red",
                     }}
                   >
@@ -430,6 +436,7 @@ const OrderHistory = () => {
                         2: "Confirm",
                         3: "On the Way",
                         4: "Completed",
+                        5: "Cancelled",
                       };
                       return (
                         statusMap[invoiceData[0].orderHistoryStatus] ||

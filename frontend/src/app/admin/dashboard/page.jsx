@@ -178,6 +178,8 @@ const Dashboard = () => {
                             ? "bg-orange-500"
                             : order.orderHistoryStatus === 4
                             ? "bg-green-500"
+                            : order.orderHistoryStatus === 5
+                            ? "bg-red-500"
                             : "bg-gray-500"
                         }`}
                       >
@@ -189,6 +191,8 @@ const Dashboard = () => {
                           ? "On the Way"
                           : order.orderHistoryStatus === 4
                           ? "Completed"
+                           : order.orderHistoryStatus === 5
+                          ? "Cancelled"
                           : "Unknown"}
                       </span>
                     </td>

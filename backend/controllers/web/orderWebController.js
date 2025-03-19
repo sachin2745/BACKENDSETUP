@@ -186,10 +186,35 @@ const getCoupon = async (req, res) => {
   }
 };
 
+const cancelOrder = async (req, res) => {
+  const { orderHistoryId, orderHistoryStatus } = req.body;
+
+  if (!orderHistoryId) {
+    return res.status(400).json({ error: "Order ID is required" });
+  }
+
+  try {
+    const [result] = await db.execute(
+      "UPDATE orderhistory SET orderHistoryStatus = ? WHERE orderHistoryId = ?",
+      [orderHistoryStatus, orderHistoryId]
+    );
+
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: "Order cancelled successfully" });
+    } else {
+      res.status(404).json({ error: "Order not found" });
+    }
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   addAddress,
   addOrder,
   getByUser,
   getInvoice,
   getCoupon,
+  cancelOrder,
 };
