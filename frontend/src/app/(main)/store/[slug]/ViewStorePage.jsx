@@ -105,10 +105,17 @@ const ViewproductPage = ({ slug }) => {
     }
   };
 
-  const { updateItemQuantity } = useProductContext();
+  const { updateItemQuantity } = useProductContext(); 
 
   const handleQuantityChange = (e) => {
-    updateItemQuantity(product.productId, parseInt(e.target.value));
+    const newQuantity = parseInt(e.target.value);
+    const exist = cartItems.find((cartItem) => cartItem.productId === product.productId);
+  
+    if (exist) {
+      updateItemQuantity(product.productId, newQuantity);
+    } else {
+      addItemToCart(product.productId, product.productDiscountPrice, product.productOriginalPrice, newQuantity);
+    }
   };
 
   if (loading) {

@@ -6,7 +6,6 @@ const ProductContext = createContext();
 
 const ISSERVER = typeof window === "undefined";
 
-
 export const ProductProvider = ({ children }) => {
   const [cartOpen, setCartOpen] = useState(false);
   const { currentConsumer } = useConsumerContext();
@@ -43,9 +42,8 @@ export const ProductProvider = ({ children }) => {
       localStorage.setItem("cartItems", JSON.stringify(filteredCartItems));
     }
   }, [cartItems, currentConsumer]);
-  
 
-  const addItemToCart = (itemId, price, delPrice) => {
+  const addItemToCart = (itemId, price, delPrice, quantity = 1) => {
     if (!currentConsumer) return; // Prevent adding items if no consumer is logged in
 
     const exist = cartItems.find((cartItem) => cartItem.productId === itemId);
@@ -63,7 +61,7 @@ export const ProductProvider = ({ children }) => {
         ...cartItems,
         {
           productId: itemId,
-          quantity: 1,
+          quantity, // Use passed quantity instead of default 1
           price,
           delPrice,
           consumerId: currentConsumer.consumerId, // Store consumer ID
